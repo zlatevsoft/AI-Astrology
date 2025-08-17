@@ -13,6 +13,7 @@ const AIAnalysisSchema = z.object({
   birthChart: z.object({
     id: z.string(),
     birthData: z.object({
+      name: z.string(),
       date: z.string(),
       time: z.string(),
       latitude: z.number(),
@@ -39,6 +40,7 @@ const AIAnalysisSchema = z.object({
   partnerBirthChart: z.object({
     id: z.string(),
     birthData: z.object({
+      name: z.string(),
       date: z.string(),
       time: z.string(),
       latitude: z.number(),
