@@ -103,13 +103,37 @@ function PaymentSuccessContent() {
 
               // Generate AI analysis
         const requestBody: any = {
-          birthChart,
+          birthChart: {
+            id: birthChart.id || `chart_${Date.now()}`,
+            birthData: {
+              date: birthChart.userData?.birthDate || birthChart.birthDate,
+              time: birthChart.userData?.birthTime || birthChart.birthTime,
+              latitude: birthChart.latitude || 42.4833,
+              longitude: birthChart.longitude || 26.5167,
+              location: birthChart.userData?.location || birthChart.location,
+            },
+            planetaryPositions: birthChart.planetaryPositions,
+            houses: birthChart.houses,
+            aspects: birthChart.aspects,
+          },
           analysisType,
         }
 
         // Add partner data if available (for comprehensive plan)
         if (partnerData) {
-          requestBody.partnerBirthChart = partnerData
+          requestBody.partnerBirthChart = {
+            id: partnerData.id || `partner_chart_${Date.now()}`,
+            birthData: {
+              date: partnerData.userData?.birthDate || partnerData.birthDate,
+              time: partnerData.userData?.birthTime || partnerData.birthTime,
+              latitude: partnerData.latitude || 42.4833,
+              longitude: partnerData.longitude || 26.5167,
+              location: partnerData.userData?.location || partnerData.location,
+            },
+            planetaryPositions: partnerData.planetaryPositions,
+            houses: partnerData.houses,
+            aspects: partnerData.aspects,
+          }
         }
 
         const analysisResponse = await fetch('/api/ai-analysis', {
