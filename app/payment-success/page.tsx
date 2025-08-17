@@ -106,6 +106,7 @@ function PaymentSuccessContent() {
           birthChart: {
             id: birthChart.id || `chart_${Date.now()}`,
             birthData: {
+              name: birthChart.userData?.fullName || birthChart.fullName || 'User',
               date: birthChart.userData?.birthDate || birthChart.birthDate,
               time: birthChart.userData?.birthTime || birthChart.birthTime,
               latitude: birthChart.latitude || 42.4833,
@@ -124,6 +125,7 @@ function PaymentSuccessContent() {
           requestBody.partnerBirthChart = {
             id: partnerData.id || `partner_chart_${Date.now()}`,
             birthData: {
+              name: partnerData.userData?.partnerName || partnerData.partnerName || 'Partner',
               date: partnerData.userData?.birthDate || partnerData.birthDate,
               time: partnerData.userData?.birthTime || partnerData.birthTime,
               latitude: partnerData.latitude || 42.4833,
@@ -136,6 +138,8 @@ function PaymentSuccessContent() {
           }
         }
 
+        console.log('Sending request body to AI analysis:', JSON.stringify(requestBody, null, 2))
+        
         const analysisResponse = await fetch('/api/ai-analysis', {
           method: 'POST',
           headers: {
