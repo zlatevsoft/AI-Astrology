@@ -69,6 +69,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
+    console.log('Received request body:', JSON.stringify(body, null, 2))
+    
     // Enhanced security: Validate and sanitize input
     const validatedData = AIAnalysisSchema.parse(body)
     
