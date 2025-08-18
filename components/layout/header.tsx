@@ -90,18 +90,6 @@ export function Header() {
           {/* Desktop Actions */}
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <ThemeToggle />
-            <Link href="/admin/stripe-config">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-cosmic-700 dark:text-white/90 hover:text-cosmic-800 dark:hover:text-white hover:bg-cosmic-100 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105">
-                <CreditCardIcon className="h-4 w-4" />
-                <span>Stripe Config</span>
-              </Button>
-            </Link>
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-cosmic-700 dark:text-white/90 hover:text-cosmic-800 dark:hover:text-white hover:bg-cosmic-100 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105">
-                <UserIcon className="h-4 w-4" />
-                <span>Dashboard</span>
-              </Button>
-            </Link>
             <Link href="/pricing">
               <Button className="bg-gradient-to-r from-cosmic-500 via-purple-500 to-indigo-500 hover:from-cosmic-600 hover:via-purple-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 hover:scale-105">
                 <ChartBarIcon className="h-4 w-4 mr-2" />
@@ -136,7 +124,7 @@ export function Header() {
           >
             {/* Backdrop */}
             <div 
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/70 backdrop-blur-md"
               onClick={() => setMobileMenuOpen(false)}
             />
             
@@ -146,7 +134,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white dark:bg-cosmic-900 shadow-2xl"
+              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white/95 dark:bg-cosmic-900/95 backdrop-blur-xl shadow-2xl border-l border-cosmic-200/50 dark:border-cosmic-700/50"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
@@ -196,12 +184,6 @@ export function Header() {
 
                 {/* Mobile Actions */}
                 <div className="p-6 border-t border-cosmic-200 dark:border-cosmic-700 space-y-4">
-                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full justify-center">
-                      <UserIcon className="h-4 w-4 mr-2" />
-                      Dashboard
-                    </Button>
-                  </Link>
                   <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white">
                       <ChartBarIcon className="h-4 w-4 mr-2" />
