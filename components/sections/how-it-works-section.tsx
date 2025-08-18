@@ -138,9 +138,11 @@ export function HowItWorksSection() {
               <p className="text-lg text-cosmic-600 dark:text-cosmic-300 mb-8 max-w-2xl mx-auto">
                 Join thousands of people who have discovered their cosmic blueprint and gained valuable insights into their personality and life path.
               </p>
-              <button className="bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                Get Your Birth Chart Now
-              </button>
+              <a href="/pricing">
+                <button className="bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  Get Your Birth Chart Now
+                </button>
+              </a>
             </div>
           </div>
         </motion.div>
