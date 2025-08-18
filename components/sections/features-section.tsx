@@ -138,9 +138,11 @@ export function FeaturesSection() {
           <p className="text-lg text-cosmic-600 dark:text-cosmic-300 mb-6">
             Ready to discover your cosmic blueprint?
           </p>
-          <button className="bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            Get Started Now
-          </button>
+          <a href="/pricing">
+            <button className="bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              Get Started Now
+            </button>
+          </a>
         </motion.div>
       </div>
     </section>
