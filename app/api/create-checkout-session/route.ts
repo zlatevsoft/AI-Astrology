@@ -72,6 +72,28 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Fallback to environment variables if frontend config failed
+    if (!stripeInstance) {
+      console.log('Frontend config failed, trying environment variables fallback')
+      
+      const envMode = process.env.STRIPE_MODE || 'test'
+      const envSecretKey = envMode === 'live' 
+        ? process.env.STRIPE_SECRET_KEY_LIVE 
+        : process.env.STRIPE_SECRET_KEY_TEST
+      
+      if (envSecretKey) {
+        try {
+          stripeInstance = new Stripe(envSecretKey, {
+            apiVersion: '2023-10-16',
+            typescript: true,
+          })
+          console.log('Stripe initialized with environment variables, mode:', envMode)
+        } catch (error) {
+          console.error('Failed to initialize Stripe with environment variables:', error)
+        }
+      }
+    }
+    
     // Check if Stripe is configured
     if (!stripeInstance) {
       console.log('Stripe not configured, using mock session')
