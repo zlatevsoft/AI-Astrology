@@ -19,7 +19,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    default: 'Professional Astro Horoscope Birth Chart',
     template: '%s | AstroHoroscope.online'
   },
   description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://astrohoroscope.online',
-    title: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    title: 'Professional Astro Horoscope Birth Chart',
     description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
     siteName: 'AstroHoroscope.online',
     images: [
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    title: 'Professional Astro Horoscope Birth Chart',
     description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
     images: ['/og-image.jpg'],
     creator: '@astrohoroscope',
@@ -156,8 +156,8 @@ export default function RootLayout({
                          __html: JSON.stringify({
                "@context": "https://schema.org",
                "@type": "WebApplication",
-               "name": "AstroHoroscope.online",
-               "description": "AI-powered astro horoscope birth chart analysis and astrological insights starting at $9.99",
+               "name": "Professional Astro Horoscope Birth Chart",
+               "description": "Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99",
                "url": "https://astrohoroscope.online",
                "applicationCategory": "LifestyleApplication",
                "operatingSystem": "Web",
