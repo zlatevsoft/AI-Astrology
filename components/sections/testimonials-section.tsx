@@ -182,9 +182,11 @@ export function TestimonialsSection() {
               <p className="text-lg text-cosmic-100 mb-8 max-w-2xl mx-auto">
                 Be part of thousands of people discovering their cosmic blueprint and gaining valuable insights into their personality and life path.
               </p>
-              <button className="bg-white text-cosmic-600 hover:bg-cosmic-50 px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                Get Your Birth Chart Now
-              </button>
+              <a href="/pricing">
+                <button className="bg-white text-cosmic-600 hover:bg-cosmic-50 px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  Get Your Birth Chart Now
+                </button>
+              </a>
             </div>
           </div>
         </motion.div>
