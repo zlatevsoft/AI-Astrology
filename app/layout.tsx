@@ -19,25 +19,30 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: 'AI Astrology - Your Cosmic Birth Chart',
-    template: '%s | AI Astrology'
+    default: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    template: '%s | AstroHoroscope.online'
   },
-  description: 'Discover your cosmic destiny with AI-powered birth chart analysis and personalized astrological insights. Get your birth chart reading starting at $9.99.',
+  description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
   keywords: [
-    'astrology',
+    'astro horoscope',
+    'AI astrology',
     'birth chart',
     'natal chart',
-    'zodiac',
-    'horoscope',
-    'AI astrology',
-    'cosmic reading',
-    'astrological analysis',
+    'zodiac horoscope',
+    'astrological reading',
+    'cosmic analysis',
     'zodiac signs',
-    'planetary positions'
+    'planetary positions',
+    'astrology online',
+    'horoscope reading',
+    'birth chart analysis',
+    'astrological insights',
+    'zodiac compatibility',
+    'astrology consultation'
   ],
-  authors: [{ name: 'AI Astrology Team' }],
-  creator: 'AI Astrology',
-  publisher: 'AI Astrology',
+  authors: [{ name: 'AstroHoroscope.online Team' }],
+  creator: 'AstroHoroscope.online',
+  publisher: 'AstroHoroscope.online',
   formatDetection: {
     email: false,
     address: false,
@@ -48,17 +53,17 @@ export const metadata: Metadata = {
     'color-scheme': 'dark light',
     'msapplication-TileColor': '#667eea',
   },
-  metadataBase: new URL('https://ai-astrology.com'),
+  metadataBase: new URL('https://astrohoroscope.online'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://ai-astrology.com',
-    title: 'AI Astrology - Your Cosmic Birth Chart',
-    description: 'Discover your cosmic destiny with AI-powered birth chart analysis and personalized astrological insights. Starting at $9.99.',
-    siteName: 'AI Astrology',
+    url: 'https://astrohoroscope.online',
+    title: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
+    siteName: 'AstroHoroscope.online',
     images: [
       {
         url: '/og-image.jpg',
@@ -70,10 +75,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Astrology - Your Cosmic Birth Chart',
-    description: 'Discover your cosmic destiny with AI-powered birth chart analysis and personalized astrological insights. Starting at $9.99.',
+    title: 'AstroHoroscope.online - AI Astrology Birth Chart Analysis',
+    description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
     images: ['/og-image.jpg'],
-    creator: '@aiastrology',
+    creator: '@astrohoroscope',
   },
   robots: {
     index: true,
@@ -121,9 +126,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#667eea" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AI Astrology" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="AI Astrology" />
+                 <meta name="apple-mobile-web-app-title" content="AstroHoroscope.online" />
+         <meta name="mobile-web-app-capable" content="yes" />
+         <meta name="application-name" content="AstroHoroscope.online" />
         <meta name="msapplication-TileColor" content="#667eea" />
         <meta name="msapplication-tap-highlight" content="no" />
         
@@ -148,24 +153,24 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              "name": "AI Astrology",
-              "description": "AI-powered birth chart analysis and astrological insights starting at $9.99",
-              "url": "https://ai-astrology.com",
-              "applicationCategory": "LifestyleApplication",
-              "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
-                "price": "9.99",
-                "priceCurrency": "USD"
-              },
-              "author": {
-                "@type": "Organization",
-                "name": "AI Astrology"
-              }
-            })
+                         __html: JSON.stringify({
+               "@context": "https://schema.org",
+               "@type": "WebApplication",
+               "name": "AstroHoroscope.online",
+               "description": "AI-powered astro horoscope birth chart analysis and astrological insights starting at $9.99",
+               "url": "https://astrohoroscope.online",
+               "applicationCategory": "LifestyleApplication",
+               "operatingSystem": "Web",
+               "offers": {
+                 "@type": "Offer",
+                 "price": "9.99",
+                 "priceCurrency": "USD"
+               },
+               "author": {
+                 "@type": "Organization",
+                 "name": "AstroHoroscope.online"
+               }
+             })
           }}
         />
       </head>
