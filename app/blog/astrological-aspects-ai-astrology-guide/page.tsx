@@ -26,8 +26,9 @@ export const metadata: Metadata = {
 
 export default function AstrologicalAspectsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
-      <div className="container mx-auto px-4 py-16">
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
+        <div className="container mx-auto px-4 py-16">
         <nav className="mb-8">
           <Link href="/blog" className="inline-flex items-center text-cosmic-600 dark:text-cosmic-400 hover:text-cosmic-700 dark:hover:text-cosmic-300">
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
@@ -101,6 +102,6 @@ export default function AstrologicalAspectsPage() {
           </div>
         </article>
       </div>
-    </div>
+    </>
   )
 }
