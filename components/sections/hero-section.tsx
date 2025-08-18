@@ -105,7 +105,7 @@ export function HeroSection() {
         >
           <span className="inline-flex items-center px-6 py-3 rounded-full text-sm font-medium bg-gradient-to-r from-cosmic-500/20 to-purple-500/20 backdrop-blur-md text-white border border-cosmic-400/30 shadow-lg">
             <span className="animate-pulse mr-2">✨</span>
-            AI-Powered Astrology
+            AstroHoroscope.online - AI Astrology
           </span>
         </motion.div>
 
@@ -115,9 +115,9 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8"
         >
-          <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">Discover Your</span>
+          <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">Professional Astro</span>
           <br />
-          <span className="text-white drop-shadow-2xl">Cosmic Blueprint</span>
+          <span className="text-white drop-shadow-2xl">Horoscope Birth Chart</span>
         </motion.h1>
 
         <motion.p
@@ -126,7 +126,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed"
         >
-          Get your personalized birth chart with AI-powered insights starting at $9.99. Understand your personality, life lessons, and cosmic guidance.
+          Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.
         </motion.p>
 
         <motion.div
