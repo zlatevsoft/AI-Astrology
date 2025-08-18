@@ -9,11 +9,11 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
-  title: 'AI Astrology - Discover Your Cosmic Destiny',
-  description: 'Get your personalized AI-powered birth chart analysis. Discover your zodiac traits, planetary influences, and life path with our advanced astrological insights.',
+  title: 'Professional Astro Horoscope Birth Chart',
+  description: 'Get your personalized AI-powered Professional Astro Horoscope Birth Chart Discover your zodiac traits, planetary influences, and life path with our advanced astrological insights.',
   openGraph: {
-    title: 'AI Astrology - Discover Your Cosmic Destiny',
-    description: 'Get your personalized AI-powered birth chart analysis. Discover your zodiac traits, planetary influences, and life path.',
+    title: 'Professional Astro Horoscope Birth Chart',
+    description: 'Get your personalized AI-powered Professional Astro Horoscope Birth Chart Discover your zodiac traits, planetary influences, and life path with our advanced astrological insights.',
   },
 }
 
@@ -44,3 +44,4 @@ export default function HomePage() {
     </>
   )
 }
+
