@@ -109,11 +109,20 @@ export default function PaymentCheckoutPage() {
     try {
       // Get Stripe config from localStorage
       const savedConfig = localStorage.getItem('stripeConfig')
-      const stripeConfig = savedConfig ? JSON.parse(savedConfig) : null
+      let stripeConfig = savedConfig ? JSON.parse(savedConfig) : null
       
-      // Add mode information to config
-      if (stripeConfig) {
-        // Get mode from localStorage
+      // Fallback to environment variables if localStorage is not available
+      if (!stripeConfig) {
+        console.log('localStorage not available, using environment variables fallback')
+        stripeConfig = {
+          mode: 'test', // Default to test mode for fallback
+          testPublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST,
+          testSecretKey: process.env.STRIPE_SECRET_KEY_TEST,
+          livePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_LIVE,
+          liveSecretKey: process.env.STRIPE_SECRET_KEY_LIVE,
+        }
+      } else {
+        // Add mode information to config from localStorage
         const savedMode = localStorage.getItem('stripeMode')
         stripeConfig.mode = savedMode || 'test' // Default to test mode
         
