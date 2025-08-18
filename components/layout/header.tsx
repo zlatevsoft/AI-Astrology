@@ -124,7 +124,7 @@ export function Header() {
           >
             {/* Backdrop */}
             <div 
-              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+              className="absolute inset-0 bg-black/80 backdrop-blur-lg"
               onClick={() => setMobileMenuOpen(false)}
             />
             
@@ -134,22 +134,22 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white/95 dark:bg-cosmic-900/95 backdrop-blur-xl shadow-2xl border-l border-cosmic-200/50 dark:border-cosmic-700/50"
+              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white dark:bg-cosmic-900 shadow-2xl border-l border-cosmic-200 dark:border-cosmic-700"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-cosmic-200 dark:border-cosmic-700">
+                <div className="flex items-center justify-between p-6 border-b border-cosmic-200 dark:border-cosmic-700 bg-gradient-to-r from-cosmic-50 to-purple-50 dark:from-cosmic-800 dark:to-purple-800">
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
-                    <SparklesIcon className="h-6 w-6 text-cosmic-600" />
-                    <span className="text-lg font-bold font-display">AI Astrology</span>
+                    <SparklesIcon className="h-6 w-6 text-cosmic-600 dark:text-cosmic-300" />
+                    <span className="text-lg font-bold font-display text-cosmic-800 dark:text-white">AI Astrology</span>
                   </Link>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2"
+                    className="p-2 hover:bg-cosmic-100 dark:hover:bg-cosmic-700"
                   >
-                    <XMarkIcon className="h-6 w-6" />
+                    <XMarkIcon className="h-6 w-6 text-cosmic-700 dark:text-cosmic-300" />
                   </Button>
                 </div>
 
@@ -170,10 +170,10 @@ export function Header() {
                             }
                           }
                         }}
-                                                 className={`block text-lg font-medium transition-colors hover:text-cosmic-600 ${
+                                                 className={`block text-lg font-medium transition-colors hover:text-cosmic-600 dark:hover:text-cosmic-300 py-3 px-4 rounded-lg hover:bg-cosmic-50 dark:hover:bg-cosmic-800 ${
                            pathname === item.href
-                             ? 'text-cosmic-600'
-                             : 'text-cosmic-900'
+                             ? 'text-cosmic-600 dark:text-cosmic-300 bg-cosmic-100 dark:bg-cosmic-800'
+                             : 'text-cosmic-900 dark:text-white'
                          }`}
                       >
                         {item.name}
@@ -183,9 +183,9 @@ export function Header() {
                 </nav>
 
                 {/* Mobile Actions */}
-                <div className="p-6 border-t border-cosmic-200 dark:border-cosmic-700 space-y-4">
+                <div className="p-6 border-t border-cosmic-200 dark:border-cosmic-700 space-y-4 bg-gradient-to-r from-cosmic-50 to-purple-50 dark:from-cosmic-800 dark:to-purple-800">
                   <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white">
+                    <Button className="w-full bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
                       <ChartBarIcon className="h-4 w-4 mr-2" />
                       Choose Plan
                     </Button>
