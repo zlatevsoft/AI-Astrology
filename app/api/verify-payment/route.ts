@@ -34,6 +34,28 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Fallback to environment variables if frontend config failed
+    if (!stripeInstance) {
+      console.log('Frontend config failed, trying environment variables fallback for payment verification')
+      
+      const envMode = process.env.STRIPE_MODE || 'test'
+      const envSecretKey = envMode === 'live' 
+        ? process.env.STRIPE_SECRET_KEY_LIVE 
+        : process.env.STRIPE_SECRET_KEY_TEST
+      
+      if (envSecretKey) {
+        try {
+          stripeInstance = new Stripe(envSecretKey, {
+            apiVersion: '2023-10-16',
+            typescript: true,
+          })
+          console.log('Stripe initialized with environment variables for payment verification, mode:', envMode)
+        } catch (error) {
+          console.error('Failed to initialize Stripe with environment variables for payment verification:', error)
+        }
+      }
+    }
+    
     if (!stripeInstance) {
       console.log('Stripe not configured for payment verification, skipping verification')
       return NextResponse.json({
