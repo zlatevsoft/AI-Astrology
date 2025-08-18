@@ -1,3 +1,4 @@
+import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
@@ -26,9 +27,8 @@ export const metadata: Metadata = {
 
 export default function AstrologicalElementsPage() {
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
-        <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
+      <div className="container mx-auto px-4 py-16">
         <nav className="mb-8">
           <Link href="/blog" className="inline-flex items-center text-cosmic-600 dark:text-cosmic-400 hover:text-cosmic-700 dark:hover:text-cosmic-300">
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
@@ -42,15 +42,15 @@ export default function AstrologicalElementsPage() {
               Elemental Analysis
             </span>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Astrological Elements: AI Astrology Guide to Fire, Earth, Air & Water
           </h1>
-          
+
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
             Learn about astrological elements with AI astrology. Understand how Fire, Earth, Air & Water influence your astro horoscope and personality.
           </p>
-          
+
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center">
               <UserIcon className="w-4 h-4 mr-2" />
@@ -69,13 +69,12 @@ export default function AstrologicalElementsPage() {
 
         <article className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-cosmic-800 rounded-2xl shadow-xl p-8 md:p-12 border border-gray-200 dark:border-cosmic-700">
-            
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
                 Understanding Astrological Elements in AI Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-                The four astrological elements - Fire, Earth, Air, and Water - represent fundamental energy types in your birth chart. At <strong>AstroHoroscope.online</strong>, 
+                The four astrological elements — Fire, Earth, Air, and Water — represent fundamental energy types in your birth chart. At <strong>AstroHoroscope.online</strong>,
                 our AI astrology technology analyzes elemental balance to reveal your natural energy patterns and personality traits.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
@@ -102,6 +101,6 @@ export default function AstrologicalElementsPage() {
           </div>
         </article>
       </div>
-    </>
+    </div>
   )
 }
