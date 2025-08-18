@@ -41,10 +41,10 @@ export function Footer() {
               <div className="w-10 h-10 bg-gradient-to-r from-cosmic-500 to-purple-500 rounded-xl flex items-center justify-center">
                 <span className="text-xl">✨</span>
               </div>
-              <span className="text-2xl font-bold">CosmicAI</span>
+              <span className="text-2xl font-bold">AstroHoroscope.online</span>
             </div>
             <p className="text-cosmic-300 mb-6 max-w-md">
-              Discover your cosmic blueprint with AI-powered astrology. Get personalized insights about your personality, life lessons, and cosmic guidance.
+              Get your personalized AI astrology birth chart reading. Professional astro horoscope analysis with cosmic insights at AstroHoroscope.online.
             </p>
             
             {/* Contact Info */}
@@ -91,7 +91,7 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-6">
               <span className="text-cosmic-400">
-                © 2024 Zlatev Soft. All rights reserved.
+                © 2024 AstroHoroscope.online. All rights reserved.
               </span>
               <div className="flex items-center space-x-2">
                 <LockClosedIcon className="w-4 h-4 text-cosmic-400" />

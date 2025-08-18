@@ -18,6 +18,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Features', href: '/#features' },
+  { name: 'Blog', href: '/blog' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'FAQ', href: '/faq' },
 ]
