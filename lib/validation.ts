@@ -67,13 +67,14 @@ export const stripeConfigSchema = z.object({
   livePublishableKey: z.string().optional(),
   liveSecretKey: z.string().optional(),
 }).refine((data) => {
+  // Allow empty keys for fallback scenarios
   if (data.mode === 'test') {
-    return data.testPublishableKey && data.testSecretKey
+    return true // Allow empty keys for test mode fallback
   } else {
     return data.livePublishableKey && data.liveSecretKey
   }
 }, {
-  message: 'Both publishable and secret keys are required for the selected mode',
+  message: 'Both publishable and secret keys are required for live mode',
   path: ['mode']
 })
 
