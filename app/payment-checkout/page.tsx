@@ -111,17 +111,17 @@ export default function PaymentCheckoutPage() {
       const savedConfig = localStorage.getItem('stripeConfig')
       let stripeConfig = savedConfig ? JSON.parse(savedConfig) : null
       
-      // Fallback to environment variables if localStorage is not available
-      if (!stripeConfig) {
-        console.log('localStorage not available, using environment variables fallback')
-        stripeConfig = {
-          mode: 'test', // Default to test mode for fallback
-          testPublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST,
-          testSecretKey: process.env.STRIPE_SECRET_KEY_TEST,
-          livePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_LIVE,
-          liveSecretKey: process.env.STRIPE_SECRET_KEY_LIVE,
-        }
-      } else {
+             // Fallback to mock config if localStorage is not available
+       if (!stripeConfig) {
+         console.log('localStorage not available, using mock config')
+         stripeConfig = {
+           mode: 'test',
+           testPublishableKey: '',
+           testSecretKey: '',
+           livePublishableKey: '',
+           liveSecretKey: '',
+         }
+       } else {
         // Add mode information to config from localStorage
         const savedMode = localStorage.getItem('stripeMode')
         stripeConfig.mode = savedMode || 'test' // Default to test mode
@@ -152,9 +152,9 @@ export default function PaymentCheckoutPage() {
         }),
       })
 
-      const result = await response.json()
+             const result = await response.json()
 
-             if (result.url) {
+       if (result.url) {
          // Check if it's a mock session
          if (result.isMock) {
            console.log('Using mock payment session')
@@ -168,11 +168,18 @@ export default function PaymentCheckoutPage() {
          toast.error('Failed to create payment session. Please try again.')
          setIsProcessing(false)
        }
-    } catch (error) {
-      console.error('Error creating checkout session:', error)
-      toast.error('Payment system error. Please try again.')
-      setIsProcessing(false)
-    }
+         } catch (error) {
+       console.error('Error creating checkout session:', error)
+       
+       // Check if it's a network error or localStorage issue
+       if (error instanceof TypeError && error.message.includes('fetch')) {
+         toast.error('Network error. Please check your connection and try again.')
+       } else {
+         toast.error('Payment system error. Please try again.')
+       }
+       
+       setIsProcessing(false)
+     }
   }
 
   if (!selectedPlan || !birthChartData) {
