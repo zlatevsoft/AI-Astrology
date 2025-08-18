@@ -120,11 +120,11 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-                         className="lg:hidden fixed inset-0 z-[200]"
+            className="lg:hidden fixed inset-0 z-[9999]"
           >
             {/* Backdrop */}
             <div 
-              className="absolute inset-0 bg-black/80 backdrop-blur-lg"
+              className="absolute inset-0 bg-black/90"
               onClick={() => setMobileMenuOpen(false)}
             />
             
@@ -134,7 +134,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white dark:bg-cosmic-900 shadow-2xl border-l border-cosmic-200 dark:border-cosmic-700"
+              className="absolute right-0 top-0 h-full w-80 max-w-[80vw] bg-white dark:bg-slate-900 shadow-2xl border-l border-gray-200 dark:border-gray-700 z-[10000]"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
@@ -154,7 +154,7 @@ export function Header() {
                 </div>
 
                 {/* Navigation Links */}
-                <nav className="flex-1 px-6 py-4">
+                <nav className="flex-1 px-6 py-4 bg-white dark:bg-cosmic-900">
                   <div className="space-y-4">
                     {navigation.map((item) => (
                       <Link
@@ -170,11 +170,11 @@ export function Header() {
                             }
                           }
                         }}
-                                                 className={`block text-lg font-medium transition-colors hover:text-cosmic-600 dark:hover:text-cosmic-300 py-3 px-4 rounded-lg hover:bg-cosmic-50 dark:hover:bg-cosmic-800 ${
-                           pathname === item.href
-                             ? 'text-cosmic-600 dark:text-cosmic-300 bg-cosmic-100 dark:bg-cosmic-800'
-                             : 'text-cosmic-900 dark:text-white'
-                         }`}
+                        className={`block text-lg font-semibold transition-colors hover:text-cosmic-600 dark:hover:text-cosmic-300 py-4 px-4 rounded-lg hover:bg-cosmic-100 dark:hover:bg-cosmic-800 border-b border-cosmic-100 dark:border-cosmic-700 ${
+                          pathname === item.href
+                            ? 'text-cosmic-600 dark:text-cosmic-300 bg-cosmic-100 dark:bg-cosmic-800'
+                            : 'text-cosmic-900 dark:text-white'
+                        }`}
                       >
                         {item.name}
                       </Link>
