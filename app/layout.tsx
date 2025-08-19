@@ -98,20 +98,20 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-large.svg', type: 'image/svg+xml', sizes: '64x64' },
-      { url: '/favicon.ico' },
-      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#667eea' },
-    ],
-  },
+  icon: [
+    { url: '/icon-32x32.png?v=2', sizes: '32x32', type: 'image/png' },
+    { url: '/icon-16x16.png?v=2', sizes: '16x16', type: 'image/png' },
+    { url: '/favicon.ico?v=2' },
+    { url: '/favicon.svg?v=2', type: 'image/svg+xml' },
+    { url: '/favicon-large.svg?v=2', type: 'image/svg+xml', sizes: '64x64' },
+  ],
+  apple: [
+    { url: '/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' },
+  ],
+  other: [
+    { rel: 'mask-icon', url: '/safari-pinned-tab.svg?v=2', color: '#667eea' },
+  ],
+},
 }
 
 export default function RootLayout({
@@ -209,3 +209,4 @@ export default function RootLayout({
     </html>
   )
 }
+
