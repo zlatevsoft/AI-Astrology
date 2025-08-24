@@ -36,7 +36,7 @@ export { stripe }
   export const products = {
     basic: {
       name: 'Basic Reading',
-      price: 999, // $9.99 in cents
+      price: 1, // $0.01 in cents
       description: 'Discover your core personality and life path',
      features: [
        '🌟 Complete birth chart analysis',
