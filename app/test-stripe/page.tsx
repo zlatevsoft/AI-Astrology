@@ -67,13 +67,14 @@ export default function TestStripePage() {
       const result = await response.json()
       setTestResults(result)
       
-      if (result.success && result.data?.sessionUrl) {
-        toast.success('Тестова сесия създадена!')
-        // Отваряме Stripe Checkout в нов таб
-        window.open(result.data.sessionUrl, '_blank')
-      } else {
-        toast.error('Грешка при създаване на сесия')
-      }
+             if (result.success && (result.data?.sessionUrl || result.data?.url || result.url)) {
+         toast.success('Тестова сесия създадена!')
+         // Отваряме Stripe Checkout в нов таб
+         const checkoutUrl = result.data?.sessionUrl || result.data?.url || result.url
+         window.open(checkoutUrl, '_blank')
+       } else {
+         toast.error('Грешка при създаване на сесия')
+       }
     } catch (error) {
       toast.error('Грешка при тестване')
       console.error('Test error:', error)
