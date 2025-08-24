@@ -56,7 +56,7 @@ export default function TestStripePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId: 'basic',
+          productName: 'basic reading',
           customerEmail: 'test@example.com',
           customerName: 'Test User',
           successUrl: `${window.location.origin}/payment-success`,
