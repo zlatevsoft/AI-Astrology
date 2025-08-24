@@ -1,42 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
+import { NextResponse } from 'next/server'
+import { stripe } from '@/lib/stripe'
 
-export async function POST(request: NextRequest) {
+export async function GET() {
   try {
-    const { secretKey, mode } = await request.json()
-
-    if (!secretKey) {
-      return NextResponse.json(
-        { error: 'Secret key is required' },
-        { status: 400 }
-      )
+    if (!stripe) {
+      return NextResponse.json({
+        success: false,
+        error: 'Stripe не е инициализиран'
+      }, { status: 500 })
     }
 
-    // Create a temporary Stripe instance with the provided key
-    const stripe = new Stripe(secretKey, {
-      apiVersion: '2023-10-16',
-      typescript: true,
-    })
-
-    // Test the connection by making a simple API call
+    // Тестваме връзката като опитаме да извлечем account информация
     const account = await stripe.accounts.retrieve()
-
-    return NextResponse.json({
-      success: true,
-      message: `Connection successful! Mode: ${mode}`,
-      account: {
-        id: account.id,
-        business_type: account.business_type,
-        charges_enabled: account.charges_enabled,
-        payouts_enabled: account.payouts_enabled,
-      }
-    })
-  } catch (error: any) {
-    console.error('Stripe connection test failed:', error)
     
     return NextResponse.json({
+      success: true,
+      data: {
+        accountId: account.id,
+        businessType: account.business_type,
+        chargesEnabled: account.charges_enabled,
+        payoutsEnabled: account.payouts_enabled,
+        country: account.country,
+        defaultCurrency: account.default_currency,
+        detailsSubmitted: account.details_submitted,
+        email: account.email,
+      },
+      message: 'Stripe връзката работи успешно'
+    })
+
+  } catch (error) {
+    console.error('Stripe connection test error:', error)
+    
+    if (error instanceof Error) {
+      return NextResponse.json({
+        success: false,
+        error: error.message,
+        details: 'Проверете дали API ключовете са правилни'
+      }, { status: 500 })
+    }
+
+    return NextResponse.json({
       success: false,
-      error: error.message || 'Failed to connect to Stripe'
-    }, { status: 400 })
+      error: 'Неизвестна грешка при тестване на връзката'
+    }, { status: 500 })
   }
 }
