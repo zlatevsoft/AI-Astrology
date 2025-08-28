@@ -4,6 +4,14 @@ import { stripe } from '@/lib/stripe'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
+// Add GET handler for testing
+export async function GET() {
+  return NextResponse.json({ 
+    status: 'Webhook endpoint is working',
+    timestamp: new Date().toISOString()
+  })
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
@@ -60,8 +68,14 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Webhook error:', error)
+    
+    // Return proper error response
     return NextResponse.json(
-      { error: 'Webhook handler failed' },
+      { 
+        error: 'Webhook handler failed',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }
