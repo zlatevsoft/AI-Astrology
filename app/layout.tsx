@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     siteName: 'AstroHoroscope.online',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image-new.jpg',
         width: 1200,
         height: 630,
         alt: 'AI Astrology - Cosmic Birth Chart Analysis',
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Professional Astro Horoscope Birth Chart',
     description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image-new.jpg'],
     creator: '@astrohoroscope',
   },
   robots: {
@@ -112,6 +112,7 @@ export const metadata: Metadata = {
     { rel: 'mask-icon', url: '/safari-pinned-tab.svg?v=2', color: '#667eea' },
   ],
 },
+
 }
 
 export default function RootLayout({
@@ -209,4 +210,3 @@ export default function RootLayout({
     </html>
   )
 }
-
