@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getProduct } from '@/lib/stripe'
 import Stripe from 'stripe'
 import { stripeConfigSchema } from '@/lib/validation'
+import { isFreeCheckoutEnabled } from '@/lib/pricing'
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,6 +45,17 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid product name' },
         { status: 400 }
       )
+    }
+
+    if (isFreeCheckoutEnabled()) {
+      const mockSessionId = `free_checkout_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+      console.log('FREE_CHECKOUT: skipping Stripe, redirecting to success')
+      return NextResponse.json({
+        sessionId: mockSessionId,
+        url: `${request.nextUrl.origin}/payment-success?session_id=${mockSessionId}`,
+        isMock: true,
+        freeCheckout: true,
+      })
     }
 
     // Initialize Stripe with frontend config
