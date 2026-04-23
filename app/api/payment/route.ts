@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Stripe from 'stripe'
+import { getChargeAmountCents, isFreeCheckoutEnabled, type AnalysisTier } from '@/lib/pricing'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -17,23 +18,13 @@ const PaymentSchema = z.object({
   cancelUrl: z.string().url(),
 })
 
-// Pricing configuration
-const PRICING = {
-  basic: {
-    amount: 999, // $9.99
-    currency: 'usd',
-    description: 'Basic Birth Chart Analysis',
-  },
-  detailed: {
-    amount: 1999, // $19.99
-    currency: 'usd',
-    description: 'Detailed Birth Chart Analysis',
-  },
-  comprehensive: {
-    amount: 3999, // $39.99
-    currency: 'usd',
-    description: 'Comprehensive Birth Chart Analysis',
-  },
+const PRICING_META: Record<
+  AnalysisTier,
+  { description: string }
+> = {
+  basic: { description: 'Basic Birth Chart Analysis' },
+  detailed: { description: 'Detailed Birth Chart Analysis' },
+  comprehensive: { description: 'Comprehensive Birth Chart Analysis' },
 }
 
 export async function POST(request: NextRequest) {
@@ -52,6 +43,21 @@ export async function POST(request: NextRequest) {
       cancelUrl 
     } = validatedData
 
+    if (isFreeCheckoutEnabled()) {
+      const mockSessionId = `mock_session_${Date.now()}`
+      return NextResponse.json({
+        success: true,
+        data: {
+          sessionId: mockSessionId,
+          sessionUrl: `${successUrl}?session_id=${mockSessionId}`,
+          amount: 0,
+          currency: 'usd',
+          isMock: true,
+          freeCheckout: true,
+        },
+      })
+    }
+
     // Check if Stripe is configured for testing
     if (!process.env.STRIPE_SECRET_KEY) {
       // Return mock payment session for testing
@@ -68,7 +74,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const pricing = PRICING[analysisType]
+    const tier = analysisType as AnalysisTier
+    const meta = PRICING_META[tier]
+    const pricing = {
+      amount: getChargeAmountCents(tier),
+      currency: 'usd' as const,
+      description: meta.description,
+    }
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -175,7 +187,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if this is a mock session
-    if (sessionId.startsWith('mock_session_')) {
+    if (
+      sessionId.startsWith('mock_session_') ||
+      sessionId.startsWith('free_checkout_') ||
+      sessionId.startsWith('test_session_')
+    ) {
       return NextResponse.json({
         success: true,
         data: {
