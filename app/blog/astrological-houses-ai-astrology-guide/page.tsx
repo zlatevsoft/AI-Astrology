@@ -102,6 +102,7 @@ export default function AstrologicalHousesPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

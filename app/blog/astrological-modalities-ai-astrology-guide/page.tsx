@@ -102,6 +102,7 @@ export default function AstrologicalModalitiesPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

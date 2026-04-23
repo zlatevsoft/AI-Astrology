@@ -228,6 +228,7 @@ export default function CareerAstrologyPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

@@ -102,6 +102,7 @@ export default function RetrogradePlanetsPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

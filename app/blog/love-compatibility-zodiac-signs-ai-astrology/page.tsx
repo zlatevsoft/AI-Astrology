@@ -342,6 +342,7 @@ export default function LoveCompatibilityPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

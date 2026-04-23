@@ -154,6 +154,7 @@ export default function DailyHoroscopePage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

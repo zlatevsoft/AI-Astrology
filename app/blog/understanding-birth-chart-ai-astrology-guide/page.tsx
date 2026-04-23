@@ -256,6 +256,7 @@ export default function BirthChartGuidePage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

@@ -102,6 +102,7 @@ export default function PlanetaryTransitsPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )

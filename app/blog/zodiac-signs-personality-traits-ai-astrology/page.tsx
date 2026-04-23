@@ -300,6 +300,7 @@ export default function ZodiacSignsPage() {
             </section>
           </div>
         </article>
+        </div>
       </div>
     </>
   )
