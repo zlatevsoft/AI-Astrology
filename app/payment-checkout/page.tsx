@@ -16,6 +16,11 @@ import {
 } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import {
+  getMarketingPriceDisplay,
+  isFreeCheckoutDisplayEnabled,
+  type AnalysisTier,
+} from '@/lib/pricing'
 
 export default function PaymentCheckoutPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -42,7 +47,7 @@ export default function PaymentCheckoutPage() {
   const plans = {
     'Basic Reading': {
       icon: StarIcon,
-      price: 9.99,
+      tier: 'basic' as AnalysisTier,
       description: 'Discover your core personality and life path',
       features: [
         '🌟 Complete birth chart analysis',
@@ -59,7 +64,7 @@ export default function PaymentCheckoutPage() {
     },
     'Detailed Analysis': {
       icon: SparklesIcon,
-      price: 19.99,
+      tier: 'detailed' as AnalysisTier,
       description: 'Deep dive into your soul\'s journey',
       features: [
         '✨ Everything in Basic, plus:',
@@ -80,7 +85,7 @@ export default function PaymentCheckoutPage() {
     },
     'Comprehensive Reading': {
       icon: HeartIcon,
-      price: 29.99,
+      tier: 'comprehensive' as AnalysisTier,
       description: 'Complete relationship compatibility analysis',
       features: [
         '💕 Astrological synastry analysis',
@@ -152,13 +157,22 @@ export default function PaymentCheckoutPage() {
         }),
       })
 
-             const result = await response.json()
+             const result = await response.json() as {
+               url?: string
+               isMock?: boolean
+               freeCheckout?: boolean
+               error?: string
+             }
 
        if (result.url) {
          // Check if it's a mock session
          if (result.isMock) {
            console.log('Using mock payment session')
-           toast.success('Development mode: Proceeding to analysis generation')
+           toast.success(
+             result.freeCheckout
+               ? 'Test mode: no charge — opening your report flow'
+               : 'Development mode: Proceeding to analysis generation'
+           )
          }
          
          // Redirect to success page (either Stripe or mock)
@@ -195,6 +209,8 @@ export default function PaymentCheckoutPage() {
 
   const plan = plans[selectedPlan as keyof typeof plans]
   const PlanIcon = plan.icon
+  const { current: displayPrice, compareAt: displayCompare } = getMarketingPriceDisplay(plan.tier)
+  const isFreeUI = isFreeCheckoutDisplayEnabled()
 
   return (
     <>
@@ -214,6 +230,11 @@ export default function PaymentCheckoutPage() {
               You're just one step away from discovering your cosmic blueprint. 
               Complete your payment to receive your personalized AI astrological analysis.
             </p>
+            {isFreeUI && (
+              <p className="mt-4 inline-block rounded-lg border border-amber-400/50 bg-amber-500/10 px-4 py-2 text-amber-100">
+                Test mode: checkout is free (set FREE_CHECKOUT + NEXT_PUBLIC_FREE_CHECKOUT on the server; remove for production).
+              </p>
+            )}
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -250,7 +271,16 @@ export default function PaymentCheckoutPage() {
                 <div className="border-t border-white/20 pt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-white font-semibold">Total:</span>
-                    <span className="text-2xl font-bold text-white">${plan.price}</span>
+                    <div className="text-right">
+                      {isFreeUI && displayPrice === 0 && (
+                        <span className="mr-2 text-sm text-white/50 line-through">
+                          ${displayCompare.toFixed(2)}
+                        </span>
+                      )}
+                      <span className="text-2xl font-bold text-white">
+                        {displayPrice === 0 ? 'Free' : `$${displayPrice.toFixed(2)}`}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -309,7 +339,9 @@ export default function PaymentCheckoutPage() {
                   ) : (
                     <div className="flex items-center gap-2">
                       <CreditCardIcon className="w-5 h-5" />
-                      Pay ${plan.price} & Get Your Analysis
+                      {displayPrice === 0 && isFreeUI
+                        ? 'Continue — get your analysis'
+                        : `Pay $${displayPrice.toFixed(2)} & get your analysis`}
                       <ArrowRightIcon className="w-4 h-4" />
                     </div>
                   )}
