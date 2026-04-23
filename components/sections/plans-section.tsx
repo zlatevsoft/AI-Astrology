@@ -5,16 +5,30 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
+import {
+  getMarketingPriceDisplay,
+  type AnalysisTier,
+} from '@/lib/pricing'
 
 export function PlansSection() {
   const router = useRouter()
 
-  const plans = [
+  const plans: {
+    name: string
+    description: string
+    tier: AnalysisTier
+    features: string[]
+    icon: typeof StarIcon
+    popular: boolean
+    gradient: string
+    borderColor: string
+    buttonText: string
+    buttonVariant: 'outline' | 'default'
+  }[] = [
             {
           name: 'Basic Reading',
           description: 'Discover your core personality and life path',
-          price: 9.99,
-          originalPrice: 19.99,
+          tier: 'basic',
       features: [
         '🌟 Complete birth chart analysis',
         '💫 Core personality insights',
@@ -36,8 +50,7 @@ export function PlansSection() {
             {
           name: 'Detailed Analysis',
           description: 'Deep dive into your soul\'s journey',
-          price: 19.99,
-          originalPrice: 34.99,
+          tier: 'detailed',
       features: [
         '✨ Everything in Basic, plus:',
         '🧠 Complete personality profile',
@@ -60,11 +73,10 @@ export function PlansSection() {
       buttonText: 'Get Detailed Analysis',
       buttonVariant: 'default' as const
     },
-            {
-          name: 'Comprehensive Reading',
-          description: 'Complete relationship compatibility analysis',
-          price: 29.99,
-          originalPrice: 39.99,
+    {
+      name: 'Comprehensive Reading',
+      description: 'Complete relationship compatibility analysis',
+      tier: 'comprehensive',
       features: [
         '💕 Astrological synastry analysis',
         '❤️ Relationship compatibility insights',
@@ -129,7 +141,9 @@ export function PlansSection() {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {plans.map((plan, index) => (
+          {plans.map((plan, index) => {
+            const { current: listPrice, compareAt } = getMarketingPriceDisplay(plan.tier)
+            return (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}
@@ -164,11 +178,11 @@ export function PlansSection() {
                 <div className="mb-6">
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-4xl font-bold text-cosmic-800 dark:text-cosmic-200">
-                      ${plan.price}
+                      {listPrice === 0 ? 'Free' : `$${listPrice.toFixed(2)}`}
                     </span>
-                    {plan.originalPrice > plan.price && (
+                    {compareAt > listPrice && (
                       <span className="text-lg text-cosmic-500 line-through">
-                        ${plan.originalPrice}
+                        ${compareAt.toFixed(2)}
                       </span>
                     )}
                   </div>
@@ -206,7 +220,8 @@ export function PlansSection() {
                  {plan.buttonText}
                </Button>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Trust Indicators */}
