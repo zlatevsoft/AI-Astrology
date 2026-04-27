@@ -32,10 +32,44 @@ function blockMessage(r: FirstAdminBlockReason) {
     },
     database_error: {
       title: 'Could not reach the database',
-      body: 'Check DATABASE_URL, network access to Postgres, and Vercel logs. Fix the connection and try again.',
+      body: '',
     },
   }
   return m[r]
+}
+
+function DatabaseErrorHelp() {
+  return (
+    <div className="mt-2 space-y-3 text-sm text-amber-100/90">
+      <p>
+        The app could not run a test query. This is almost always <strong>DATABASE_URL</strong> on the server, not
+        the setup key in your screenshot.
+      </p>
+      <ul className="list-inside list-disc space-y-1.5 pl-0.5 text-amber-100/85">
+        <li>
+          In Vercel → <strong>Environment Variables</strong> → <code className="rounded bg-black/20 px-1">DATABASE_URL</code>{' '}
+          must be set for the same environment you deploy to (usually <strong>Production</strong> and redeploy after
+          any change).
+        </li>
+        <li>
+          Use a full Postgres URL, often with <code className="rounded bg-black/20 px-1">?sslmode=require</code> for
+          hosted DBs (Neon, Supabase, Railway, etc.).
+        </li>
+        <li>
+          Vercel → <strong>Deployments</strong> → your deployment → <strong>Runtime Logs</strong> — look for Prisma
+          / connection errors.
+        </li>
+        <li>
+          <span className="text-amber-200/90">BG:</span> Кодът за SETUP_SECRET и DATABASE_URL се държат <strong>само</strong> в
+          Vercel — <strong>не</strong> се поставят в GitHub/файлове.
+        </li>
+      </ul>
+      <p className="text-amber-200/80">
+        <strong>SETUP_SECRET</strong> must be its own long random value — do not reuse Stripe <code>sk_live_</code> /
+        <code>sk_test_</code> keys.
+      </p>
+    </div>
+  )
 }
 
 export default async function FirstTimeAdminPage() {
@@ -65,7 +99,11 @@ export default async function FirstTimeAdminPage() {
             ) : (
               <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-5">
                 <h2 className="font-semibold text-amber-100">{blockMessage(state.reason).title}</h2>
-                <p className="mt-2 text-sm text-amber-100/90">{blockMessage(state.reason).body}</p>
+                {state.reason === 'database_error' ? (
+                  <DatabaseErrorHelp />
+                ) : (
+                  <p className="mt-2 text-sm text-amber-100/90">{blockMessage(state.reason).body}</p>
+                )}
                 {state.reason === 'super_admin_exists' && (
                   <Link
                     href="/login"
