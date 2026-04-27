@@ -11,8 +11,12 @@ import html2canvas from 'html2canvas'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { getClientLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
+import { paymentSuccessPage } from '@/lib/payment-success-locale'
 
 function PaymentSuccessContent() {
+  const locale = useSiteLocale()
+  const t = paymentSuccessPage[locale]
   const [isLoading, setIsLoading] = useState(true)
   const [analysisData, setAnalysisData] = useState<any>(null)
   const [birthChartData, setBirthChartData] = useState<any>(null)
@@ -21,15 +25,17 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    const loc = getClientLocale()
+    const tErr = paymentSuccessPage[loc]
     const sessionId = searchParams.get('session_id')
-    
+
     // Get stored data
     const storedBirthChart = sessionStorage.getItem('birthChartData')
     const selectedAnalysisType = sessionStorage.getItem('selectedAnalysisType')
     const storedAnalysisData = sessionStorage.getItem('analysisData')
 
     if (!storedBirthChart || !selectedAnalysisType) {
-      toast.error('Missing birth chart data')
+      toast.error(tErr.toastMissingData)
       router.push('/birth-chart')
       return
     }
@@ -51,12 +57,12 @@ function PaymentSuccessContent() {
       if (sessionId) {
         generateAnalysis(birthChart, selectedAnalysisType, sessionId)
       } else {
-        toast.error('Invalid session')
+        toast.error(tErr.toastInvalidSession)
         router.push('/birth-chart')
       }
     } catch (error) {
       console.error('Error parsing stored data:', error)
-      toast.error('Invalid stored data')
+      toast.error(tErr.toastInvalidStored)
       router.push('/birth-chart')
     }
   }, [searchParams, router])
@@ -191,7 +197,7 @@ function PaymentSuccessContent() {
 
     } catch (error) {
       console.error('Error generating analysis:', error)
-      toast.error('Failed to generate your analysis. Please contact support.')
+      toast.error(paymentSuccessPage[getClientLocale()].toastAnalysisFailed)
       router.push('/birth-chart')
     } finally {
       setIsGenerating(false)
@@ -200,7 +206,7 @@ function PaymentSuccessContent() {
 
   const handleDownloadPDF = async () => {
     try {
-      toast.loading('Generating PDF...', { id: 'pdf-generation' })
+      toast.loading(t.pdfLoading, { id: 'pdf-generation' })
       
       // Create a temporary div for PDF content
       const pdfContainer = document.createElement('div')
@@ -218,21 +224,21 @@ function PaymentSuccessContent() {
       // Create PDF content with proper formatting
       pdfContainer.innerHTML = `
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #6366f1; font-size: 24px; margin-bottom: 10px;">🌟 AI Astrology Analysis Report</h1>
+          <h1 style="color: #6366f1; font-size: 24px; margin-bottom: 10px;">🌟 ${t.pdfReportTitle}</h1>
           <div style="border-top: 2px solid #6366f1; width: 100px; margin: 0 auto;"></div>
         </div>
         
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f8fafc; border-radius: 8px;">
-          <h3 style="color: #6366f1; margin-bottom: 10px;">📋 Analysis Details</h3>
-          <p><strong>Analysis Type:</strong> ${analysisData.analysisType.charAt(0).toUpperCase() + analysisData.analysisType.slice(1)}</p>
-          <p><strong>Generated:</strong> ${new Date(analysisData.generatedAt).toLocaleString()}</p>
-          <p><strong>For:</strong> ${birthChartData.userData?.name}</p>
-          <p><strong>Birth Date:</strong> ${new Date(birthChartData.userData?.birthDate).toLocaleDateString()}</p>
-          <p><strong>Location:</strong> ${birthChartData.userData?.location}</p>
+          <h3 style="color: #6366f1; margin-bottom: 10px;">📋 ${t.pdfAnalysisDetails}</h3>
+          <p><strong>${t.pdfAnalysisType}:</strong> ${analysisData.analysisType.charAt(0).toUpperCase() + analysisData.analysisType.slice(1)}</p>
+          <p><strong>${t.pdfGenerated}:</strong> ${new Date(analysisData.generatedAt).toLocaleString()}</p>
+          <p><strong>${t.pdfFor}:</strong> ${birthChartData.userData?.name}</p>
+          <p><strong>${t.pdfBirthDate}:</strong> ${new Date(birthChartData.userData?.birthDate).toLocaleDateString()}</p>
+          <p><strong>${t.pdfLocation}:</strong> ${birthChartData.userData?.location}</p>
         </div>
         
         <div style="margin-bottom: 20px;">
-          ${(analysisData.content || 'No analysis content available')
+          ${(analysisData.content || t.pdfNoContent)
             .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #6366f1;">$1</strong>')
             .replace(/## (.*?)/g, '<h2 style="color: #6366f1; font-size: 18px; margin: 25px 0 15px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">$1</h2>')
             .replace(/##/g, '')
@@ -243,8 +249,8 @@ function PaymentSuccessContent() {
         </div>
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; text-align: center; color: #6b7280;">
-          <p style="margin: 0;">Generated by Professional Astro Horoscope Birth Chart</p>
-          <p style="margin: 5px 0;">Visit: https://astrohoroscope.online/</p>
+          <p style="margin: 0;">${t.pdfFooter}</p>
+          <p style="margin: 5px 0;">${t.pdfVisit}: https://astrohoroscope.online/</p>
         </div>
       `
       
@@ -285,24 +291,24 @@ function PaymentSuccessContent() {
       // Download PDF
       pdf.save(`professional-astro-horoscope-${analysisData.analysisType}-${Date.now()}.pdf`)
       
-      toast.success('PDF downloaded successfully!', { id: 'pdf-generation' })
+      toast.success(t.pdfOk, { id: 'pdf-generation' })
     } catch (error) {
       console.error('Error generating PDF:', error)
-      toast.error('Failed to generate PDF', { id: 'pdf-generation' })
+      toast.error(t.pdfErr, { id: 'pdf-generation' })
     }
   }
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: 'My AI Astrology Reading',
-        text: 'Check out my personalized astrological analysis!',
+        title: t.shareTitle,
+        text: t.shareText,
         url: window.location.href,
       })
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href)
-      toast.success('Link copied to clipboard!')
+      toast.success(t.shareToast)
     }
   }
 
@@ -321,10 +327,10 @@ function PaymentSuccessContent() {
               >
                 <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto mb-6" />
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
-                  Payment Successful!
+                  {t.paymentSuccessTitle}
                 </h1>
                 <p className="text-xl text-cosmic-700 dark:text-cosmic-300 mb-8">
-                  Thank you for your purchase. We're generating your personalized analysis...
+                  {t.paymentSuccessSub}
                 </p>
 
               </motion.div>
@@ -337,10 +343,10 @@ function PaymentSuccessContent() {
               >
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-cosmic-500 mx-auto mb-4"></div>
                 <h3 className="text-xl font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">
-                  Generating Your Analysis
+                  {t.generatingTitle}
                 </h3>
                 <p className="text-cosmic-600 dark:text-cosmic-400">
-                  Our AI is crafting your personalized astrological insights...
+                  {t.generatingSub}
                 </p>
               </motion.div>
             </div>
@@ -355,9 +361,9 @@ function PaymentSuccessContent() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-cosmic-600 dark:text-cosmic-400">No analysis data found</p>
+          <p className="text-cosmic-600 dark:text-cosmic-400">{t.noDataTitle}</p>
           <Button onClick={() => router.push('/birth-chart')} className="mt-4">
-            Start Over
+            {t.startOver}
           </Button>
         </div>
       </div>
@@ -385,10 +391,10 @@ function PaymentSuccessContent() {
               >
                 <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto mb-6" />
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
-                  Your Analysis is Ready!
+                  {t.readyTitle}
                 </h1>
                 <p className="text-xl text-cosmic-700 dark:text-cosmic-300">
-                  Discover your cosmic blueprint and unlock your potential
+                  {t.readySub}
                 </p>
 
               </motion.div>
@@ -396,7 +402,7 @@ function PaymentSuccessContent() {
               {/* User Info */}
               <div className="bg-white/60 dark:bg-cosmic-800/60 backdrop-blur-sm rounded-lg p-4 inline-block mb-8">
                 <p className="text-sm text-cosmic-700 dark:text-cosmic-300">
-                  <strong>Analysis for:</strong> {birthChartData.userData?.name} • {new Date(birthChartData.userData?.birthDate).toLocaleDateString()} • {birthChartData.userData?.location}
+                  <strong>{t.analysisFor}</strong> {birthChartData.userData?.name} • {new Date(birthChartData.userData?.birthDate).toLocaleDateString()} • {birthChartData.userData?.location}
                 </p>
               </div>
 
@@ -407,15 +413,15 @@ function PaymentSuccessContent() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
               >
-                                 <Button
-                   size="lg"
-                   variant="gradient"
-                   className="text-lg px-8 py-4"
-                   onClick={handleDownloadPDF}
-                 >
-                   <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
-                   Download PDF Report
-                 </Button>
+                <Button
+                  size="lg"
+                  variant="gradient"
+                  className="text-lg px-8 py-4"
+                  onClick={handleDownloadPDF}
+                >
+                  <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
+                  {t.downloadPdf}
+                </Button>
                 <Button
                   size="lg"
                   variant="outline"
@@ -423,7 +429,7 @@ function PaymentSuccessContent() {
                   onClick={handleShare}
                 >
                   <ShareIcon className="w-5 h-5 mr-2" />
-                  Share Results
+                  {t.shareResults}
                 </Button>
               </motion.div>
             </div>
@@ -439,7 +445,7 @@ function PaymentSuccessContent() {
                  <div 
                    className="text-cosmic-800 dark:text-cosmic-200 leading-relaxed whitespace-pre-wrap"
                    dangerouslySetInnerHTML={{ 
-                     __html: (analysisData.content || 'No analysis content available').replace(/\n/g, '<br>') 
+                     __html: (analysisData.content || t.pdfNoContent).replace(/\n/g, '<br>') 
                    }}
                  />
                  {!analysisData.content && (
@@ -463,28 +469,28 @@ function PaymentSuccessContent() {
               <div className="bg-white/60 dark:bg-cosmic-800/60 backdrop-blur-sm rounded-lg p-6 text-center">
                 <StarIcon className="w-8 h-8 text-cosmic-500 mx-auto mb-3" />
                 <h3 className="font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">
-                  Save Your Reading
+                  {t.feature1Title}
                 </h3>
                 <p className="text-sm text-cosmic-600 dark:text-cosmic-400">
-                  Access your analysis anytime from your account
+                  {t.feature1Body}
                 </p>
               </div>
               <div className="bg-white/60 dark:bg-cosmic-800/60 backdrop-blur-sm rounded-lg p-6 text-center">
                 <StarIcon className="w-8 h-8 text-cosmic-500 mx-auto mb-3" />
                 <h3 className="font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">
-                  Get Updates
+                  {t.feature2Title}
                 </h3>
                 <p className="text-sm text-cosmic-600 dark:text-cosmic-400">
-                  Receive personalized insights and cosmic guidance
+                  {t.feature2Body}
                 </p>
               </div>
               <div className="bg-white/60 dark:bg-cosmic-800/60 backdrop-blur-sm rounded-lg p-6 text-center">
                 <StarIcon className="w-8 h-8 text-cosmic-500 mx-auto mb-3" />
                 <h3 className="font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">
-                  Share Journey
+                  {t.feature3Title}
                 </h3>
                 <p className="text-sm text-cosmic-600 dark:text-cosmic-400">
-                  Connect with others on their spiritual path
+                  {t.feature3Body}
                 </p>
               </div>
             </motion.div>
@@ -502,7 +508,7 @@ function PaymentSuccessContent() {
                 className="text-lg px-12 py-4"
                 onClick={() => router.push('/')}
               >
-                Explore More Features
+                {t.exploreCta}
               </Button>
             </motion.div>
           </motion.div>
@@ -513,16 +519,26 @@ function PaymentSuccessContent() {
   )
 }
 
+function PaymentSuccessSuspenseFallback() {
+  const locale = useSiteLocale()
+  const t = paymentSuccessPage[locale]
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+      <div className="text-center text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4" />
+        <p>{t.loadingSuspense}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function PaymentSuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <PaymentSuccessSuspenseFallback />
+      }
+    >
       <PaymentSuccessContent />
     </Suspense>
   )

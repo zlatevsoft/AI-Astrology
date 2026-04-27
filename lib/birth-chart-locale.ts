@@ -7,6 +7,8 @@ export const birthChartCopy = {
   en: {
     h1: 'Your Birth Chart',
     subtitle: 'Enter your birth details to discover your cosmic blueprint',
+    formOrderHint:
+      'Order: full name → birth date → birth time (needed for houses) → place of birth. Scroll up if a field is hidden.',
     selectedPlan: 'Selected plan',
     nameLabel: 'Full name',
     namePlaceholder: 'Enter your full name',
@@ -45,6 +47,8 @@ export const birthChartCopy = {
   bg: {
     h1: 'Твоята натална карта',
     subtitle: 'Въведи данните си за раждане, за да отключиш космическия си почерк',
+    formOrderHint:
+      'Ред: пълно име → рождена дата → рожден час (задължителен за точни домове) → място. Ако не виждаш поле, превърти нагоре.',
     selectedPlan: 'Избран план',
     nameLabel: 'Пълно име',
     namePlaceholder: 'Твоето пълно име',
@@ -66,7 +70,7 @@ export const birthChartCopy = {
     btnSingleLoading: 'Изчисляваме картата...',
     btnComp: 'Изчисли картите и продължи',
     btnSingle: 'Изчисли картата и продължи',
-    whyTimeTitle: 'Защо е важен рождаеният час',
+    whyTimeTitle: 'Защо е важен рожденият час',
     whyTimeBody:
       'Часът определя домовете и ъглите в картата. Той е важен за по-прецизен анализ на теми и аспекти.',
     toastNoPlan: 'Първо избери план',

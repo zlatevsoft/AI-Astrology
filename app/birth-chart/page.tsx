@@ -183,7 +183,8 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
           >
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">{t.h1}</h1>
-              <p className="text-xl text-cosmic-700 dark:text-cosmic-300 mb-4">{t.subtitle}</p>
+              <p className="text-xl text-cosmic-700 dark:text-cosmic-300 mb-2">{t.subtitle}</p>
+              <p className="text-sm text-cosmic-600 dark:text-cosmic-400 mb-4 max-w-xl mx-auto">{t.formOrderHint}</p>
 
               {selectedPlan && (
                 <div className="inline-block bg-gradient-to-r from-cosmic-500 to-purple-500 text-white px-6 py-3 rounded-full text-lg font-semibold">
@@ -243,6 +244,11 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
                   )}
                   <p className="mt-1 text-sm text-cosmic-600 dark:text-cosmic-400">{t.timeHint1}</p>
                   <p className="mt-1 text-sm text-cosmic-500 dark:text-cosmic-400">{t.timeHint2}</p>
+                </div>
+
+                <div className="p-4 bg-cosmic-50 dark:bg-cosmic-700/50 rounded-lg border border-cosmic-200 dark:border-cosmic-600">
+                  <h3 className="font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">💫 {t.whyTimeTitle}</h3>
+                  <p className="text-sm text-cosmic-700 dark:text-cosmic-300">{t.whyTimeBody}</p>
                 </div>
 
                 <div>
@@ -366,11 +372,6 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
                   </Button>
                 </motion.div>
               </form>
-
-              <div className="mt-8 p-4 bg-cosmic-50 dark:bg-cosmic-700/50 rounded-lg border border-cosmic-200 dark:border-cosmic-600">
-                <h3 className="font-semibold text-cosmic-800 dark:text-cosmic-200 mb-2">💫 {t.whyTimeTitle}</h3>
-                <p className="text-sm text-cosmic-700 dark:text-cosmic-300">{t.whyTimeBody}</p>
-              </div>
             </motion.div>
           </motion.div>
         </div>
