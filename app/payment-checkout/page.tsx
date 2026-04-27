@@ -9,9 +9,9 @@ import { CreditCardIcon, CheckCircleIcon, StarIcon, SparklesIcon, HeartIcon, Arr
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import {
-  getMarketingPriceDisplay,
   isFreeCheckoutDisplayEnabled,
   LIST_PRICE_EUR,
+  COMPARE_AT_EUR,
   formatEur,
 } from '@/lib/pricing'
 import { paymentCheckout } from '@/lib/dictionaries'
@@ -153,10 +153,10 @@ export default function PaymentCheckoutPage() {
   }
 
   const PlanIcon = PLAN_ICONS[planName]
-  const baseDisplay = getMarketingPriceDisplay(planRow.tier)
+  /** What the product costs in the price list (always shown; independent of test/free-charge mode). */
+  const listPriceEur = LIST_PRICE_EUR[planRow.tier]
+  const compareAtEur = COMPARE_AT_EUR[planRow.tier]
   const useFreeUI = freeFromServer === true || isFreeCheckoutDisplayEnabled()
-  const displayPrice = useFreeUI ? 0 : baseDisplay.current
-  const displayCompare = useFreeUI ? LIST_PRICE_EUR[planRow.tier] : baseDisplay.compareAt
   const isFreeUI = useFreeUI
 
   return (
@@ -214,14 +214,10 @@ export default function PaymentCheckoutPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-white font-semibold">{t.total}</span>
                     <div className="text-right">
-                      {isFreeUI && displayPrice === 0 && (
-                        <span className="mr-2 text-sm text-white/50 line-through">
-                          {formatEur(displayCompare)}
-                        </span>
-                      )}
-                      <span className="text-2xl font-bold text-white">
-                        {displayPrice === 0 ? t.freeLabel : formatEur(displayPrice)}
+                      <span className="mr-2 text-sm text-white/50 line-through">
+                        {formatEur(compareAtEur)}
                       </span>
+                      <span className="text-2xl font-bold text-white">{formatEur(listPriceEur)}</span>
                     </div>
                   </div>
                 </div>
@@ -303,9 +299,9 @@ export default function PaymentCheckoutPage() {
                   ) : (
                     <div className="flex items-center gap-2">
                       <CreditCardIcon className="w-5 h-5" />
-                      {displayPrice === 0 && isFreeUI
+                      {isFreeUI
                         ? t.continueFree
-                        : t.payButtonTemplate.replace('%s', formatEur(displayPrice))}
+                        : t.payButtonTemplate.replace('%s', formatEur(listPriceEur))}
                       <ArrowRightIcon className="w-4 h-4" />
                     </div>
                   )}
