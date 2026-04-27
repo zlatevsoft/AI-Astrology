@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
-import { getMarketingPriceDisplay, type AnalysisTier } from '@/lib/pricing'
+import { LIST_PRICE_EUR, COMPARE_AT_EUR, type AnalysisTier } from '@/lib/pricing'
 import { getPlanRowsForLocale, pricingSection, isBasicProductName, type PlanProductName } from '@/lib/plan-locale'
 import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
 
@@ -67,7 +67,8 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => {
-            const { current: listPrice, compareAt } = getMarketingPriceDisplay(plan.tier)
+            const listPrice = LIST_PRICE_EUR[plan.tier]
+            const compareAt = COMPARE_AT_EUR[plan.tier]
             const Icon = PlanIcon[plan.tier]
             return (
               <motion.div
@@ -100,7 +101,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                   <div className="mb-6">
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-4xl font-bold text-cosmic-800 dark:text-cosmic-200">
-                        {listPrice === 0 ? t.free : formatEur(listPrice)}
+                        {formatEur(listPrice)}
                       </span>
                       {compareAt > listPrice && (
                         <span className="text-lg text-cosmic-500 line-through">{formatEur(compareAt)}</span>
