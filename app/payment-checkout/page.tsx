@@ -8,12 +8,7 @@ import { Footer } from '@/components/layout/footer'
 import { CreditCardIcon, CheckCircleIcon, StarIcon, SparklesIcon, HeartIcon, ArrowRightIcon, ShieldCheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import {
-  isFreeCheckoutDisplayEnabled,
-  LIST_PRICE_EUR,
-  COMPARE_AT_EUR,
-  formatEur,
-} from '@/lib/pricing'
+import { LIST_PRICE_EUR, COMPARE_AT_EUR, formatEur } from '@/lib/pricing'
 import { paymentCheckout } from '@/lib/dictionaries'
 import { getPlanRowsForLocale, type PlanProductName } from '@/lib/plan-locale'
 import { getClientLocale } from '@/lib/locale'
@@ -156,8 +151,8 @@ export default function PaymentCheckoutPage() {
   /** What the product costs in the price list (always shown; independent of test/free-charge mode). */
   const listPriceEur = LIST_PRICE_EUR[planRow.tier]
   const compareAtEur = COMPARE_AT_EUR[planRow.tier]
-  const useFreeUI = freeFromServer === true || isFreeCheckoutDisplayEnabled()
-  const isFreeUI = useFreeUI
+  /** Only server env FREE_CHECKOUT=1 (via /api/site-config). Do not use NEXT_PUBLIC here — old builds would stay on "free" UI after env changes without redeploy. */
+  const isFreeUI = freeFromServer === true
 
   return (
     <>
