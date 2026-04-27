@@ -63,6 +63,7 @@ export async function middleware(request: NextRequest) {
       path: '/',
       maxAge: 60 * 60 * 24 * 400,
       sameSite: 'lax',
+      httpOnly: false,
     })
   }
 

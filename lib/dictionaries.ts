@@ -112,6 +112,80 @@ export const ctaHome = {
   },
 } as const
 
+/** `/payment-checkout` page (Stripe or free test mode). */
+export const paymentCheckout = {
+  en: {
+    title: 'Complete Your Purchase',
+    subtitle:
+      "You're one step away from your cosmic blueprint. Complete payment to receive your personalized AI astrological analysis.",
+    testModeBanner:
+      'Test mode: checkout is free (set FREE_CHECKOUT=1 on the server; remove for production).',
+    orderSummary: 'Order Summary',
+    total: 'Total:',
+    freeLabel: 'Free',
+    yourInfo: 'Your Information',
+    labelName: 'Name:',
+    labelBirthDate: 'Birth Date:',
+    labelBirthTime: 'Birth Time:',
+    labelLocation: 'Location:',
+    labelPartnerName: 'Partner Name:',
+    labelPartnerBirth: 'Partner Birth Date:',
+    securePayment: 'Secure Payment',
+    securityTitle: 'Secure Payment',
+    securityBody:
+      'Your payment is processed securely by Stripe. We never store your card details.',
+    promoLabel: 'Promo or influencer code (optional)',
+    promoPlaceholder: 'e.g. STARS20',
+    payButtonTemplate: 'Pay %s & get your analysis',
+    continueFree: 'Continue — get your analysis',
+    processing: 'Processing...',
+    trustSsl: 'SSL Encrypted',
+    trustInstant: 'Instant Access',
+    termsNote: 'By completing your purchase, you agree to our Terms of Service and Privacy Policy.',
+    loading: 'Loading...',
+    toastMissing: 'Missing required data. Please start over.',
+    toastSessionError: 'Failed to create payment session. Please try again.',
+    toastNetwork: 'Network error. Check your connection and try again.',
+    toastPaymentError: 'Payment system error. Please try again.',
+    toastMockFree: 'Test mode: no charge — opening your report',
+    toastMockDev: 'Development mode: opening analysis',
+  },
+  bg: {
+    title: 'Завърши покупката',
+    subtitle:
+      'Остава още една стъпка до твоя анализ. Плати, за да получиш персонализираната си AI астрологична интерпретация.',
+    testModeBanner: 'Тестов режим: плащането е безплатно (сървър env FREE_CHECKOUT=1; махни го в продакшън).',
+    orderSummary: 'Обобщение на поръчката',
+    total: 'Общо:',
+    freeLabel: 'Безплатно',
+    yourInfo: 'Твои данни',
+    labelName: 'Име:',
+    labelBirthDate: 'Рождена дата:',
+    labelBirthTime: 'Рожден час:',
+    labelLocation: 'Място:',
+    labelPartnerName: 'Партньор (име):',
+    labelPartnerBirth: 'Рождена дата на партньор:',
+    securePayment: 'Сигурно плащане',
+    securityTitle: 'Сигурно плащане',
+    securityBody: 'Плащането минава през Stripe. Не пазим данните на картата ти.',
+    promoLabel: 'Промо или код на инфлуенсър (по избор)',
+    promoPlaceholder: 'напр. STARS20',
+    payButtonTemplate: 'Плати %s и получи анализа',
+    continueFree: 'Продължи — тест, без плащане',
+    processing: 'Обработка...',
+    trustSsl: 'SSL',
+    trustInstant: 'Веднага достъп',
+    termsNote: 'С финализиране на поръчката приемаш Общите условия и Политиката за поверителност.',
+    loading: 'Зареждане...',
+    toastMissing: 'Липсват данни. Започни отначало.',
+    toastSessionError: 'Неуспешна сесия за плащане. Опитай пак.',
+    toastNetwork: 'Мрежова грешка. Провери връзката.',
+    toastPaymentError: 'Грешка в плащането. Опитай пак.',
+    toastMockFree: 'Тест: без плащане — пренасочваме към анализа',
+    toastMockDev: 'Dev режим: отваряне на анализ',
+  },
+} as const satisfies Record<SiteLocale, Record<string, string>>
+
 /** Home hero (matches `HeroSection` copy). */
 export const heroHome = {
   en: {

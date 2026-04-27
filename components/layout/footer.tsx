@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import { siteNav, footerLocale } from '@/lib/dictionaries'
 import { getPlanRowsForLocale } from '@/lib/plan-locale'
-import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
 
 const socialLinks = [
   { name: 'Facebook', href: '#', icon: '📘' },
@@ -14,14 +14,7 @@ const socialLinks = [
 ]
 
 export function Footer() {
-  const [locale, setLocale] = useState<SiteLocale>('en')
-  useEffect(() => {
-    setLocale(getClientLocale())
-    const sync = () => setLocale(getClientLocale())
-    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
-    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
-  }, [])
-
+  const locale = useSiteLocale()
   const t = siteNav[locale]
   const f = footerLocale[locale]
 

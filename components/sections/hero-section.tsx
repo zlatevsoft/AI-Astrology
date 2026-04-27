@@ -1,21 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { heroHome } from '@/lib/dictionaries'
-import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
 
 export function HeroSection() {
-  const [locale, setLocale] = useState<SiteLocale>('en')
-  useEffect(() => {
-    setLocale(getClientLocale())
-    const sync = () => setLocale(getClientLocale())
-    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
-    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
-  }, [])
-
+  const locale = useSiteLocale()
   const t = heroHome[locale]
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

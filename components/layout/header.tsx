@@ -8,18 +8,15 @@ import { Bars3Icon, XMarkIcon, SparklesIcon, ChartBarIcon } from '@heroicons/rea
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { siteNav } from '@/lib/dictionaries'
-import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
+import { LOCALE_CHANGE_EVENT, setClientLocaleCache, type SiteLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
 import { LanguageSwitcher } from '@/components/layout/language-switcher'
 
 export function Header() {
-  const [locale, setLocale] = useState<SiteLocale>('en')
+  const locale = useSiteLocale()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
-
-  useEffect(() => {
-    setLocale(getClientLocale())
-  }, [])
 
   const t = siteNav[locale]
   const navigation = useMemo(() => {
@@ -42,9 +39,11 @@ export function Header() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ locale: next }),
     })
-    setLocale(next)
+    setClientLocaleCache(next)
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event(LOCALE_CHANGE_EVENT))
+      window.dispatchEvent(
+        new CustomEvent(LOCALE_CHANGE_EVENT, { detail: { locale: next } })
+      )
     }
   }
 

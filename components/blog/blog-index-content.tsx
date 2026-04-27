@@ -1,20 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon } from '@heroicons/react/24/outline'
 import { blogIndexCopy, getBlogListPosts } from '@/lib/blog-index-locale'
-import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
 
 export function BlogIndexContent() {
-  const [locale, setLocale] = useState<SiteLocale>('en')
-  useEffect(() => {
-    setLocale(getClientLocale())
-    const sync = () => setLocale(getClientLocale())
-    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
-    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
-  }, [])
-
+  const locale = useSiteLocale()
   const t = blogIndexCopy[locale]
   const blogPosts = getBlogListPosts(locale)
 

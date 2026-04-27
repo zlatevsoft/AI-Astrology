@@ -23,7 +23,8 @@ export const metadata: Metadata = {
     default: 'Professional Astro Horoscope Birth Chart',
     template: '%s | AstroHoroscope.online'
   },
-  description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
+  description:
+    'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights from €19 (EUR).',
   keywords: [
     'astro horoscope',
     'AI astrology',
@@ -63,7 +64,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://astrohoroscope.online',
     title: 'Professional Astro Horoscope Birth Chart',
-    description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
+    description:
+    'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights from €19 (EUR).',
     siteName: 'AstroHoroscope.online',
     images: [
       {
@@ -77,7 +79,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Professional Astro Horoscope Birth Chart',
-    description: 'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.',
+    description:
+    'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights from €19 (EUR).',
     images: ['/og-image-new.jpg'],
     creator: '@astrohoroscope',
   },
@@ -160,14 +163,14 @@ export default function RootLayout({
                "@context": "https://schema.org",
                "@type": "WebApplication",
                "name": "Professional Astro Horoscope Birth Chart",
-               "description": "Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99",
+               "description": "Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights from €19 (EUR).",
                "url": "https://astrohoroscope.online",
                "applicationCategory": "LifestyleApplication",
                "operatingSystem": "Web",
                "offers": {
                  "@type": "Offer",
-                 "price": "9.99",
-                 "priceCurrency": "USD"
+                 "price": "19",
+                 "priceCurrency": "EUR"
                },
                "author": {
                  "@type": "Organization",

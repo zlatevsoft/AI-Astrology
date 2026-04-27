@@ -1,18 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { faqPage, getFaqItems } from '@/lib/faq-locale'
-import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
+import { useSiteLocale } from '@/lib/use-site-locale'
 
 export function FAQPageContent() {
-  const [locale, setLocale] = useState<SiteLocale>('en')
-  useEffect(() => {
-    setLocale(getClientLocale())
-    const sync = () => setLocale(getClientLocale())
-    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
-    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
-  }, [])
-
+  const locale = useSiteLocale()
   const t = faqPage[locale]
   const items = getFaqItems(locale)
 
