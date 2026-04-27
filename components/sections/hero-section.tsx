@@ -1,10 +1,22 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { PlayIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
+import { StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
+import { heroHome } from '@/lib/dictionaries'
+import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
 
 export function HeroSection() {
+  const [locale, setLocale] = useState<SiteLocale>('en')
+  useEffect(() => {
+    setLocale(getClientLocale())
+    const sync = () => setLocale(getClientLocale())
+    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
+    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
+  }, [])
+
+  const t = heroHome[locale]
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Starry night sky background */}
@@ -105,7 +117,7 @@ export function HeroSection() {
         >
           <span className="inline-flex items-center px-6 py-3 rounded-full text-sm font-medium bg-gradient-to-r from-cosmic-500/20 to-purple-500/20 backdrop-blur-md text-white border border-cosmic-400/30 shadow-lg">
             <span className="animate-pulse mr-2">✨</span>
-            AstroHoroscope.online - AI Astrology
+            {t.badge}
           </span>
         </motion.div>
 
@@ -115,9 +127,11 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8"
         >
-          <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">Professional Astro</span>
+          <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
+            {t.titleLine1}
+          </span>
           <br />
-          <span className="text-white drop-shadow-2xl">Horoscope Birth Chart</span>
+          <span className="text-white drop-shadow-2xl">{t.titleLine2}</span>
         </motion.h1>
 
         <motion.p
@@ -126,7 +140,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed"
         >
-          Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights starting at $9.99.
+          {t.description}
         </motion.p>
 
         <motion.div
@@ -137,7 +151,7 @@ export function HeroSection() {
         >
           <a href="/pricing">
             <Button size="lg" variant="gradient" className="text-lg px-10 py-5 bg-gradient-to-r from-cosmic-500 via-purple-500 to-indigo-500 hover:from-cosmic-600 hover:via-purple-600 hover:to-indigo-600 shadow-2xl hover:shadow-cosmic-500/25 transition-all duration-300 hover:scale-105">
-              Choose Your Plan
+              {t.cta}
             </Button>
           </a>
         </motion.div>
@@ -150,15 +164,15 @@ export function HeroSection() {
         >
           <div className="flex items-center justify-center space-x-3 bg-gradient-to-r from-cosmic-500/20 to-purple-500/20 backdrop-blur-md rounded-xl p-4 border border-cosmic-400/30 hover:border-cosmic-300/50 transition-all duration-300 hover:scale-105">
             <BoltIcon className="w-6 h-6 text-yellow-400" />
-            <span className="text-white font-semibold">Accurate Calculations</span>
+            <span className="text-white font-semibold">{t.feat1}</span>
           </div>
           <div className="flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-md rounded-xl p-4 border border-purple-400/30 hover:border-purple-300/50 transition-all duration-300 hover:scale-105">
             <StarIcon className="w-6 h-6 text-yellow-400" />
-            <span className="text-white font-semibold">AI Analysis</span>
+            <span className="text-white font-semibold">{t.feat2}</span>
           </div>
           <div className="flex items-center justify-center space-x-3 bg-gradient-to-r from-indigo-500/20 to-cosmic-500/20 backdrop-blur-md rounded-xl p-4 border border-indigo-400/30 hover:border-indigo-300/50 transition-all duration-300 hover:scale-105">
             <ShieldCheckIcon className="w-6 h-6 text-yellow-400" />
-            <span className="text-white font-semibold">Instant Results</span>
+            <span className="text-white font-semibold">{t.feat3}</span>
           </div>
         </motion.div>
 
@@ -170,15 +184,15 @@ export function HeroSection() {
         >
           <span className="font-semibold flex items-center space-x-2">
             <span className="animate-pulse">✨</span>
-            <span>10,000+ Charts Generated</span>
+            <span>{t.stat1}</span>
           </span>
           <span className="font-semibold flex items-center space-x-2">
             <span className="animate-pulse">⭐</span>
-            <span>4.9/5 Rating</span>
+            <span>{t.stat2}</span>
           </span>
           <span className="font-semibold flex items-center space-x-2">
             <span className="animate-pulse">🔒</span>
-            <span>100% Secure</span>
+            <span>{t.stat3}</span>
           </span>
         </motion.div>
       </div>

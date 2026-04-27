@@ -8,7 +8,7 @@ import { Bars3Icon, XMarkIcon, SparklesIcon, ChartBarIcon } from '@heroicons/rea
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { siteNav } from '@/lib/dictionaries'
-import { getClientLocale, type SiteLocale } from '@/lib/locale'
+import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
 import { LanguageSwitcher } from '@/components/layout/language-switcher'
 
 export function Header() {
@@ -22,17 +22,19 @@ export function Header() {
   }, [])
 
   const t = siteNav[locale]
-  const navigation = useMemo(
-    () => [
+  const navigation = useMemo(() => {
+    const items: { name: string; href: string }[] = [
       { name: t.home, href: '/' },
       { name: t.features, href: '/#features' },
       { name: t.blog, href: '/blog' },
       { name: t.pricing, href: '/pricing' },
       { name: t.faq, href: '/faq' },
-      { name: t.testStripe, href: '/test-stripe' },
-    ],
-    [t]
-  )
+    ]
+    if (process.env.NODE_ENV !== 'production') {
+      items.push({ name: t.testStripe, href: '/test-stripe' })
+    }
+    return items
+  }, [t])
 
   const persistLocale = async (next: SiteLocale) => {
     await fetch('/api/locale', {
@@ -41,6 +43,9 @@ export function Header() {
       body: JSON.stringify({ locale: next }),
     })
     setLocale(next)
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event(LOCALE_CHANGE_EVENT))
+    }
   }
 
   useEffect(() => {
