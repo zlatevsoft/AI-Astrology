@@ -4,10 +4,14 @@ import { getToken } from 'next-auth/jwt'
 
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+const authRateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 100 // 100 requests per minute
+/** Stricter cap for sign-in / NextAuth to reduce brute force. */
+const AUTH_RATE_WINDOW = 15 * 60 * 1000 // 15 minutes
+const AUTH_RATE_MAX = 30
 
 function getRateLimitKey(request: NextRequest): string {
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
@@ -32,6 +36,24 @@ function isRateLimited(request: NextRequest): boolean {
   return false
 }
 
+function isAuthRateLimited(request: NextRequest): boolean {
+  const key = `auth:${getRateLimitKey(request)}`
+  const now = Date.now()
+  const record = authRateLimitStore.get(key)
+
+  if (!record || now > record.resetTime) {
+    authRateLimitStore.set(key, { count: 1, resetTime: now + AUTH_RATE_WINDOW })
+    return false
+  }
+
+  if (record.count >= AUTH_RATE_MAX) {
+    return true
+  }
+
+  record.count++
+  return false
+}
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
@@ -41,15 +63,15 @@ export async function middleware(request: NextRequest) {
       secret: process.env.NEXTAUTH_SECRET,
     })
     if (!token) {
-      const u = new URL('/auth/signin', request.url)
+      const u = new URL('/login', request.url)
       u.searchParams.set('callbackUrl', path)
       return NextResponse.redirect(u)
     }
     if (path.startsWith('/admin/affiliates') && token.role !== 'SUPER_ADMIN') {
-      return NextResponse.redirect(new URL('/auth/signin?error=forbidden', request.url))
+      return NextResponse.redirect(new URL('/login?error=forbidden', request.url))
     }
     if (path.startsWith('/partner') && token.role !== 'INFLUENCER') {
-      return NextResponse.redirect(new URL('/auth/signin?error=forbidden', request.url))
+      return NextResponse.redirect(new URL('/login?error=forbidden', request.url))
     }
   }
 
@@ -87,6 +109,19 @@ export async function middleware(request: NextRequest) {
     "form-action 'self'; " +
     "upgrade-insecure-requests;"
   )
+
+  // Stricter rate limit for auth endpoints (brute force protection)
+  if (request.nextUrl.pathname.startsWith('/api/auth')) {
+    if (isAuthRateLimited(request)) {
+      return new NextResponse(JSON.stringify({ error: 'Too many sign-in attempts. Try again later.' }), {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': '900',
+        },
+      })
+    }
+  }
 
   // Rate limiting for API routes
   if (request.nextUrl.pathname.startsWith('/api/')) {

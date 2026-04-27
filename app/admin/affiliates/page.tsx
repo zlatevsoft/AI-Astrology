@@ -115,7 +115,7 @@ export default function AdminAffiliatesPage() {
           <h1 className="text-2xl font-bold">Admin access</h1>
           <p className="mt-2 text-cosmic-600 dark:text-cosmic-300">Sign in as a super admin to continue.</p>
           <Link
-            href="/auth/signin?callbackUrl=/admin/affiliates"
+            href="/login?callbackUrl=/admin/affiliates"
             className={cn(buttonVariants(), 'mt-6 inline-flex')}
           >
             Sign in
@@ -137,6 +137,16 @@ export default function AdminAffiliatesPage() {
               Sign out
             </Button>
           </div>
+
+          <p className="mb-8 rounded-xl border border-cosmic-200 bg-cosmic-50/90 p-4 text-sm text-cosmic-800 dark:border-cosmic-600 dark:bg-cosmic-900/40 dark:text-cosmic-200">
+            <strong>Staff &amp; influencers</strong> sign in at the same page:{' '}
+            <Link href="/login" className="text-cosmic-600 underline hover:text-cosmic-500 dark:text-cosmic-300">
+              /login
+            </Link>
+            . You stay here to create promo codes. Influencers are redirected to{' '}
+            <code className="rounded bg-cosmic-100 px-1 dark:bg-cosmic-800">/partner</code> to see paid orders, gross, and
+            commission.
+          </p>
 
           <div className="mb-10 rounded-2xl border border-cosmic-200 bg-white p-6 shadow dark:border-cosmic-700 dark:bg-cosmic-900">
             <h2 className="mb-4 text-lg font-semibold text-cosmic-800 dark:text-white">Add influencer + code</h2>

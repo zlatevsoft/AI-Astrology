@@ -49,7 +49,7 @@ export default function PartnerPage() {
           <h1 className="text-2xl font-bold">Partner dashboard</h1>
           <p className="mt-2 text-cosmic-600 dark:text-cosmic-300">Sign in with your influencer account.</p>
           <Link
-            href="/auth/signin?callbackUrl=/partner"
+            href="/login?callbackUrl=/partner"
             className={cn(buttonVariants(), 'mt-6 inline-flex')}
           >
             Sign in
