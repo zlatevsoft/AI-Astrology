@@ -5,6 +5,7 @@ import { getToken } from 'next-auth/jwt'
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 const authRateLimitStore = new Map<string, { count: number; resetTime: number }>()
+const firstAdminRegStore = new Map<string, { count: number; resetTime: number }>()
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
@@ -12,6 +13,9 @@ const RATE_LIMIT_MAX_REQUESTS = 100 // 100 requests per minute
 /** Stricter cap for sign-in / NextAuth to reduce brute force. */
 const AUTH_RATE_WINDOW = 15 * 60 * 1000 // 15 minutes
 const AUTH_RATE_MAX = 30
+/** First admin registration: very strict (brute force on setup key). */
+const FIRST_ADMIN_REG_WINDOW = 60 * 60 * 1000 // 1 hour
+const FIRST_ADMIN_REG_MAX = 5
 
 function getRateLimitKey(request: NextRequest): string {
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
@@ -54,8 +58,35 @@ function isAuthRateLimited(request: NextRequest): boolean {
   return false
 }
 
+function isFirstAdminRegisterLimited(request: NextRequest): boolean {
+  const key = `first_admin_reg:${getRateLimitKey(request)}`
+  const now = Date.now()
+  const record = firstAdminRegStore.get(key)
+
+  if (!record || now > record.resetTime) {
+    firstAdminRegStore.set(key, { count: 1, resetTime: now + FIRST_ADMIN_REG_WINDOW })
+    return false
+  }
+
+  if (record.count >= FIRST_ADMIN_REG_MAX) {
+    return true
+  }
+
+  record.count++
+  return false
+}
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
+
+  if (path === '/api/admin/register-first-admin' && request.method === 'POST') {
+    if (isFirstAdminRegisterLimited(request)) {
+      return new NextResponse(JSON.stringify({ error: 'Too many attempts. Try again later.' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', 'Retry-After': '3600' },
+      })
+    }
+  }
 
   if (path.startsWith('/admin/affiliates') || path.startsWith('/partner')) {
     const token = await getToken({

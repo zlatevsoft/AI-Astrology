@@ -3,17 +3,19 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { SignInForm } from '@/components/auth/sign-in-form'
+import { getAllowFirstAdminSetup } from '@/lib/admin-setup'
 
 export const metadata: Metadata = {
   title: 'Staff login',
   robots: { index: false, follow: false },
 }
 
-function LoginFormShell() {
-  return <SignInForm title="Staff login" />
+function LoginFormShell({ allowFirstAdminSetup }: { allowFirstAdminSetup: boolean }) {
+  return <SignInForm title="Staff login" allowFirstAdminSetup={allowFirstAdminSetup} />
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const allowFirstAdminSetup = await getAllowFirstAdminSetup()
   return (
     <>
       <Header />
@@ -25,7 +27,7 @@ export default function LoginPage() {
             </div>
           }
         >
-          <LoginFormShell />
+          <LoginFormShell allowFirstAdminSetup={allowFirstAdminSetup} />
         </Suspense>
       </div>
       <Footer />

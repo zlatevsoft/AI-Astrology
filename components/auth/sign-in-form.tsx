@@ -6,15 +6,22 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
+import { FirstAdminSignup } from '@/components/auth/first-admin-signup'
 
 type Props = {
   /** e.g. "Staff login" for /login, "Sign in" for legacy */
   title?: string
   /** e.g. error=forbidden from URL */
   showForbiddenNote?: boolean
+  /** Set on server: true when no SUPER_ADMIN and SETUP_SECRET is set */
+  allowFirstAdminSetup?: boolean
 }
 
-export function SignInForm({ title = 'Sign in', showForbiddenNote = true }: Props) {
+export function SignInForm({
+  title = 'Sign in',
+  showForbiddenNote = true,
+  allowFirstAdminSetup = false,
+}: Props) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -106,6 +113,7 @@ export function SignInForm({ title = 'Sign in', showForbiddenNote = true }: Prop
           Back to home
         </Link>
       </p>
+      {allowFirstAdminSetup ? <FirstAdminSignup /> : null}
     </div>
   )
 }
