@@ -107,12 +107,25 @@ function PaymentSuccessContent() {
           birthChart: {
             id: birthChart.id || `chart_${Date.now()}`,
             birthData: {
-              name: birthChart.userData?.fullName || birthChart.fullName || 'User',
-              date: birthChart.userData?.birthDate || birthChart.birthDate,
-              time: birthChart.userData?.birthTime || birthChart.birthTime,
-              latitude: birthChart.latitude || 42.4833,
-              longitude: birthChart.longitude || 26.5167,
-              location: birthChart.userData?.location || birthChart.location,
+              name:
+                birthChart.userData?.name ||
+                birthChart.userData?.fullName ||
+                birthChart.fullName ||
+                'User',
+              date:
+                birthChart.userData?.birthDate ||
+                birthChart.birthData?.date ||
+                birthChart.birthDate,
+              time:
+                birthChart.userData?.birthTime ||
+                birthChart.birthData?.time ||
+                birthChart.birthTime,
+              latitude: birthChart.birthData?.latitude ?? birthChart.latitude ?? 42.4833,
+              longitude: birthChart.birthData?.longitude ?? birthChart.longitude ?? 26.5167,
+              location:
+                birthChart.userData?.location ||
+                birthChart.birthData?.location ||
+                birthChart.location,
             },
             planetaryPositions: birthChart.planetaryPositions,
             houses: birthChart.houses,
@@ -127,12 +140,25 @@ function PaymentSuccessContent() {
           requestBody.partnerBirthChart = {
             id: partnerData.id || `partner_chart_${Date.now()}`,
             birthData: {
-              name: partnerData.userData?.partnerName || partnerData.partnerName || 'Partner',
-              date: partnerData.userData?.birthDate || partnerData.birthDate,
-              time: partnerData.userData?.birthTime || partnerData.birthTime,
-              latitude: partnerData.latitude || 42.4833,
-              longitude: partnerData.longitude || 26.5167,
-              location: partnerData.userData?.location || partnerData.location,
+              name:
+                partnerData.userData?.name ||
+                partnerData.userData?.partnerName ||
+                partnerData.partnerName ||
+                'Partner',
+              date:
+                partnerData.userData?.birthDate ||
+                partnerData.birthData?.date ||
+                partnerData.birthDate,
+              time:
+                partnerData.userData?.birthTime ||
+                partnerData.birthData?.time ||
+                partnerData.birthTime,
+              latitude: partnerData.birthData?.latitude ?? partnerData.latitude ?? 42.4833,
+              longitude: partnerData.birthData?.longitude ?? partnerData.longitude ?? 26.5167,
+              location:
+                partnerData.userData?.location ||
+                partnerData.birthData?.location ||
+                partnerData.location,
             },
             planetaryPositions: partnerData.planetaryPositions,
             houses: partnerData.houses,
