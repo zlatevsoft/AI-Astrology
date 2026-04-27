@@ -6,22 +6,18 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
-import { FirstAdminSignup } from '@/components/auth/first-admin-signup'
+import { StaffLoginExtras } from '@/components/auth/staff-login-extras'
 
 type Props = {
   /** e.g. "Staff login" for /login, "Sign in" for legacy */
   title?: string
   /** e.g. error=forbidden from URL */
   showForbiddenNote?: boolean
-  /** Set on server: true when no SUPER_ADMIN and SETUP_SECRET is set */
-  allowFirstAdminSetup?: boolean
+  /** Show link to /login/first-time (main staff page only) */
+  showFirstTimeLink?: boolean
 }
 
-export function SignInForm({
-  title = 'Sign in',
-  showForbiddenNote = true,
-  allowFirstAdminSetup = false,
-}: Props) {
+export function SignInForm({ title = 'Sign in', showForbiddenNote = true, showFirstTimeLink = true }: Props) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -108,12 +104,12 @@ export function SignInForm({
           {loading ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
+      {showFirstTimeLink ? <StaffLoginExtras /> : null}
       <p className="mt-6 text-center text-sm text-white/60">
         <Link href="/" className="text-cosmic-200 hover:underline">
           Back to home
         </Link>
       </p>
-      {allowFirstAdminSetup ? <FirstAdminSignup /> : null}
     </div>
   )
 }
