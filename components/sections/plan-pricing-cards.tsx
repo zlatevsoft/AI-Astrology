@@ -55,9 +55,9 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
           className="text-center mb-16"
         >
           {layout === 'page' ? (
-            <h1 className={`${titleClass} font-bold mb-6 gradient-text`}>{t.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">{t.title}</h1>
           ) : (
-            <h2 className={`${titleClass} font-bold mb-6 gradient-text`}>{t.title}</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">{t.title}</h2>
           )}
           <p className="text-xl text-cosmic-700 dark:text-cosmic-300 mb-8 max-w-3xl mx-auto">{t.subtitle}</p>
           <div className="flex items-center justify-center gap-4 mb-8">
