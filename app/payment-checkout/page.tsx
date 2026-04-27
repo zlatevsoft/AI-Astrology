@@ -19,7 +19,8 @@ import toast from 'react-hot-toast'
 import {
   getMarketingPriceDisplay,
   isFreeCheckoutDisplayEnabled,
-  LIST_PRICE_USD,
+  LIST_PRICE_EUR,
+  formatEur,
   type AnalysisTier,
 } from '@/lib/pricing'
 
@@ -226,7 +227,7 @@ export default function PaymentCheckoutPage() {
     freeFromServer === true || isFreeCheckoutDisplayEnabled()
   const displayPrice = useFreeUI ? 0 : baseDisplay.current
   const displayCompare = useFreeUI
-    ? LIST_PRICE_USD[plan.tier]
+    ? LIST_PRICE_EUR[plan.tier]
     : baseDisplay.compareAt
   const isFreeUI = useFreeUI
 
@@ -292,11 +293,11 @@ export default function PaymentCheckoutPage() {
                     <div className="text-right">
                       {isFreeUI && displayPrice === 0 && (
                         <span className="mr-2 text-sm text-white/50 line-through">
-                          ${displayCompare.toFixed(2)}
+                          {formatEur(displayCompare)}
                         </span>
                       )}
                       <span className="text-2xl font-bold text-white">
-                        {displayPrice === 0 ? 'Free' : `$${displayPrice.toFixed(2)}`}
+                        {displayPrice === 0 ? 'Free' : formatEur(displayPrice)}
                       </span>
                     </div>
                   </div>
@@ -371,7 +372,7 @@ export default function PaymentCheckoutPage() {
                       <CreditCardIcon className="w-5 h-5" />
                       {displayPrice === 0 && isFreeUI
                         ? 'Continue — get your analysis'
-                        : `Pay $${displayPrice.toFixed(2)} & get your analysis`}
+                        : `Pay ${formatEur(displayPrice)} & get your analysis`}
                       <ArrowRightIcon className="w-4 h-4" />
                     </div>
                   )}

@@ -36,7 +36,7 @@ export { stripe }
   export const products = {
     basic: {
       name: 'Basic Reading',
-      price: 999, // $9.99 in cents
+      price: 1900, // €19.00 in cents
       description: 'Discover your core personality and life path',
      features: [
        '🌟 Complete birth chart analysis',
@@ -52,7 +52,7 @@ export { stripe }
    },
        detailed: {
       name: 'Detailed Analysis',
-      price: 1999, // $19.99 in cents
+      price: 2900, // €29.00 in cents
       description: 'Deep dive into your soul\'s journey',
      features: [
        '✨ Everything in Basic, plus:',
@@ -72,7 +72,7 @@ export { stripe }
    },
        comprehensive: {
       name: 'Comprehensive Reading',
-      price: 2999, // $29.99 in cents
+      price: 3900, // €39.00 in cents
       description: 'Complete relationship compatibility analysis',
      features: [
        '💕 Astrological synastry analysis',
@@ -111,5 +111,5 @@ export function getProduct(productName: string) {
 
 // Helper function to format price
 export function formatPrice(priceInCents: number): string {
-  return `$${(priceInCents / 100).toFixed(2)}`
+  return `€${(priceInCents / 100).toFixed(2)}`
 }

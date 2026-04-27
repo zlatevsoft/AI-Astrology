@@ -1,32 +1,31 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
+import { ctaHome } from '@/lib/dictionaries'
+import { getClientLocale, LOCALE_CHANGE_EVENT, type SiteLocale } from '@/lib/locale'
 
-const benefits = [
-  "Accurate birth chart calculations",
-  "AI-powered personality analysis",
-  "Comprehensive life path insights",
-  "Beautiful visual charts",
-  "Instant results delivery",
-  "Secure data protection"
-]
-
-const trustIndicators = [
-  { icon: ShieldCheckIcon, text: "100% Secure" },
-  { icon: BoltIcon, text: "Instant Results" },
-  { icon: StarIcon, text: "4.9/5 Rating" }
-]
+const trustMeta = [ShieldCheckIcon, BoltIcon, StarIcon] as const
 
 export function CTASection() {
+  const [locale, setLocale] = useState<SiteLocale>('en')
+  useEffect(() => {
+    setLocale(getClientLocale())
+    const sync = () => setLocale(getClientLocale())
+    window.addEventListener(LOCALE_CHANGE_EVENT, sync)
+    return () => window.removeEventListener(LOCALE_CHANGE_EVENT, sync)
+  }, [])
+
+  const t = ctaHome[locale]
+  const benefits = t.benefits as unknown as string[]
+  const cardBullets = t.cardBullets as unknown as string[]
+  const trustLabels = [t.trust1, t.trust2, t.trust3]
+
   return (
     <section id="pricing" className="py-20 bg-gradient-to-br from-cosmic-900 via-purple-900 to-cosmic-800 relative overflow-hidden">
-      {/* Starry background */}
       <div className="absolute inset-0 z-0">
-        {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900"></div>
-        
-        {/* Stars */}
         <div className="absolute inset-0">
           {[...Array(80)].map((_, i) => (
             <div
@@ -43,19 +42,15 @@ export function CTASection() {
             />
           ))}
         </div>
-        
-        {/* Nebula effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-pink-500/20"></div>
       </div>
 
-      {/* Background elements */}
       <div className="absolute inset-0 z-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float-delayed"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl animate-glow"></div>
       </div>
 
-      {/* Floating zodiac symbols */}
       <div className="absolute inset-0 z-20 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -93,7 +88,6 @@ export function CTASection() {
 
       <div className="container mx-auto px-4 relative z-30">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -101,22 +95,19 @@ export function CTASection() {
             viewport={{ once: true }}
           >
             <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/10 text-white border border-white/20 mb-6">
-              ⭐ Limited Time Offer
+              {t.badge}
             </span>
-            
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Discover Your
-              <br />
-              <span className="text-gradient-cosmic">Cosmic Blueprint</span>
-              <br />
-              Today
-            </h2>
-            
-            <p className="text-xl text-cosmic-200 mb-8 leading-relaxed">
-              Get your personalized birth chart with AI-powered insights starting at $9.99. Understand your personality, life lessons, and cosmic guidance in minutes.
-            </p>
 
-            {/* Benefits */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+              {t.title1}
+              <br />
+              <span className="text-gradient-cosmic">{t.title2}</span>
+              <br />
+              {t.title3}
+            </h2>
+
+            <p className="text-xl text-cosmic-200 mb-8 leading-relaxed">{t.body}</p>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center space-x-3">
@@ -126,18 +117,16 @@ export function CTASection() {
               ))}
             </div>
 
-            {/* Trust indicators */}
             <div className="flex flex-wrap items-center gap-6 mb-8">
-              {trustIndicators.map((indicator, index) => (
+              {trustMeta.map((Icon, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <indicator.icon className="w-5 h-5 text-cosmic-300" />
-                  <span className="text-cosmic-300 text-sm">{indicator.text}</span>
+                  <Icon className="w-5 h-5 text-cosmic-300" />
+                  <span className="text-cosmic-300 text-sm">{trustLabels[index]}</span>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right side - Pricing card */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -146,7 +135,6 @@ export function CTASection() {
             className="flex justify-center lg:justify-end"
           >
             <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 max-w-md w-full relative overflow-hidden">
-              {/* Cosmic pattern */}
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-pink-500/20"></div>
                 <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full opacity-60"></div>
@@ -156,47 +144,26 @@ export function CTASection() {
 
               <div className="relative z-10">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    Premium Analysis
-                  </h3>
-                  <div className="text-4xl font-bold text-white mb-2">
-                    $9.99
-                  </div>
-                  <p className="text-cosmic-200">One-time payment</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">{t.cardTitle}</h3>
+                  <div className="text-4xl font-bold text-white mb-2">{t.price}</div>
+                  <p className="text-cosmic-200">{t.oneTime}</p>
                 </div>
 
                 <div className="space-y-4 mb-8">
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">Complete birth chart</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">AI personality analysis</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">Life path insights</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">Planetary positions</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">Aspect interpretations</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckIcon className="w-5 h-5 text-green-400" />
-                    <span className="text-cosmic-100">Lifetime access</span>
-                  </div>
+                  {cardBullets.map((line, i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <CheckIcon className="w-5 h-5 text-green-400" />
+                      <span className="text-cosmic-100">{line}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <a href="/pricing" className="block w-full bg-gradient-to-r from-cosmic-500 to-purple-500 hover:from-cosmic-600 hover:to-purple-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-center">
-                  Choose Your Plan
+                <a
+                  href="/pricing"
+                  className="block w-full bg-gradient-to-r from-cosmic-500 to-purple-500 hover:from-cosmic-600 hover:to-purple-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-center"
+                >
+                  {t.button}
                 </a>
-
-
               </div>
             </div>
           </motion.div>

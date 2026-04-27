@@ -81,13 +81,13 @@ export default function PartnerPage() {
               <div className="rounded-2xl border border-cosmic-200 bg-white p-6 shadow dark:border-cosmic-700 dark:bg-cosmic-900">
                 <p className="text-sm text-cosmic-600 dark:text-cosmic-400">Gross (your codes)</p>
                 <p className="text-2xl font-bold text-cosmic-900 dark:text-white">
-                  ${(stats.totalPaidCents / 100).toFixed(2)} {stats.currency.toUpperCase()}
+                  €{(stats.totalPaidCents / 100).toFixed(2)}
                 </p>
               </div>
               <div className="rounded-2xl border border-cosmic-200 bg-white p-6 shadow dark:border-cosmic-700 dark:bg-cosmic-900">
                 <p className="text-sm text-cosmic-600 dark:text-cosmic-400">Your commission</p>
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                  ${(stats.yourCommissionCents / 100).toFixed(2)}
+                  €{(stats.yourCommissionCents / 100).toFixed(2)}
                 </p>
               </div>
             </div>

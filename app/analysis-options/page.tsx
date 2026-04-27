@@ -25,7 +25,7 @@ const analysisOptions: AnalysisOption[] = [
     id: 'basic',
     title: 'Basic Analysis',
     description: 'Essential insights about your personality and life path',
-    price: 24,
+    price: 19,
     features: [
       'Core personality traits',
       'Life purpose overview',
@@ -40,7 +40,7 @@ const analysisOptions: AnalysisOption[] = [
     id: 'detailed',
     title: 'Detailed Analysis',
     description: 'Comprehensive reading with deeper psychological insights',
-    price: 49,
+    price: 29,
     features: [
       'Everything in Basic',
       'Detailed house interpretations',
@@ -58,7 +58,7 @@ const analysisOptions: AnalysisOption[] = [
     id: 'comprehensive',
     title: 'Comprehensive Analysis',
     description: 'Complete astrological blueprint with personalized guidance',
-    price: 99,
+    price: 39,
     features: [
       'Everything in Detailed',
       'House-by-house breakdown',
@@ -241,7 +241,7 @@ export default function AnalysisOptionsPage() {
                           {option.description}
                         </p>
                         <div className="text-3xl font-bold text-cosmic-900 dark:text-white">
-                          {option.price === 0 ? 'FREE' : `$${option.price}`}
+                          {option.price === 0 ? 'FREE' : `€${option.price}`}
                         </div>
                       </div>
 

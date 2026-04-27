@@ -4,7 +4,7 @@ import { FeaturesSection } from '@/components/sections/features-section'
 import { HowItWorksSection } from '@/components/sections/how-it-works-section'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { CTASection } from '@/components/sections/cta-section'
-import { PlansSection } from '@/components/sections/plans-section'
+import { PlanPricingCards } from '@/components/sections/plan-pricing-cards'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 
@@ -33,7 +33,7 @@ export default function HomePage() {
         
         <div className="relative z-10">
           <HeroSection />
-          <PlansSection />
+          <PlanPricingCards layout="home" />
           <FeaturesSection />
           <HowItWorksSection />
           <TestimonialsSection />

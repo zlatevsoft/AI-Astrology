@@ -244,8 +244,8 @@ export default function AdminAffiliatesPage() {
                     <td className="p-3">{it.discountPercent}</td>
                     <td className="p-3">{it.commissionPercent}</td>
                     <td className="p-3">{it.orderCount}</td>
-                    <td className="p-3">${(it.revenueCents / 100).toFixed(2)}</td>
-                    <td className="p-3">${(it.commissionCents / 100).toFixed(2)}</td>
+                    <td className="p-3">€{(it.revenueCents / 100).toFixed(2)}</td>
+                    <td className="p-3">€{(it.commissionCents / 100).toFixed(2)}</td>
                   </tr>
                 ))}
                 {items.length === 0 && (
