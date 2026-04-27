@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
+import { prisma } from '@/lib/prisma'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -84,14 +85,7 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   console.log('Checkout session completed:', session.id)
   
-  // Extract metadata
-  const { birthChartId, analysisType, customerName } = session.metadata || {}
-  
-  // Here you would typically:
-  // 1. Update your database to mark the payment as successful
-  // 2. Generate the AI analysis if not already done
-  // 3. Send confirmation email to customer
-  // 4. Update order status
+  const { birthChartId, analysisType, customerName, promoCodeId, influencerId, commissionCents } = session.metadata || {}
   
   console.log('Processing payment for:', {
     birthChartId,
@@ -100,6 +94,28 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     customerEmail: session.customer_email,
     amount: session.amount_total
   })
+
+  if (process.env.DATABASE_URL) {
+    try {
+      const at = session.amount_total ?? 0
+      const comm = parseInt((commissionCents as string) || '0', 10) || 0
+      await prisma.order.upsert({
+        where: { stripeCheckoutSessionId: session.id },
+        create: {
+          stripeCheckoutSessionId: session.id,
+          amountTotal: at,
+          currency: session.currency || 'usd',
+          promoCodeId: (promoCodeId as string) || undefined,
+          influencerId: (influencerId as string) || undefined,
+          commissionAmount: comm,
+          status: 'PAID',
+        },
+        update: { status: 'PAID' },
+      })
+    } catch (e) {
+      console.error('Order persist error:', e)
+    }
+  }
 }
 
 async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
@@ -31,8 +32,39 @@ function isRateLimited(request: NextRequest): boolean {
   return false
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname
+
+  if (path.startsWith('/admin/affiliates') || path.startsWith('/partner')) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    })
+    if (!token) {
+      const u = new URL('/auth/signin', request.url)
+      u.searchParams.set('callbackUrl', path)
+      return NextResponse.redirect(u)
+    }
+    if (path.startsWith('/admin/affiliates') && token.role !== 'SUPER_ADMIN') {
+      return NextResponse.redirect(new URL('/auth/signin?error=forbidden', request.url))
+    }
+    if (path.startsWith('/partner') && token.role !== 'INFLUENCER') {
+      return NextResponse.redirect(new URL('/auth/signin?error=forbidden', request.url))
+    }
+  }
+
   const response = NextResponse.next()
+
+  if (!request.cookies.get('NEXT_LOCALE')) {
+    const al = (request.headers.get('accept-language') || '').toLowerCase()
+    const country = request.headers.get('x-vercel-ip-country') || ''
+    const loc = al.startsWith('bg') || country === 'BG' ? 'bg' : 'en'
+    response.cookies.set('NEXT_LOCALE', loc, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 400,
+      sameSite: 'lax',
+    })
+  }
 
   // Security headers
   response.headers.set('X-Content-Type-Options', 'nosniff')

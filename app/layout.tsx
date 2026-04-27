@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
+import { cookies } from 'next/headers'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { Providers } from '@/components/providers'
@@ -120,8 +121,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const htmlLang = cookies().get('NEXT_LOCALE')?.value === 'bg' ? 'bg' : 'en'
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
+    <html lang={htmlLang} className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <meta name="theme-color" content="#667eea" />

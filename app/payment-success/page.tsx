@@ -10,6 +10,7 @@ import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { getClientLocale } from '@/lib/locale'
 
 function PaymentSuccessContent() {
   const [isLoading, setIsLoading] = useState(true)
@@ -118,6 +119,7 @@ function PaymentSuccessContent() {
             aspects: birthChart.aspects,
           },
           analysisType,
+          locale: getClientLocale(),
         }
 
         // Add partner data if available (for comprehensive plan)

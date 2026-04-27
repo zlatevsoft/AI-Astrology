@@ -1,33 +1,47 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Bars3Icon, 
-  XMarkIcon, 
-  SparklesIcon,
-  UserIcon,
-  ChartBarIcon,
-  CreditCardIcon
-} from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/24/outline'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
-
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Features', href: '/#features' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'FAQ', href: '/faq' },
-  { name: 'Test Stripe', href: '/test-stripe' },
-]
+import { siteNav } from '@/lib/dictionaries'
+import { getClientLocale, type SiteLocale } from '@/lib/locale'
+import { LanguageSwitcher } from '@/components/layout/language-switcher'
 
 export function Header() {
+  const [locale, setLocale] = useState<SiteLocale>('en')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    setLocale(getClientLocale())
+  }, [])
+
+  const t = siteNav[locale]
+  const navigation = useMemo(
+    () => [
+      { name: t.home, href: '/' },
+      { name: t.features, href: '/#features' },
+      { name: t.blog, href: '/blog' },
+      { name: t.pricing, href: '/pricing' },
+      { name: t.faq, href: '/faq' },
+      { name: t.testStripe, href: '/test-stripe' },
+    ],
+    [t]
+  )
+
+  const persistLocale = async (next: SiteLocale) => {
+    await fetch('/api/locale', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ locale: next }),
+    })
+    setLocale(next)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,19 +104,21 @@ export function Header() {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+          <div className="hidden lg:flex lg:items-center lg:space-x-3">
+            <LanguageSwitcher value={locale} onChange={persistLocale} />
             <ThemeToggle />
             <Link href="/pricing">
               <Button className="bg-gradient-to-r from-cosmic-500 via-purple-500 to-indigo-500 hover:from-cosmic-600 hover:via-purple-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 hover:scale-105">
                 <ChartBarIcon className="h-4 w-4 mr-2" />
-                Choose Plan
+                {t.choosePlan}
               </Button>
             </Link>
           </div>
 
                      {/* Mobile menu button */}
            <div className="lg:hidden flex items-center space-x-2">
-             <ThemeToggle />
+            <LanguageSwitcher value={locale} onChange={persistLocale} />
+            <ThemeToggle />
              <Button
                variant="ghost"
                size="sm"
@@ -189,7 +205,7 @@ export function Header() {
                   <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full bg-gradient-to-r from-cosmic-600 to-purple-600 hover:from-cosmic-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
                       <ChartBarIcon className="h-4 w-4 mr-2" />
-                      Choose Plan
+                      {t.choosePlan}
                     </Button>
                   </Link>
                 </div>

@@ -3,11 +3,21 @@ import { getProduct } from '@/lib/stripe'
 import Stripe from 'stripe'
 import { stripeConfigSchema } from '@/lib/validation'
 import { isFreeCheckoutEnabled } from '@/lib/pricing'
+import { findActivePromoByCode, amountAfterDiscountCents, commissionCentsForOrder } from '@/lib/promo'
 
 export async function POST(request: NextRequest) {
   try {
-    const { productName, successUrl, cancelUrl, stripeConfig } = await request.json()
-    
+    const { productName, successUrl, cancelUrl, stripeConfig, promoCode } = await request.json() as {
+      productName?: string
+      successUrl?: string
+      cancelUrl?: string
+      stripeConfig?: unknown
+      promoCode?: string
+    }
+    const cfg = stripeConfig as
+      | { mode?: string; testSecretKey?: string; liveSecretKey?: string }
+      | undefined
+
     // Enhanced security: Validate Stripe configuration
     if (stripeConfig) {
       try {
@@ -21,11 +31,11 @@ export async function POST(request: NextRequest) {
     
     console.log('Creating checkout session for:', productName)
     console.log('Stripe config from frontend:', {
-      mode: stripeConfig?.mode,
-      hasTestKey: !!stripeConfig?.testSecretKey,
-      hasLiveKey: !!stripeConfig?.liveSecretKey,
-      testKeyPrefix: stripeConfig?.testSecretKey?.substring(0, 7) + '...',
-      liveKeyPrefix: stripeConfig?.liveSecretKey?.substring(0, 7) + '...'
+      mode: cfg?.mode,
+      hasTestKey: !!cfg?.testSecretKey,
+      hasLiveKey: !!cfg?.liveSecretKey,
+      testKeyPrefix: cfg?.testSecretKey?.substring(0, 7) + '...',
+      liveKeyPrefix: cfg?.liveSecretKey?.substring(0, 7) + '...',
     })
 
     if (!productName) {
@@ -61,24 +71,22 @@ export async function POST(request: NextRequest) {
     // Initialize Stripe with frontend config
     let stripeInstance: Stripe | null = null
     
-    if (stripeConfig) {
+    if (cfg) {
       // Determine which key to use based on mode
-      const secretKey = stripeConfig.mode === 'live' 
-        ? stripeConfig.liveSecretKey 
-        : stripeConfig.testSecretKey
-      
+      const secretKey = cfg.mode === 'live' ? cfg.liveSecretKey : cfg.testSecretKey
+
       if (secretKey && secretKey.trim() !== '') {
         try {
           stripeInstance = new Stripe(secretKey, {
             apiVersion: '2023-10-16',
             typescript: true,
           })
-          console.log('Stripe initialized with frontend config, mode:', stripeConfig.mode)
+          console.log('Stripe initialized with frontend config, mode:', cfg.mode)
         } catch (error) {
           console.error('Failed to initialize Stripe with frontend config:', error)
         }
       } else {
-        console.log('No valid secret key found for mode:', stripeConfig.mode)
+        console.log('No valid secret key found for mode:', cfg.mode)
       }
     }
     
@@ -118,6 +126,27 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    let unitAmount = product.price
+    const meta: Record<string, string> = {
+      productName: product.name,
+      productType: productName.toLowerCase().replace(/\s+/g, ''),
+    }
+    if (promoCode && process.env.DATABASE_URL) {
+      const pc = (promoCode as string).trim()
+      if (pc) {
+        const promo = await findActivePromoByCode(pc)
+        if (!promo) {
+          return NextResponse.json({ error: 'Invalid or expired promo code' }, { status: 400 })
+        }
+        unitAmount = amountAfterDiscountCents(product.price, promo.discountPercent)
+        const comm = commissionCentsForOrder(unitAmount, promo.commissionPercent)
+        meta.promoCodeId = promo.id
+        meta.influencerId = promo.influencerId
+        meta.commissionCents = String(comm)
+        meta.discountPercent = String(promo.discountPercent)
+      }
+    }
+
     // Create real Stripe checkout session
     const session = await stripeInstance.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -129,7 +158,7 @@ export async function POST(request: NextRequest) {
               name: product.name,
               description: product.description,
             },
-            unit_amount: product.price,
+            unit_amount: unitAmount,
           },
           quantity: 1,
         },
@@ -137,10 +166,7 @@ export async function POST(request: NextRequest) {
       mode: 'payment',
       success_url: successUrl || `${request.nextUrl.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl || `${request.nextUrl.origin}/pricing`,
-      metadata: {
-        productName: product.name,
-        productType: productName.toLowerCase().replace(/\s+/g, ''),
-      },
+      metadata: meta,
     })
 
     return NextResponse.json({ sessionId: session.id, url: session.url })

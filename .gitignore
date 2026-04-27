@@ -70,6 +70,9 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
+# Local secrets / notes (never commit)
+GitHub local pass/
+
 # dotenv environment variable files
 .env
 .env.development.local

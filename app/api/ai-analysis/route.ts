@@ -8,6 +8,15 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+const SYSTEM_EN = `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better.`
+
+const SYSTEM_BG = `Ти си опитен астролог с дълбоки познания по западната астрология, планетарните влияния и психологическата астрология. Давай уместни, персонални тълкувания, които са едновременно точни и смислени. Фокусирай се върху практични прозрения, които помагат на човека да се разбира по-добре. Отговаряй изцяло на български език.`
+
+const BG_COMPLETION_INSTRUCTION = `
+
+---
+ВАЖНО: Пиши целия анализ на български език. Западна астрология; използвай приети български термини.`
+
 // Validation schema for AI analysis request
 const AIAnalysisSchema = z.object({
   birthChart: z.object({
@@ -65,6 +74,7 @@ const AIAnalysisSchema = z.object({
     })),
   }).optional(),
   analysisType: z.enum(['basic', 'detailed', 'comprehensive']).default('basic'),
+  locale: z.enum(['en', 'bg']).default('en'),
 })
 
 export async function POST(request: NextRequest) {
@@ -106,13 +116,21 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    const { birthChart, analysisType } = validatedData
+    const { birthChart, analysisType, locale } = validatedData
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
       console.log('No OpenAI API key found, using mock analysis')
       // Return mock analysis for testing without API key
-      const mockAnalysis = generateMockAnalysis(birthChart, analysisType)
+      const mockAnalysis = generateMockAnalysis(birthChart, analysisType) as {
+        content?: string
+        [key: string]: unknown
+      }
+      if (locale === 'bg' && mockAnalysis.content) {
+        mockAnalysis.content =
+          `> **Бележка:** Демо режим без OpenAI API ключ. По-долу е примерен анализ на английски; с настроен API ключ пълният анализ ще бъде на български.\n\n` +
+          mockAnalysis.content
+      }
       return NextResponse.json({
         success: true,
         data: mockAnalysis,
@@ -121,7 +139,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create prompt for AI analysis
-    const prompt = createAnalysisPrompt(birthChart, validatedData.partnerBirthChart, analysisType)
+    const basePrompt = createAnalysisPrompt(birthChart, validatedData.partnerBirthChart, analysisType)
+    const userPrompt = locale === 'bg' ? basePrompt + BG_COMPLETION_INSTRUCTION : basePrompt
+    const systemMessage = locale === 'bg' ? SYSTEM_BG : SYSTEM_EN
 
     // Generate AI analysis with fallback to GPT-3.5 Turbo if needed
     let completion;
@@ -132,11 +152,11 @@ export async function POST(request: NextRequest) {
         messages: [
           {
             role: "system",
-            content: `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better.`
+            content: systemMessage
           },
           {
             role: "user",
-            content: prompt
+            content: userPrompt
           }
         ],
         max_tokens: analysisType === 'comprehensive' ? 8000 : analysisType === 'detailed' ? 6000 : 4000,
@@ -151,11 +171,11 @@ export async function POST(request: NextRequest) {
           messages: [
             {
               role: "system",
-              content: `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better.`
+              content: systemMessage
             },
             {
               role: "user",
-              content: prompt
+              content: userPrompt
             }
           ],
           max_tokens: analysisType === 'comprehensive' ? 6000 : analysisType === 'detailed' ? 4000 : 2500,
@@ -169,11 +189,11 @@ export async function POST(request: NextRequest) {
           messages: [
             {
               role: "system",
-              content: `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better.`
+              content: systemMessage
             },
             {
               role: "user",
-              content: prompt
+              content: userPrompt
             }
           ],
           max_tokens: analysisType === 'comprehensive' ? 4000 : analysisType === 'detailed' ? 3000 : 2000,

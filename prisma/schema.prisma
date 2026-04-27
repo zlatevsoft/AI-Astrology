@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  INFLUENCER
+}
+
+enum OrderStatus {
+  PAID
+  REFUNDED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String?    @unique
+  username     String?    @unique
+  name         String?
+  passwordHash String
+  role         Role       @default(INFLUENCER)
+  createdAt    DateTime   @default(now())
+  promoCodes   PromoCode[] @relation("InfluencerPromos")
+}
+
+model PromoCode {
+  id                String   @id @default(cuid())
+  code              String   @unique
+  discountPercent   Int
+  commissionPercent Int
+  active            Boolean  @default(true)
+  validFrom         DateTime?
+  validUntil        DateTime?
+  influencerId      String
+  influencer        User     @relation("InfluencerPromos", fields: [influencerId], references: [id], onDelete: Cascade)
+  orders            Order[]
+  createdAt         DateTime @default(now())
+}
+
+model Order {
+  id                     String      @id @default(cuid())
+  stripeCheckoutSessionId String     @unique
+  amountTotal            Int
+  currency               String      @default("usd")
+  promoCodeId            String?
+  promoCode              PromoCode?  @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
+  influencerId           String?
+  commissionAmount       Int         @default(0)
+  status                 OrderStatus @default(PAID)
+  createdAt              DateTime    @default(now())
+}

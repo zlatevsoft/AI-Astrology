@@ -27,6 +27,7 @@ export default function PaymentCheckoutPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [birthChartData, setBirthChartData] = useState<any>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
   /** True when Vercel has FREE_CHECKOUT=1 (read at runtime via /api/site-config). */
   const [freeFromServer, setFreeFromServer] = useState<boolean | null>(null)
   const router = useRouter()
@@ -163,7 +164,8 @@ export default function PaymentCheckoutPage() {
           productName: selectedPlan,
           successUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: `${window.location.origin}/payment-checkout`,
-          stripeConfig: stripeConfig
+          stripeConfig: stripeConfig,
+          promoCode: promoCode.trim() || undefined,
         }),
       })
 
@@ -338,6 +340,18 @@ export default function PaymentCheckoutPage() {
                   <p className="text-white/80 text-sm">
                     Your payment is processed securely by Stripe. We never store your payment information.
                   </p>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm text-white/90">Promo or influencer code (optional)</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder:text-white/50 focus:border-cosmic-300 focus:outline-none focus:ring-1 focus:ring-cosmic-400"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    placeholder="e.g. STARS20"
+                    autoComplete="off"
+                  />
                 </div>
 
                 {/* Payment Button */}

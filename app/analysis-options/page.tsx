@@ -8,6 +8,7 @@ import { Footer } from '@/components/layout/footer'
 import { StarIcon, SparklesIcon, RocketLaunchIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { getClientLocale } from '@/lib/locale'
 
 interface AnalysisOption {
   id: 'basic' | 'detailed' | 'comprehensive'
@@ -116,6 +117,7 @@ export default function AnalysisOptionsPage() {
       const requestBody: any = {
         birthChart: birthChartData,
         analysisType: selectedOption,
+        locale: getClientLocale(),
       }
 
       // Add partner birth chart data if available (for comprehensive plan)
