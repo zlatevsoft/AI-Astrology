@@ -68,11 +68,27 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Initialize Stripe with frontend config
+    // Prefer server env keys so STRIPE_MODE on Vercel is authoritative. Browser localStorage
+    // stripeConfig (with live mode) was previously taken first, which always produced cs_live_ sessions.
     let stripeInstance: Stripe | null = null
-    
-    if (cfg) {
-      // Determine which key to use based on mode
+    const envMode = (process.env.STRIPE_MODE || 'test') as 'test' | 'live'
+    const envSecretKey =
+      envMode === 'live' ? process.env.STRIPE_SECRET_KEY_LIVE : process.env.STRIPE_SECRET_KEY_TEST
+
+    if (envSecretKey && envSecretKey.trim() !== '') {
+      try {
+        stripeInstance = new Stripe(envSecretKey, {
+          apiVersion: '2023-10-16',
+          typescript: true,
+        })
+        console.log('Stripe: server environment key, mode:', envMode)
+      } catch (error) {
+        console.error('Failed to initialize Stripe with environment variables:', error)
+      }
+    }
+
+    // Local dev / legacy: keys only in admin UI localStorage
+    if (!stripeInstance && cfg) {
       const secretKey = cfg.mode === 'live' ? cfg.liveSecretKey : cfg.testSecretKey
 
       if (secretKey && secretKey.trim() !== '') {
@@ -81,34 +97,12 @@ export async function POST(request: NextRequest) {
             apiVersion: '2023-10-16',
             typescript: true,
           })
-          console.log('Stripe initialized with frontend config, mode:', cfg.mode)
+          console.log('Stripe initialized with frontend localStorage config, mode:', cfg.mode)
         } catch (error) {
           console.error('Failed to initialize Stripe with frontend config:', error)
         }
       } else {
-        console.log('No valid secret key found for mode:', cfg.mode)
-      }
-    }
-    
-    // Fallback to environment variables if frontend config failed
-    if (!stripeInstance) {
-      console.log('Frontend config failed, trying environment variables fallback')
-      
-      const envMode = process.env.STRIPE_MODE || 'test'
-      const envSecretKey = envMode === 'live' 
-        ? process.env.STRIPE_SECRET_KEY_LIVE 
-        : process.env.STRIPE_SECRET_KEY_TEST
-      
-      if (envSecretKey) {
-        try {
-          stripeInstance = new Stripe(envSecretKey, {
-            apiVersion: '2023-10-16',
-            typescript: true,
-          })
-          console.log('Stripe initialized with environment variables, mode:', envMode)
-        } catch (error) {
-          console.error('Failed to initialize Stripe with environment variables:', error)
-        }
+        console.log('No valid secret key in frontend config for mode:', cfg.mode)
       }
     }
     

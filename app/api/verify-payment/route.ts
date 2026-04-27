@@ -31,46 +31,35 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Initialize Stripe with frontend config
     let stripeInstance: Stripe | null = null
-    
-    if (stripeConfig) {
-      // Determine which key to use based on mode
-      const secretKey = stripeConfig.mode === 'live' 
-        ? stripeConfig.liveSecretKey 
-        : stripeConfig.testSecretKey
-      
+    const envMode = (process.env.STRIPE_MODE || 'test') as 'test' | 'live'
+    const envSecretKey =
+      envMode === 'live' ? process.env.STRIPE_SECRET_KEY_LIVE : process.env.STRIPE_SECRET_KEY_TEST
+
+    if (envSecretKey && envSecretKey.trim() !== '') {
+      try {
+        stripeInstance = new Stripe(envSecretKey, {
+          apiVersion: '2023-10-16',
+          typescript: true,
+        })
+        console.log('Stripe verify: server environment key, mode:', envMode)
+      } catch (error) {
+        console.error('Failed to initialize Stripe for payment verification (env):', error)
+      }
+    }
+
+    if (!stripeInstance && stripeConfig) {
+      const secretKey = stripeConfig.mode === 'live' ? stripeConfig.liveSecretKey : stripeConfig.testSecretKey
+
       if (secretKey) {
         try {
           stripeInstance = new Stripe(secretKey, {
             apiVersion: '2023-10-16',
             typescript: true,
           })
-          console.log('Stripe initialized for payment verification, mode:', stripeConfig.mode)
+          console.log('Stripe verify: frontend config, mode:', stripeConfig.mode)
         } catch (error) {
           console.error('Failed to initialize Stripe for payment verification:', error)
-        }
-      }
-    }
-    
-    // Fallback to environment variables if frontend config failed
-    if (!stripeInstance) {
-      console.log('Frontend config failed, trying environment variables fallback for payment verification')
-      
-      const envMode = process.env.STRIPE_MODE || 'test'
-      const envSecretKey = envMode === 'live' 
-        ? process.env.STRIPE_SECRET_KEY_LIVE 
-        : process.env.STRIPE_SECRET_KEY_TEST
-      
-      if (envSecretKey) {
-        try {
-          stripeInstance = new Stripe(envSecretKey, {
-            apiVersion: '2023-10-16',
-            typescript: true,
-          })
-          console.log('Stripe initialized with environment variables for payment verification, mode:', envMode)
-        } catch (error) {
-          console.error('Failed to initialize Stripe with environment variables for payment verification:', error)
         }
       }
     }
