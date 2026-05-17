@@ -46,7 +46,11 @@ model Order {
   id                     String      @id @default(cuid())
   stripeCheckoutSessionId String     @unique
   amountTotal            Int
-  currency               String      @default("usd")
+  currency               String      @default("eur")
+  productName            String?
+  productType            String?
+  customerEmail          String?
+  discountPercent        Int?
   promoCodeId            String?
   promoCode              PromoCode?  @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
   influencerId           String?

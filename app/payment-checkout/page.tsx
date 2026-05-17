@@ -20,11 +20,18 @@ const PLAN_ICONS: Record<PlanProductName, typeof StarIcon> = {
   'Comprehensive Reading': HeartIcon,
 }
 
+type PromoPreview =
+  | { status: 'idle' }
+  | { status: 'checking' }
+  | { status: 'valid'; discountPercent: number; finalAmountCents: number }
+  | { status: 'invalid'; error: string }
+
 export default function PaymentCheckoutPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [birthChartData, setBirthChartData] = useState<Record<string, unknown> | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [promoCode, setPromoCode] = useState('')
+  const [promoPreview, setPromoPreview] = useState<PromoPreview>({ status: 'idle' })
   const [freeFromServer, setFreeFromServer] = useState<boolean | null>(null)
   const locale = useSiteLocale()
   const router = useRouter()
@@ -59,6 +66,49 @@ export default function PaymentCheckoutPage() {
   const partnerChartData = birthChartData?.partnerChartData as
     | { userData?: { name?: string; birthDate?: string } }
     | undefined
+
+  useEffect(() => {
+    const code = promoCode.trim()
+    if (!selectedPlan || !code) {
+      setPromoPreview({ status: 'idle' })
+      return
+    }
+    const planRow = getPlanRowsForLocale(locale).find((r) => r.productName === selectedPlan)
+    if (!planRow) return
+
+    const timeout = window.setTimeout(async () => {
+      setPromoPreview({ status: 'checking' })
+      try {
+        const r = await fetch('/api/promo/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code,
+            baseAmountCents: LIST_PRICE_EUR[planRow.tier] * 100,
+          }),
+        })
+        const d = (await r.json()) as {
+          valid?: boolean
+          error?: string
+          discountPercent?: number
+          finalAmountCents?: number
+        }
+        if (d.valid && typeof d.discountPercent === 'number' && typeof d.finalAmountCents === 'number') {
+          setPromoPreview({
+            status: 'valid',
+            discountPercent: d.discountPercent,
+            finalAmountCents: d.finalAmountCents,
+          })
+        } else {
+          setPromoPreview({ status: 'invalid', error: d.error || 'Invalid code' })
+        }
+      } catch {
+        setPromoPreview({ status: 'invalid', error: 'Could not validate code' })
+      }
+    }, 450)
+
+    return () => window.clearTimeout(timeout)
+  }, [promoCode, selectedPlan, locale])
 
   const handlePayment = async () => {
     if (!selectedPlan) return
@@ -151,6 +201,8 @@ export default function PaymentCheckoutPage() {
   /** What the product costs in the price list (always shown; independent of test/free-charge mode). */
   const listPriceEur = LIST_PRICE_EUR[planRow.tier]
   const compareAtEur = COMPARE_AT_EUR[planRow.tier]
+  const finalPriceEur =
+    promoPreview.status === 'valid' ? promoPreview.finalAmountCents / 100 : listPriceEur
   /** Only server env FREE_CHECKOUT=1 (via /api/site-config). Do not use NEXT_PUBLIC here — old builds would stay on "free" UI after env changes without redeploy. */
   const isFreeUI = freeFromServer === true
 
@@ -212,9 +264,19 @@ export default function PaymentCheckoutPage() {
                       <span className="mr-2 text-sm text-white/50 line-through">
                         {formatEur(compareAtEur)}
                       </span>
-                      <span className="text-2xl font-bold text-white">{formatEur(listPriceEur)}</span>
+                      {promoPreview.status === 'valid' && (
+                        <span className="mr-2 text-sm text-white/50 line-through">
+                          {formatEur(listPriceEur)}
+                        </span>
+                      )}
+                      <span className="text-2xl font-bold text-white">{formatEur(finalPriceEur)}</span>
                     </div>
                   </div>
+                  {promoPreview.status === 'valid' && (
+                    <p className="mt-2 text-right text-sm text-emerald-300">
+                      Promo code applied: -{promoPreview.discountPercent}%
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -278,6 +340,17 @@ export default function PaymentCheckoutPage() {
                     placeholder={t.promoPlaceholder}
                     autoComplete="off"
                   />
+                  {promoPreview.status === 'checking' && (
+                    <p className="mt-2 text-xs text-white/60">Checking promo code...</p>
+                  )}
+                  {promoPreview.status === 'valid' && (
+                    <p className="mt-2 text-xs text-emerald-300">
+                      Code applied: -{promoPreview.discountPercent}% · final price {formatEur(finalPriceEur)}
+                    </p>
+                  )}
+                  {promoPreview.status === 'invalid' && (
+                    <p className="mt-2 text-xs text-red-200">{promoPreview.error}</p>
+                  )}
                 </div>
 
                 <Button
@@ -296,7 +369,7 @@ export default function PaymentCheckoutPage() {
                       <CreditCardIcon className="w-5 h-5" />
                       {isFreeUI
                         ? t.continueFree
-                        : t.payButtonTemplate.replace('%s', formatEur(listPriceEur))}
+                        : t.payButtonTemplate.replace('%s', formatEur(finalPriceEur))}
                       <ArrowRightIcon className="w-4 h-4" />
                     </div>
                   )}

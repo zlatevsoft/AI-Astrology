@@ -85,7 +85,17 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   console.log('Checkout session completed:', session.id)
   
-  const { birthChartId, analysisType, customerName, promoCodeId, influencerId, commissionCents } = session.metadata || {}
+  const {
+    birthChartId,
+    analysisType,
+    customerName,
+    promoCodeId,
+    influencerId,
+    commissionCents,
+    discountPercent,
+    productName,
+    productType,
+  } = session.metadata || {}
   
   console.log('Processing payment for:', {
     birthChartId,
@@ -104,13 +114,28 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         create: {
           stripeCheckoutSessionId: session.id,
           amountTotal: at,
-          currency: session.currency || 'usd',
+          currency: session.currency || 'eur',
+          productName: (productName as string) || undefined,
+          productType: (productType as string) || undefined,
+          customerEmail: session.customer_details?.email || session.customer_email || undefined,
+          discountPercent: discountPercent ? parseInt(discountPercent as string, 10) || undefined : undefined,
           promoCodeId: (promoCodeId as string) || undefined,
           influencerId: (influencerId as string) || undefined,
           commissionAmount: comm,
           status: 'PAID',
         },
-        update: { status: 'PAID' },
+        update: {
+          amountTotal: at,
+          currency: session.currency || 'eur',
+          productName: (productName as string) || undefined,
+          productType: (productType as string) || undefined,
+          customerEmail: session.customer_details?.email || session.customer_email || undefined,
+          discountPercent: discountPercent ? parseInt(discountPercent as string, 10) || undefined : undefined,
+          promoCodeId: (promoCodeId as string) || undefined,
+          influencerId: (influencerId as string) || undefined,
+          commissionAmount: comm,
+          status: 'PAID',
+        },
       })
     } catch (e) {
       console.error('Order persist error:', e)

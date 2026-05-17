@@ -1,5 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { prisma } from '@/lib/prisma'
+
+async function persistPaidOrder(session: Stripe.Checkout.Session) {
+  if (!process.env.DATABASE_URL) return
+
+  const {
+    promoCodeId,
+    influencerId,
+    commissionCents,
+    discountPercent,
+    productName,
+    productType,
+  } = session.metadata || {}
+
+  const commissionAmount = parseInt((commissionCents as string) || '0', 10) || 0
+  const parsedDiscount = discountPercent ? parseInt(discountPercent as string, 10) : undefined
+
+  await prisma.order.upsert({
+    where: { stripeCheckoutSessionId: session.id },
+    create: {
+      stripeCheckoutSessionId: session.id,
+      amountTotal: session.amount_total ?? 0,
+      currency: session.currency || 'eur',
+      productName: (productName as string) || undefined,
+      productType: (productType as string) || undefined,
+      customerEmail: session.customer_details?.email || session.customer_email || undefined,
+      discountPercent: Number.isFinite(parsedDiscount) ? parsedDiscount : undefined,
+      promoCodeId: (promoCodeId as string) || undefined,
+      influencerId: (influencerId as string) || undefined,
+      commissionAmount,
+      status: 'PAID',
+    },
+    update: {
+      amountTotal: session.amount_total ?? 0,
+      currency: session.currency || 'eur',
+      productName: (productName as string) || undefined,
+      productType: (productType as string) || undefined,
+      customerEmail: session.customer_details?.email || session.customer_email || undefined,
+      discountPercent: Number.isFinite(parsedDiscount) ? parsedDiscount : undefined,
+      promoCodeId: (promoCodeId as string) || undefined,
+      influencerId: (influencerId as string) || undefined,
+      commissionAmount,
+      status: 'PAID',
+    },
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +72,7 @@ export async function POST(request: NextRequest) {
           productName: 'Astro reading',
           productType: 'local-mock',
           amountTotal: 0,
-          currency: 'usd',
+          currency: 'eur',
         },
       })
     }
@@ -75,7 +121,7 @@ export async function POST(request: NextRequest) {
           productName: 'Test Product',
           productType: 'test',
           amountTotal: 1900,
-          currency: 'usd',
+          currency: 'eur',
         }
       })
     }
@@ -92,6 +138,12 @@ export async function POST(request: NextRequest) {
 
     // Check if payment was successful
     if (session.payment_status === 'paid') {
+      try {
+        await persistPaidOrder(session)
+      } catch (e) {
+        console.error('verify-payment order persist error:', e)
+      }
+
       return NextResponse.json({
         success: true,
         session: {
