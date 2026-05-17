@@ -9,6 +9,15 @@ import { useSiteLocale } from '@/lib/use-site-locale'
 export function HeroSection() {
   const locale = useSiteLocale()
   const t = heroHome[locale]
+  const isBg = locale === 'bg'
+  /** BG headlines run longer in Cyrillic — smaller type & tighter leading reads cleaner than EN mega display sizes. */
+  const titleClass = isBg
+    ? 'text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-6xl font-semibold mb-6 max-w-3xl mx-auto leading-[1.18] tracking-tight'
+    : 'text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight'
+  const subtitleClass = isBg
+    ? 'text-base sm:text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto drop-shadow-md leading-relaxed'
+    : 'text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed'
+  const badgeClass = isBg ? 'text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5' : 'text-sm px-6 py-3'
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Starry night sky background */}
@@ -107,7 +116,9 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <span className="inline-flex items-center px-6 py-3 rounded-full text-sm font-medium bg-gradient-to-r from-cosmic-500/20 to-purple-500/20 backdrop-blur-md text-white border border-cosmic-400/30 shadow-lg">
+          <span
+            className={`inline-flex items-center rounded-full font-medium bg-gradient-to-r from-cosmic-500/20 to-purple-500/20 backdrop-blur-md text-white border border-cosmic-400/30 shadow-lg ${badgeClass}`}
+          >
             <span className="animate-pulse mr-2">✨</span>
             {t.badge}
           </span>
@@ -117,20 +128,20 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8"
+          className={titleClass}
         >
           <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
             {t.titleLine1}
           </span>
           <br />
-          <span className="text-white drop-shadow-2xl">{t.titleLine2}</span>
+          <span className={`text-white ${isBg ? 'drop-shadow-lg' : 'drop-shadow-2xl'}`}>{t.titleLine2}</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed"
+          className={subtitleClass}
         >
           {t.description}
         </motion.p>

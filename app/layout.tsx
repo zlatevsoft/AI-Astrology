@@ -5,14 +5,14 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { Providers } from '@/components/providers'
 
-const inter = Inter({ 
-  subsets: ['latin'],
+const inter = Inter({
+  subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
   variable: '--font-inter',
   display: 'swap',
 })
 
-const poppins = Poppins({ 
-  subsets: ['latin'],
+const poppins = Poppins({
+  subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-poppins',
   display: 'swap',
