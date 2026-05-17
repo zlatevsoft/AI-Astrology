@@ -12,7 +12,8 @@ const inter = Inter({
 })
 
 const poppins = Poppins({
-  subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
+  /* next/font: Poppins only exposes latin + latin-ext (no Cyrillic bundle). BG body copy uses Inter + globals.css Cyrillic imports. */
+  subsets: ['latin', 'latin-ext'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-poppins',
   display: 'swap',
