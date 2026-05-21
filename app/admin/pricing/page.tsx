@@ -34,7 +34,7 @@ export default function AdminPricingPage() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const r = await fetch('/api/admin/pricing')
+      const r = await fetch('/api/admin/pricing', { credentials: 'include' })
       const d = (await r.json()) as { cents?: CentsPayload; error?: string }
       if (!r.ok) throw new Error(d.error || 'Failed to load pricing')
       const c = d.cents!
@@ -73,8 +73,12 @@ export default function AdminPricingPage() {
       compareDetailedCents: toCent(form.compareDetailedEur),
       compareComprehensiveCents: toCent(form.compareComprehensiveEur),
     }
-    if (Object.values(body).some((x) => !Number.isFinite(x) || x < 50)) {
-      toast.error('Each amount must be at least €0.50')
+    if (
+      Object.values(body).some(
+        (x) => typeof x !== 'number' || !Number.isFinite(x) || !Number.isInteger(x) || x < 50
+      )
+    ) {
+      toast.error('Всяка сума трябва да е поне €0,50 и да е валидно число.')
       return
     }
     setSaving(true)
@@ -82,10 +86,20 @@ export default function AdminPricingPage() {
       const r = await fetch('/api/admin/pricing', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(body),
       })
-      const d = (await r.json()) as { error?: string }
-      if (!r.ok) throw new Error(d.error || 'Save failed')
+      const d = (await r.json().catch(() => ({}))) as {
+        error?: string
+        details?: Record<string, string[] | undefined>
+      }
+      if (!r.ok) {
+        const extra =
+          d.details && Object.keys(d.details).length
+            ? ` ${JSON.stringify(d.details)}`
+            : ''
+        throw new Error((d.error || 'Записът се провали.') + extra)
+      }
       toast.success('Pricing updated. Homepage and checkout use these amounts.')
       await load()
     } catch (err) {

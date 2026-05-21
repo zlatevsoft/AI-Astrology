@@ -1,56 +1,87 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { getToken } from 'next-auth/jwt'
 import { z } from 'zod'
-import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { ensurePricingDefaultsRow, getPricingSnapshot, snapshotToPublicJson } from '@/lib/pricing-settings'
 
-const cents = z.number().int().min(50).max(9_999_999)
+/** Coerce from JSON numbers or numeric strings so validation never fails silently in production. */
+const centsField = z.coerce.number().int().min(50).max(9_999_999)
 
 const PutBody = z.object({
-  basicCents: cents,
-  detailedCents: cents,
-  comprehensiveCents: cents,
-  compareBasicCents: cents,
-  compareDetailedCents: cents,
-  compareComprehensiveCents: cents,
+  basicCents: centsField,
+  detailedCents: centsField,
+  comprehensiveCents: centsField,
+  compareBasicCents: centsField,
+  compareDetailedCents: centsField,
+  compareComprehensiveCents: centsField,
 })
 
-export async function GET() {
-  const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !process.env.DATABASE_URL) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+async function requireSuperAdmin(request: NextRequest) {
+  if (!process.env.DATABASE_URL) {
+    return { ok: false as const, response: NextResponse.json({ error: 'DATABASE_URL не е зададен' }, { status: 503 }) }
   }
+  const secret = process.env.NEXTAUTH_SECRET
+  if (!secret) {
+    return { ok: false as const, response: NextResponse.json({ error: 'NEXTAUTH_SECRET не е зададен' }, { status: 503 }) }
+  }
+  const token = await getToken({ req: request, secret })
+  const role = token?.role as string | undefined
+  if (!token || role !== 'SUPER_ADMIN') {
+    return {
+      ok: false as const,
+      response: NextResponse.json({ error: 'Нямате достъп. Влезте отново като главен админ.' }, { status: 401 }),
+    }
+  }
+  return { ok: true as const }
+}
+
+export async function GET(request: NextRequest) {
+  const gate = await requireSuperAdmin(request)
+  if (!gate.ok) return gate.response
+
   await ensurePricingDefaultsRow()
   const snap = await getPricingSnapshot()
   return NextResponse.json({ cents: snap, public: snapshotToPublicJson(snap) })
 }
 
 export async function PUT(request: NextRequest) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !process.env.DATABASE_URL) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const gate = await requireSuperAdmin(request)
+  if (!gate.ok) return gate.response
 
   let json: unknown
   try {
     json = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+    return NextResponse.json({ error: 'Невалидно JSON тяло' }, { status: 400 })
   }
 
   const parsed = PutBody.safeParse(json)
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      {
+        error: 'Има невалидни суми. Всяка положителна стойност трябва да е поне €0,50.',
+        details: parsed.error.flatten().fieldErrors,
+      },
+      { status: 400 }
+    )
   }
 
   const d = parsed.data
 
-  await prisma.pricingSettings.upsert({
-    where: { id: 1 },
-    create: { id: 1, ...d },
-    update: { ...d },
-  })
+  try {
+    await prisma.pricingSettings.upsert({
+      where: { id: 1 },
+      create: { id: 1, ...d },
+      update: { ...d },
+    })
+  } catch (e) {
+    console.error('admin/pricing PUT:', e)
+    const msg =
+      e instanceof Error && e.message
+        ? `Базата отхвърли записа (${e.message}). Изпълнете prisma db push върху production DB.`
+        : 'Неуспешен запис в базата. Провери Prisma/table PricingSettings.'
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
 
   const snap = await getPricingSnapshot()
   return NextResponse.json({ ok: true, cents: snap, public: snapshotToPublicJson(snap) })
