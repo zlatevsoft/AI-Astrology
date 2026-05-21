@@ -41,6 +41,10 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
       birthTime: '12:00',
       latitude: 42.4833,
       longitude: 26.5167,
+      /** Same defaults as main chart — avoids NaN from hidden inputs with valueAsNumber */
+      partnerLatitude: 42.4833,
+      partnerLongitude: 26.5167,
+      partnerBirthTime: '12:00',
     },
   })
 
@@ -118,16 +122,18 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
 
         const partnerChartResult = await partnerChartResponse.json()
 
-        if (partnerChartResult.success) {
-          partnerChartData = {
-            ...partnerChartResult.data,
-            userData: {
-              name: data.partnerName,
-              birthDate: data.partnerBirthDate,
-              birthTime: data.partnerBirthTime || '12:00',
-              location: data.partnerLocation || 'Unknown',
-            },
-          }
+        if (!partnerChartResult.success) {
+          throw new Error(partnerChartResult.error || 'Partner chart calculation failed')
+        }
+
+        partnerChartData = {
+          ...partnerChartResult.data,
+          userData: {
+            name: data.partnerName,
+            birthDate: data.partnerBirthDate,
+            birthTime: data.partnerBirthTime || '12:00',
+            location: data.partnerLocation || 'Unknown',
+          },
         }
       }
 

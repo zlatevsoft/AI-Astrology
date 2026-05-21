@@ -1,7 +1,17 @@
 import { z } from 'zod'
 import type { SiteLocale } from '@/lib/locale'
 
-const timeRe = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
+/** HH:mm or HH:mm:ss from `<input type="time">` — browsers vary */
+const timeRe = /^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/
+
+/** Hidden coords use valueAsNumber; empty → NaN must not fail validation */
+function optionalCoord(min: number, max: number) {
+  return z.preprocess((val) => {
+    if (val === '' || val === undefined || val === null) return undefined
+    const n = typeof val === 'number' ? val : Number(val)
+    return Number.isFinite(n) ? n : undefined
+  }, z.number().min(min).max(max).optional())
+}
 
 export const birthChartCopy = {
   en: {
@@ -98,16 +108,16 @@ export function buildBirthChartSchema(t: BirthChartCopy) {
     birthDate: z.string().min(1, t.errBirthDate),
     birthTime: z.string().regex(timeRe, t.errBirthTime),
     location: z.string().min(1, t.errLocation),
-    latitude: z.number().min(-90).max(90).optional(),
-    longitude: z.number().min(-180).max(180).optional(),
+    latitude: optionalCoord(-90, 90),
+    longitude: optionalCoord(-180, 180),
     partnerName: z.union([z.string().min(2, t.errPartnerName), z.literal('')]).optional(),
     partnerBirthDate: z.string().optional(),
     partnerBirthTime: z
       .union([z.string().regex(timeRe, t.errBirthTime), z.literal('')])
       .optional(),
     partnerLocation: z.string().optional(),
-    partnerLatitude: z.number().min(-90).max(90).optional(),
-    partnerLongitude: z.number().min(-180).max(180).optional(),
+    partnerLatitude: optionalCoord(-90, 90),
+    partnerLongitude: optionalCoord(-180, 180),
   })
 }
 
