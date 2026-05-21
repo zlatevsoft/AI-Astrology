@@ -59,7 +59,7 @@ model Order {
   createdAt              DateTime    @default(now())
 }
 
-/** Singleton row (id = 1): list/checkout prices + “compare at” strikethrough (all EUR cents). */
+// Singleton row (id = 1): list/checkout prices + compare-at display (EUR cents).
 model PricingSettings {
   id                           Int      @id
   basicCents                   Int      @default(1900)
