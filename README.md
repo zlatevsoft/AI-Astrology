@@ -91,8 +91,17 @@ A modern, AI-powered Progressive Web App (PWA) for generating personalized birth
 
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 🏗️ Project Structure
+### Vercel deployments
 
+На Vercel build включва **`prisma db push`**, докато има **`VERCEL=1`** (по подразбиране при deploy). Така новите таблици от `schema.prisma` — например **`PricingSettings`** за админ цени — се създават в **същия Postgres** като юзърите/промокодовете, без да пускаш `db push` ръчно.
+
+Очакват се поне **`DATABASE_URL`** или често **`POSTGRES_PRISMA_URL`** / **`POSTGRES_URL`** при Vercel Storage / Neon.
+
+Локално **`npm run build`** пропуска `db push`, освен ако зададеш **`RUN_DB_PUSH=1`** или **`CI=true`**.
+
+---
+
+## 🏗️ Project Structure
 ```
 ai-astrology-pwa/
 ├── app/                    # Next.js 13+ app directory
