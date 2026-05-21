@@ -247,9 +247,17 @@ export default function AdminAffiliatesPage() {
         <div className="container mx-auto max-w-5xl px-4">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <h1 className="text-3xl font-bold text-cosmic-900 dark:text-white">Affiliates & promo codes</h1>
-            <Button variant="outline" onClick={() => void signOut({ callbackUrl: '/' })}>
-              Sign out
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/admin/pricing"
+                className={cn(buttonVariants({ variant: 'secondary' }), 'inline-flex')}
+              >
+                Pricing
+              </Link>
+              <Button variant="outline" onClick={() => void signOut({ callbackUrl: '/' })}>
+                Sign out
+              </Button>
+            </div>
           </div>
 
           <p className="mb-8 rounded-xl border border-cosmic-200 bg-cosmic-50/90 p-4 text-sm text-cosmic-800 dark:border-cosmic-600 dark:bg-cosmic-900/40 dark:text-cosmic-200">

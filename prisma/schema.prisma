@@ -58,3 +58,15 @@ model Order {
   status                 OrderStatus @default(PAID)
   createdAt              DateTime    @default(now())
 }
+
+/** Singleton row (id = 1): list/checkout prices + “compare at” strikethrough (all EUR cents). */
+model PricingSettings {
+  id                           Int      @id
+  basicCents                   Int      @default(1900)
+  detailedCents               Int      @default(2900)
+  comprehensiveCents          Int      @default(3900)
+  compareBasicCents            Int      @default(2900)
+  compareDetailedCents          Int      @default(3900)
+  compareComprehensiveCents     Int      @default(4900)
+  updatedAt                    DateTime @updatedAt
+}

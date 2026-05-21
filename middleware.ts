@@ -88,7 +88,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (path.startsWith('/admin/affiliates') || path.startsWith('/partner')) {
+  if (path.startsWith('/admin/')) {
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
@@ -98,10 +98,22 @@ export async function middleware(request: NextRequest) {
       u.searchParams.set('callbackUrl', path)
       return NextResponse.redirect(u)
     }
-    if (path.startsWith('/admin/affiliates') && token.role !== 'SUPER_ADMIN') {
+    if (token.role !== 'SUPER_ADMIN') {
       return NextResponse.redirect(new URL('/login?error=forbidden', request.url))
     }
-    if (path.startsWith('/partner') && token.role !== 'INFLUENCER') {
+  }
+
+  if (path.startsWith('/partner')) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    })
+    if (!token) {
+      const u = new URL('/login', request.url)
+      u.searchParams.set('callbackUrl', path)
+      return NextResponse.redirect(u)
+    }
+    if (token.role !== 'INFLUENCER') {
       return NextResponse.redirect(new URL('/login?error=forbidden', request.url))
     }
   }

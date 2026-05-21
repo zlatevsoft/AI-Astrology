@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { LIST_PRICE_EUR, COMPARE_AT_EUR, type AnalysisTier } from '@/lib/pricing'
+import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { getPlanRowsForLocale, pricingSection, isBasicProductName, type PlanProductName } from '@/lib/plan-locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
@@ -28,6 +30,17 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
   const locale = useSiteLocale()
   const t = pricingSection[locale]
   const plans = getPlanRowsForLocale(locale)
+  const [apiPrices, setApiPrices] = useState<PublicPricingPayload | null>(null)
+
+  useEffect(() => {
+    fetch('/api/pricing')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: PublicPricingPayload | null) => (d?.listEur && d?.compareEur ? setApiPrices(d) : null))
+      .catch(() => {})
+  }, [])
+
+  const listOf = (tier: AnalysisTier) => apiPrices?.listEur[tier] ?? LIST_PRICE_EUR[tier]
+  const compareOf = (tier: AnalysisTier) => apiPrices?.compareEur[tier] ?? COMPARE_AT_EUR[tier]
 
   const handlePlanSelect = (productName: PlanProductName) => {
     sessionStorage.setItem('selectedPlan', productName)
@@ -59,8 +72,8 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => {
-            const listPrice = LIST_PRICE_EUR[plan.tier]
-            const compareAt = COMPARE_AT_EUR[plan.tier]
+            const listPrice = listOf(plan.tier)
+            const compareAt = compareOf(plan.tier)
             const Icon = PlanIcon[plan.tier]
             return (
               <motion.div

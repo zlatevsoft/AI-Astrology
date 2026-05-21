@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getProduct } from '@/lib/stripe'
+import { getChargeCentsForProductName } from '@/lib/pricing-settings'
 import Stripe from 'stripe'
 import { stripeConfigSchema } from '@/lib/validation'
 import { isFreeCheckoutEnabled } from '@/lib/pricing'
@@ -56,6 +57,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    const dynamicCents = await getChargeCentsForProductName(productName)
 
     if (isFreeCheckoutEnabled()) {
       const mockSessionId = `free_checkout_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
@@ -120,7 +123,8 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    let unitAmount = product.price
+    const baseListCents = dynamicCents ?? product.price
+    let unitAmount = baseListCents
     const meta: Record<string, string> = {
       productName: product.name,
       productType: productName.toLowerCase().replace(/\s+/g, ''),
@@ -132,7 +136,7 @@ export async function POST(request: NextRequest) {
         if (!promo) {
           return NextResponse.json({ error: 'Invalid or expired promo code' }, { status: 400 })
         }
-        unitAmount = amountAfterDiscountCents(product.price, promo.discountPercent)
+        unitAmount = amountAfterDiscountCents(baseListCents, promo.discountPercent)
         const comm = commissionCentsForOrder(unitAmount, promo.commissionPercent)
         meta.promoCodeId = promo.id
         meta.influencerId = promo.influencerId

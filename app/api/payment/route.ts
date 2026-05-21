@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Stripe from 'stripe'
-import { getChargeAmountCents, isFreeCheckoutEnabled, type AnalysisTier } from '@/lib/pricing'
+import { getChargeCentsForTier } from '@/lib/pricing-settings'
+import { isFreeCheckoutEnabled, type AnalysisTier } from '@/lib/pricing'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -76,8 +77,9 @@ export async function POST(request: NextRequest) {
 
     const tier = analysisType as AnalysisTier
     const meta = PRICING_META[tier]
+    const amountCents = await getChargeCentsForTier(tier)
     const pricing = {
-      amount: getChargeAmountCents(tier),
+      amount: amountCents,
       currency: 'usd' as const,
       description: meta.description,
     }
