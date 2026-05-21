@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { normalizePromoCode } from '@/lib/promo'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 const Create = z.object({
   code: z.string().min(2).max(32),
@@ -18,7 +19,7 @@ const Create = z.object({
 
 export async function GET() {
   const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !process.env.DATABASE_URL) {
+  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !isDatabaseConfigured()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const codes = await prisma.promoCode.findMany({
@@ -47,7 +48,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !process.env.DATABASE_URL) {
+  if (!session?.user || session.user.role !== 'SUPER_ADMIN' || !isDatabaseConfigured()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const json = await request.json()

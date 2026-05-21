@@ -1,11 +1,12 @@
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 export function normalizePromoCode(code: string) {
   return code.trim().toUpperCase()
 }
 
 export async function findActivePromoByCode(code: string) {
-  if (!process.env.DATABASE_URL) return null
+  if (!isDatabaseConfigured()) return null
   const normalized = normalizePromoCode(code)
   const p = await prisma.promoCode.findUnique({
     where: { code: normalized },

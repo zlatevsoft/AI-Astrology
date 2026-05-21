@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 async function persistPaidOrder(session: Stripe.Checkout.Session) {
-  if (!process.env.DATABASE_URL) return
+  if (!isDatabaseConfigured()) return
 
   const {
     promoCodeId,

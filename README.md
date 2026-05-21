@@ -55,7 +55,7 @@ A modern, AI-powered Progressive Web App (PWA) for generating personalized birth
    
    Edit `.env.local` with your configuration:
    ```env
-   # Database
+   # Database (or use POSTGRES_PRISMA_URL / POSTGRES_* from Vercel Postgres / Neon when DATABASE_URL is unset)
    DATABASE_URL="your-postgresql-url"
    
    # Authentication
@@ -81,7 +81,14 @@ A modern, AI-powered Progressive Web App (PWA) for generating personalized birth
    yarn dev
    ```
 
+   After editing env, sync the Prisma schema to Postgres:
+
+   ```bash
+   npm run db:push
+   ```
+
 5. **Open your browser**
+
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 🏗️ Project Structure

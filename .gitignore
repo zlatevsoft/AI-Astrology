@@ -170,6 +170,9 @@ storybook-static
 # Vercel
 .vercel
 
+# Secrets from `vercel env pull` — never commit (Stripe/GitHub блокират push)
+.env.vercel.pull
+
 # Turbo
 .turbo
 
@@ -192,3 +195,4 @@ workbox-*.js
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+.env*.local

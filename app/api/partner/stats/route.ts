@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'INFLUENCER' || !process.env.DATABASE_URL) {
+  if (!session?.user || session.user.role !== 'INFLUENCER' || !isDatabaseConfigured()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const id = session.user.id

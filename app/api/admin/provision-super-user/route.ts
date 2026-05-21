@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 const Body = z.object({
   password: z.string().min(8),
@@ -19,8 +20,8 @@ export async function POST(request: NextRequest) {
   if (!process.env.SETUP_SECRET || secret !== process.env.SETUP_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  if (!process.env.DATABASE_URL) {
-    return NextResponse.json({ error: 'DATABASE_URL not set' }, { status: 503 })
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json({ error: 'PostgreSQL URL not configured' }, { status: 503 })
   }
   const raw = await request.json()
   const body = Body.parse(raw)

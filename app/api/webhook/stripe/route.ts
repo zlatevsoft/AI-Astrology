@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -105,7 +106,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     amount: session.amount_total
   })
 
-  if (process.env.DATABASE_URL) {
+  if (isDatabaseConfigured()) {
     try {
       const at = session.amount_total ?? 0
       const comm = parseInt((commissionCents as string) || '0', 10) || 0

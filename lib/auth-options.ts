@@ -2,6 +2,7 @@ import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,7 +14,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null
-        if (!process.env.DATABASE_URL) return null
+        if (!isDatabaseConfigured()) return null
 
         const key = credentials.username.trim()
         const user = await prisma.user.findFirst({

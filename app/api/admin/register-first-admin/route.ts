@@ -3,6 +3,7 @@ import { timingSafeEqual } from 'node:crypto'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 const Body = z.object({
   setupKey: z.string().min(1),
@@ -28,7 +29,7 @@ function safeEqualKey(provided: string, expected: string): boolean {
  */
 export async function POST(request: NextRequest) {
   const expected = process.env.SETUP_SECRET
-  if (!expected?.trim() || !process.env.DATABASE_URL) {
+  if (!expected?.trim() || !isDatabaseConfigured()) {
     return NextResponse.json({ error: 'Not available' }, { status: 503 })
   }
   if (process.env.ALLOW_FIRST_ADMIN_FORM === '0' || process.env.ALLOW_FIRST_ADMIN_FORM === 'false') {

@@ -3,6 +3,7 @@ import { getToken } from 'next-auth/jwt'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { ensurePricingDefaultsRow, getPricingSnapshot, snapshotToPublicJson } from '@/lib/pricing-settings'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 /** Coerce from JSON numbers or numeric strings so validation never fails silently in production. */
 const centsField = z.coerce.number().int().min(50).max(9_999_999)
@@ -17,8 +18,14 @@ const PutBody = z.object({
 })
 
 async function requireSuperAdmin(request: NextRequest) {
-  if (!process.env.DATABASE_URL) {
-    return { ok: false as const, response: NextResponse.json({ error: 'DATABASE_URL не е зададен' }, { status: 503 }) }
+  if (!isDatabaseConfigured()) {
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        { error: 'Базата не е конфигурирана (задайте DATABASE_URL или POSTGRES_PRISMA_URL на хостинг).' },
+        { status: 503 }
+      ),
+    }
   }
   const secret = process.env.NEXTAUTH_SECRET
   if (!secret) {

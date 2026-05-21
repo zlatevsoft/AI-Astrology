@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { findActivePromoByCode, amountAfterDiscountCents, commissionCentsForOrder } from '@/lib/promo'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 const Body = z.object({
   code: z.string().min(1),
@@ -9,7 +10,7 @@ const Body = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.DATABASE_URL) {
+    if (!isDatabaseConfigured()) {
       return NextResponse.json({ valid: false, error: 'Promo system not configured' }, { status: 503 })
     }
     const json = await request.json()

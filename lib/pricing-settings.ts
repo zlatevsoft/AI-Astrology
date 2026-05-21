@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 import type { AnalysisTier } from '@/lib/pricing'
 
 export type PricingSnapshot = {
@@ -29,7 +30,7 @@ export function analysisTierFromProductName(productName: string): AnalysisTier |
 }
 
 export async function ensurePricingDefaultsRow(): Promise<void> {
-  if (!process.env.DATABASE_URL) return
+  if (!isDatabaseConfigured()) return
   try {
     await prisma.pricingSettings.upsert({
       where: { id: 1 },
@@ -42,7 +43,7 @@ export async function ensurePricingDefaultsRow(): Promise<void> {
 }
 
 export async function getPricingSnapshot(): Promise<PricingSnapshot> {
-  if (!process.env.DATABASE_URL) return { ...PRICING_DEFAULTS }
+  if (!isDatabaseConfigured()) return { ...PRICING_DEFAULTS }
   await ensurePricingDefaultsRow()
   try {
     const row = await prisma.pricingSettings.findUnique({ where: { id: 1 } })

@@ -5,6 +5,7 @@ import Stripe from 'stripe'
 import { stripeConfigSchema } from '@/lib/validation'
 import { isFreeCheckoutEnabled } from '@/lib/pricing'
 import { findActivePromoByCode, amountAfterDiscountCents, commissionCentsForOrder } from '@/lib/promo'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 export async function POST(request: NextRequest) {
   try {
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
       productName: product.name,
       productType: productName.toLowerCase().replace(/\s+/g, ''),
     }
-    if (promoCode && process.env.DATABASE_URL) {
+    if (promoCode && isDatabaseConfigured()) {
       const pc = (promoCode as string).trim()
       if (pc) {
         const promo = await findActivePromoByCode(pc)

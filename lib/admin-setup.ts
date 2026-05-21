@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { isDatabaseConfigured } from '@/lib/database-url'
 
 export type FirstAdminBlockReason =
   | 'no_setup_secret'
@@ -21,7 +22,7 @@ export async function getFirstAdminSetupState(): Promise<FirstAdminSetupState> {
   if (!process.env.SETUP_SECRET?.trim()) {
     return { ok: false, reason: 'no_setup_secret' }
   }
-  if (!process.env.DATABASE_URL?.trim()) {
+  if (!isDatabaseConfigured()) {
     return { ok: false, reason: 'no_database_url' }
   }
   try {
