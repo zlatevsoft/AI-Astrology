@@ -4,6 +4,8 @@
  * Free test mode: FREE_CHECKOUT=1, NEXT_PUBLIC_FREE_CHECKOUT=1 (see env.example).
  */
 
+import type { SiteLocale } from '@/lib/locale'
+
 export type AnalysisTier = 'basic' | 'detailed' | 'comprehensive'
 
 export const CHARGE_CURRENCY = 'eur' as const
@@ -56,4 +58,14 @@ export function getMarketingPriceDisplay(tier: AnalysisTier): { current: number;
 
 export function formatEur(amount: number): string {
   return `€${amount.toFixed(2)}`
+}
+
+/** EUR list price shown in UI (whole euros); matches `LIST_PRICE_EUR` / free-checkout display. */
+export function formatMarketingListPriceEUR(tier: AnalysisTier, locale: SiteLocale): string {
+  const { current } = getMarketingPriceDisplay(tier)
+  if (current === 0) {
+    return locale === 'bg' ? 'Безплатно' : 'Free'
+  }
+  const n = Math.round(current)
+  return locale === 'bg' ? `${n} €` : `€${n}`
 }
