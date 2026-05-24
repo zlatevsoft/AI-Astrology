@@ -89,7 +89,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                      {t.popular}
+                      {plan.popularLabel ?? t.popular}
                     </span>
                   </div>
                 )}
@@ -124,6 +124,12 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                     </li>
                   ))}
                 </ul>
+
+                {plan.emotionalLine ? (
+                  <p className="mb-6 text-center text-sm font-medium text-cosmic-700 dark:text-cosmic-200 leading-snug px-1">
+                    {plan.emotionalLine}
+                  </p>
+                ) : null}
 
                 <Button
                   onClick={() => handlePlanSelect(plan.productName)}

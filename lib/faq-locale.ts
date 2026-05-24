@@ -17,12 +17,12 @@ type Qa = { q: string; a: string }
 
 const enQa: Qa[] = [
   {
-    q: 'What is AI Astrology?',
-    a: 'AI Astrology combines traditional astrological principles with advanced artificial intelligence to provide personalized cosmic insights. Our AI analyzes your birth chart data to generate detailed personality profiles, life path guidance, and relationship compatibility insights.',
+    q: 'What is AstroHoroscope.online?',
+    a: 'AstroHoroscope.online offers professional birth-chart readings that combine classical astrological methods with structured text interpretation based on your natal placements. Using the details you provide, we synthesize insights about personality patterns, major life themes, relationship dynamics, and growth opportunities.',
   },
   {
     q: 'How accurate are the readings?',
-    a: 'Our AI-powered analysis provides insights based on established astrological principles and patterns. While we strive for accuracy, results should be used for self-reflection and entertainment purposes. The quality of analysis depends on the accuracy of birth information provided.',
+    a: 'The reading follows mainstream astrological techniques and repeatable interpretation conventions. Expect meaningful reflection rather than deterministic prediction; outcomes are strongest when birth date, time, and location are precise. Astrology content is intended for entertainment and personal insight, not as professional, medical, or legal advice.',
   },
   {
     q: 'What information do I need to provide?',
@@ -72,8 +72,8 @@ const enQa: Qa[] = [
 
 const bgQa: Qa[] = [
   {
-    q: 'Какво е AI Astrology?',
-    a: 'AI Astrology съчетава класическа астрология с изкуствен интелект, за да даде персонализирани космически инсайти. Моделът анализира наталната ти карта – личност, път и съвместимост.',
+    q: 'Какво представлява услугата?',
+    a: 'AstroHoroscope.online предлага професионално четене на натална карта – класическа астрология, изложена като ясна текстова интерпретация според подадените ти данни (знаци, домове, аспекти). Фокусът е самопознание, животни теми и съвместимост, без обещание за точни бъдещи събития.',
   },
   {
     q: 'Колко са точни отчетите?',

@@ -124,7 +124,7 @@ export default function StripeConfigPage() {
               <h1 className="text-3xl font-bold text-white">Stripe Configuration</h1>
             </div>
             <p className="text-white/80 text-lg">
-              Configure your Stripe payment settings for AI Astrology
+              Configure your Stripe payment settings for Astro Horoscope
             </p>
           </div>
 

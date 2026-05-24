@@ -6,35 +6,35 @@ export const featuresSection = {
     line1: 'Everything You Need',
     line2: 'for Your Astrological Journey',
     intro:
-      'Discover the comprehensive features that make our AI astrology platform advanced and easy to use.',
-    bottomLine: 'Ready to discover your cosmic blueprint?',
+      'Rich tools for your birth chart—a clear interpretation flow, trusted calculations, and a secure checkout.',
+    bottomLine: 'Ready to explore your cosmic blueprint?',
     bottomCta: 'Get Started Now',
   },
   bg: {
-    badge: '✨ Функции',
-    line1: 'Всичко необходимо',
-    line2: 'за твоя астрологичен път',
+    badge: '',
+    line1: 'Повече от обикновен хороскоп',
+    line2: '',
     intro:
-      'Пълни възможности за точна натална карта, AI анализ и сигурност – на едно място.',
-    bottomLine: 'Готови ли сте да видите своята натална карта?',
-    bottomCta: 'Започни сега',
+      'Персонален анализ, създаден специално според твоите рождени данни и житейски периоди.',
+    bottomLine: 'Разбери какво ти подготвят звездите!',
+    bottomCta: 'Започни анализа',
   },
 } as const
 
 export const featureCards = {
   en: [
     { title: 'Accurate Birth Charts', description: 'Precise natal charts with Swiss Ephemeris: planets and aspects.' },
-    { title: 'AI-Powered Analysis', description: 'Personalized insights on personality, lessons, and guidance.' },
+    { title: 'Personal interpretation', description: 'Guidance framed around personality, recurring themes, and direction.' },
     { title: 'Privacy & Security', description: 'Your data is protected; we take privacy seriously.' },
-    { title: 'Instant Results', description: 'Full chart and analysis in seconds, not days.' },
-    { title: 'Personalized Insights', description: 'Interpretations for your unique planetary picture.' },
+    { title: 'Instant Results', description: 'Full chart and interpretation in moments, not days.' },
+    { title: 'Personalized Insights', description: 'Written for your unique planetary picture.' },
     { title: 'Global Compatibility', description: 'Accurate for births anywhere, correct time zones.' },
     { title: 'Mobile Optimized', description: 'Works great on phone, tablet, and desktop; PWA-ready.' },
     { title: 'Secure Payments', description: 'Stripe and SSL for safe checkout in EUR.' },
   ],
   bg: [
     { title: 'Точни натални карти', description: 'Планети и аспекти с надеждни изчисления (Swiss Ephemeris).' },
-    { title: 'AI анализ', description: 'Персонални прозрения за личност, уроци и ориентири.' },
+    { title: 'Персонална интерпретация', description: 'Текст, който обобщава картата в разбираеми акценти.' },
     { title: 'Поверителност', description: 'Данните ти са защитени; доверието е приоритет.' },
     { title: 'Мигновен резултат', description: 'Карта и анализ за секунди, не дни.' },
     { title: 'Персонализация', description: 'Тълкуване според твоята планетна картина.' },
@@ -49,12 +49,12 @@ export const howItWorksSection = {
     badge: '🚀 How It Works',
     line1: 'Simple 4-Step Process',
     line2: 'to Your Cosmic Insights',
-    intro: 'Get your analysis in a few easy steps. Unlock your cosmic blueprint.',
+    intro: 'Get your chart and written reading in four quick steps.',
     steps: [
       { title: 'Enter Your Details', description: 'Birth date, time, and place for accurate math.' },
       { title: 'Generate Birth Chart', description: 'We compute planetary positions and aspects.' },
-      { title: 'AI Analysis', description: 'AI turns your chart into clear, personal insights.' },
-      { title: 'Get Your Report', description: 'Read and download your full analysis and PDF.' },
+      { title: 'Written reading', description: 'Your chart is turned into structured, readable guidance.' },
+      { title: 'Get Your Report', description: 'Read online and download your PDF.' },
     ],
     ctaTitle: 'Ready to Start Your Journey?',
     ctaBody:
@@ -64,18 +64,18 @@ export const howItWorksSection = {
   bg: {
     badge: '🚀 Как работи',
     line1: '4 прости стъпки',
-    line2: 'към твоите космически инсайти',
-    intro: 'Попълваш данни, изчисляваме картата, AI ти дава ясен анализ – бързо и нагледно.',
+    line2: 'към твоите инсайти',
+    intro: 'Попълваш данни, изчисляваме картата и ти даваме структуриран текст – бързо и нагледно.',
     steps: [
       { title: 'Въведи данните', description: 'Дата, час и място на раждане за точна карта.' },
       { title: 'Генерира се картата', description: 'Изчисляваме планети и аспекти.' },
-      { title: 'AI анализ', description: 'Моделът обобщава картата в разбираем текст.' },
+      { title: 'Ясна текстова интерпретация', description: 'Обобщаваме картата в разбираем отчет.' },
       { title: 'Получаваш отчет', description: 'Четеш в браузъра и теглиш PDF.' },
     ],
-    ctaTitle: 'Готови ли сте да започнете?',
+    ctaTitle: 'Разбери какво ти подготвят звездите!',
     ctaBody:
-      'Хиляди потребители вече ползват картата си, за по-добра самопонос и ориентир.',
-    ctaButton: 'Към плановете',
+      'Хиляди потребители вече ползват картата си за по-добро самопознание и ориентир.',
+    ctaButton: 'Започни анализа',
   },
 } as const
 
@@ -91,7 +91,7 @@ type Testimonial = {
 const testimonialsEn: Testimonial[] = [
   {
     content:
-      "This app is amazing — the reading matched my life themes. It's like a smart companion for reflection.",
+      "This app is amazing — the reading matched my life themes. It's like a thoughtful companion for reflection.",
     author: 'Sarah J.',
     role: 'Marketing',
     zodiac: 'Libra',
@@ -99,7 +99,7 @@ const testimonialsEn: Testimonial[] = [
     initial: 'S',
   },
   {
-    content: 'I doubted it at first, but the chart and the AI text really helped me see myself more clearly.',
+    content: 'I doubted it at first, but the chart and interpretation helped me see myself more clearly.',
     author: 'Michael C.',
     role: 'Engineer',
     zodiac: 'Scorpio',
@@ -107,7 +107,7 @@ const testimonialsEn: Testimonial[] = [
     initial: 'M',
   },
   {
-    content: 'Classic astrology plus modern AI — deep but practical. I recommend it.',
+    content: 'Classic astrology framing with modern clarity — deep but practical. I recommend it.',
     author: 'Emma R.',
     role: 'Coach',
     zodiac: 'Pisces',
@@ -131,7 +131,7 @@ const testimonialsEn: Testimonial[] = [
     initial: 'L',
   },
   {
-    content: "I've tried other apps; this one stands out for insight quality and clarity.",
+    content: "I've tried other apps; this one stands out for clarity and depth.",
     author: 'Alex M.',
     role: 'Founder',
     zodiac: 'Aries',
@@ -159,7 +159,7 @@ const testimonialsBg: Testimonial[] = [
     initial: 'М',
   },
   {
-    content: 'Съчетание от класическа астрология и съвременен AI – съдържателно и практично. Препоръчвам.',
+    content: 'Класическа астрология, поднесена модерно – съдържателно и практично. Препоръчвам.',
     author: 'Ема Р.',
     role: 'Коуч',
     zodiac: 'Риби',
@@ -209,13 +209,17 @@ export const testimonialsHead = {
 
 export const statsRow = {
   en: [
-    { label: 'Charts Generated', value: '10,000+', icon: '📊' as const },
+    { label: 'Charts generated', value: '10,000+', icon: '📊' as const },
     { label: 'Average Rating', value: '4.9/5', icon: '⭐' as const },
     { label: 'Countries', value: '50+', icon: '🌍' as const },
-    { label: 'Happy Users', value: '8,500+', icon: '😊' as const },
+    { label: 'Happy Readers', value: '8,500+', icon: '😊' as const },
   ],
   bg: [
-    { label: 'Генерирани карти', value: '10 000+', icon: '📊' as const },
+    {
+      label: 'Любим избор на хиляди потребители',
+      value: '★★★★★',
+      icon: '⭐' as const,
+    },
     { label: 'Средна оценка', value: '4,9/5', icon: '⭐' as const },
     { label: 'Държави', value: '50+', icon: '🌍' as const },
     { label: 'Доволни', value: '8 500+', icon: '😊' as const },

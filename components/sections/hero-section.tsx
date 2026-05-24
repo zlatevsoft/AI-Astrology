@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { heroHome } from '@/lib/dictionaries'
@@ -20,53 +21,23 @@ export function HeroSection() {
   const badgeClass = isBg ? 'text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5' : 'text-sm px-6 py-3'
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Starry night sky background */}
+      {/* Full-bleed hero image (configured in `/public`). */}
       <div className="absolute inset-0 z-0">
-        {/* Base gradient for night sky */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900"></div>
-        
-        {/* Stars layer */}
-        <div className="absolute inset-0">
-          {[...Array(150)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white rounded-full animate-twinkle"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: `${Math.random() * 3 + 1}px`,
-                height: `${Math.random() * 3 + 1}px`,
-                animationDelay: `${Math.random() * 4}s`,
-                animationDuration: `${Math.random() * 3 + 3}s`,
-                opacity: Math.random() * 0.8 + 0.2,
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Planets layer */}
-        <div className="absolute inset-0">
-          {/* Large planet */}
-          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-orange-400 via-red-500 to-pink-600 rounded-full opacity-60 blur-md animate-float shadow-2xl shadow-orange-500/30"></div>
-          
-          {/* Medium planet */}
-          <div className="absolute bottom-32 left-16 w-20 h-20 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-full opacity-50 blur-md animate-float-delayed shadow-2xl shadow-blue-500/30"></div>
-          
-          {/* Small planet */}
-          <div className="absolute top-1/3 left-1/4 w-12 h-12 bg-gradient-to-br from-green-400 via-teal-500 to-cyan-600 rounded-full opacity-40 blur-md animate-float shadow-2xl shadow-green-500/30"></div>
-          
-          {/* Additional small planets */}
-          <div className="absolute top-1/2 right-1/3 w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-30 blur-sm animate-float-delayed"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full opacity-25 blur-sm animate-float"></div>
-        </div>
-        
-        {/* Nebula effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-transparent to-pink-500/15"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-500/10 via-transparent to-cosmic-500/10"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-slate-900/20"></div>
+        <Image
+          src="/astrohoroscope.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-purple-950/55 to-indigo-950/75"
+          aria-hidden
+        />
       </div>
 
-      {/* Animated background elements */}
+      {/* Soft glow accents (minimal, over image). */}
       <div className="absolute inset-0 overflow-hidden z-10">
         <div className="absolute top-20 left-20 w-72 h-72 bg-cosmic-500/10 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float-delayed"></div>

@@ -8,7 +8,7 @@ export const pricingSection = {
   en: {
     title: 'Choose Your Astrological Journey',
     subtitle:
-      'Discover your cosmic blueprint with our AI-powered astrological analysis. Choose the perfect plan for your spiritual journey.',
+      'Discover your cosmic blueprint with a personalized astrological analysis. Choose the plan that fits your journey.',
     oneTimeLine: 'One-time payment • Instant access • PDF download included',
     popular: 'Most Popular',
     oneTimePayment: 'one-time payment',
@@ -16,9 +16,9 @@ export const pricingSection = {
     trustNoRecurring: 'No recurring charges',
   },
   bg: {
-    title: 'Избери своя астрологичен път',
+    title: 'Какво разкриват звездите за теб?',
     subtitle:
-      'Открий космическия си почерк с AI анализ. Избери плана, който подхожда на твоето духовно пътешествие.',
+      'Получи персонална астрологична прогноза за любовта, характера и бъдещите възможности в живота ти!',
     oneTimeLine: 'Еднократно плащане • Мигновен достъп • Включен PDF',
     popular: 'Най-популярен',
     oneTimePayment: 'еднократно плащане',
@@ -27,17 +27,23 @@ export const pricingSection = {
   },
 } as const satisfies Record<SiteLocale, Record<string, string>>
 
-type PlanRow = {
-  productName: PlanProductName
-  tier: AnalysisTier
+type PlanLocaleFields = {
   name: string
   description: string
   features: string[]
   buttonText: string
   popular: boolean
+  buttonVariant: 'outline' | 'default'
+  /** Overrides `pricingSection.popular` on the ribbon (e.g. BG marketing copy). */
+  popularLabel?: string
+  emotionalLine?: string
+}
+
+export type PlanRow = PlanLocaleFields & {
+  productName: PlanProductName
+  tier: AnalysisTier
   gradient: string
   borderColor: string
-  buttonVariant: 'outline' | 'default'
 }
 
 const gradients: Record<AnalysisTier, { gradient: string; borderColor: string }> = {
@@ -46,7 +52,7 @@ const gradients: Record<AnalysisTier, { gradient: string; borderColor: string }>
   comprehensive: { gradient: 'from-pink-500 to-red-600', borderColor: 'border-pink-500/30' },
 }
 
-const planContent: Record<SiteLocale, Record<AnalysisTier, Omit<PlanRow, 'tier' | 'productName' | 'gradient' | 'borderColor'>>> = {
+const planContent: Record<SiteLocale, Record<AnalysisTier, PlanLocaleFields>> = {
   en: {
     basic: {
       name: 'Basic Reading',
@@ -113,64 +119,62 @@ const planContent: Record<SiteLocale, Record<AnalysisTier, Omit<PlanRow, 'tier' 
   },
   bg: {
     basic: {
-      name: 'Базов анализ',
-      description: 'Открий ядрото на личността и житейския си път',
+      name: 'Лична астрологична прогноза',
+      description:
+        'Разбери какво разкриват звездите за твоя характер, любов и бъдещи възможности.',
       features: [
-        '🌟 Пълен анализ на наталната карта',
-        '💫 Ключови черти на личността',
-        '🎯 Предназначение и житейска цел',
-        '💕 Любовни и партньорски модели',
-        '💼 Кариера и силни страни',
-        '📊 Планетарни влияния',
-        '🔮 Уроци и предизвикателства',
-        '📱 Мигновен PDF',
-        '✨ Споделим отчет',
+        'Анализ на личността и силните страни',
+        'Любов и взаимоотношения',
+        'Кариера и житейски насоки',
+        'Скрит потенциал и таланти',
+        'Важни планетарни влияния',
+        'Персонален PDF доклад',
+        'Мигновен достъп след поръчка',
       ],
-      buttonText: 'Базов анализ',
+      buttonText: 'Вземи своята прогноза',
       popular: false,
       buttonVariant: 'outline',
     },
     detailed: {
-      name: 'Задълбочен анализ',
-      description: 'Пътешествие в дълбините на душата ти',
+      name: 'Премиум звезден анализ',
+      description:
+        'Детайлен персонален анализ, който разкрива любовта, бъдещето и важните периоди в живота ти.',
+      popularLabel: '🔥 Най-предпочитан избор',
       features: [
-        '✨ Всичко от Базов, плюс:',
-        '🧠 Пълен психологичен профил',
-        '🌙 Кармични и душевни теми',
-        '💝 Любов и връзки – детайлно',
-        '🚀 Житейски път и кариера',
-        '🏠 Домове и житейски сфери',
-        '⭐ Аспекти между планетите',
-        '⏰ Цикли и време',
-        '🔄 Сенки и израстване',
-        '📋 15+ практични съвета',
-        '🔮 Перспектива напред',
-        '📱 Премиум PDF',
-        '🎨 Визуален отчет',
+        'Всичко от основната прогноза',
+        'Подробен психологически профил',
+        'Любов, връзки и емоционални модели',
+        'Кариера и финансов потенциал',
+        'Предстоящи възможности и промени',
+        'Силни и слаби периоди',
+        'Анализ на житейски цикли',
+        'Персонални насоки и препоръки',
+        'Premium PDF доклад',
+        'По-задълбочен и детайлен анализ',
       ],
-      buttonText: 'Задълбочен анализ',
+      emotionalLine:
+        '✨ Хиляди хора вече откриха нов поглед към живота си чрез своята прогноза.',
+      buttonText: 'Разкрий какво ти предстои',
       popular: true,
       buttonVariant: 'default',
     },
     comprehensive: {
-      name: 'Пълен съвместимост',
-      description: 'Синастрия и съвместимост за двама',
+      name: 'Любовна съвместимост',
+      description:
+        'Разбери истинската динамика между вас и какво показват звездите за връзката ви.',
       features: [
-        '💕 Синастрия и сравнение на карти',
-        '❤️ Съвместимост в любовта',
-        '🗣️ Комуникация и динамика',
-        '🔥 Емоционална близост',
-        '🌟 Дългосрочен потенциал',
-        '⚡ Предизвикателства и растеж',
-        '✨ Хармонични аспекти',
-        '🛡️ Конфликти – как да ги срещаш',
-        '🛤️ Съвместен път',
-        '⏰ Подходящо време за стъпки',
-        '📱 PDF за двама',
-        '🎭 Отчет за връзката',
-        '💎 Ексклузивни инсайти',
+        'Сравнение между две натални карти',
+        'Любовна и емоционална съвместимост',
+        'Комуникация и привличане',
+        'Силни страни на връзката',
+        'Потенциални конфликти',
+        'Дългосрочен потенциал',
+        'Подходящи периоди за развитие',
+        'Подробен PDF анализ',
       ],
-      buttonText: 'Съвместимост',
+      emotionalLine:
+        '❤️ Научи какво ви свързва, какво ви разделя и какъв е потенциалът на връзката ви.',
+      buttonText: 'Провери вашата съвместимост',
       popular: false,
       buttonVariant: 'outline',
     },

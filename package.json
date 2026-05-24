@@ -1,7 +1,7 @@
 {
   "name": "ai-astrology-pwa",
   "version": "1.0.0",
-  "description": "Modern AI-powered astrology birth chart application",
+  "description": "Next.js astro horoscope and natal-chart reading app",
   "private": true,
   "scripts": {
     "postinstall": "prisma generate",

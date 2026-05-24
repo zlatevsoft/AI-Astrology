@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
             currency: pricing.currency,
             product_data: {
               name: pricing.description,
-              description: `AI-powered ${analysisType} birth chart analysis`,
+              description: `Personalized ${analysisType} birth chart reading`,
               images: ['https://astrohoroscope.online/og-image-new.jpg'],
               metadata: {
                 birthChartId,

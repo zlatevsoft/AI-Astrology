@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Astrological Houses: AI Astrology Guide to Life Areas | AstroHoroscope.online',
-  description: 'Learn about astrological houses with AI astrology. Understand the 12 life areas in your astro horoscope at AstroHoroscope.online.',
+  title: 'Astrological Houses: Astrology Guide to Life Areas | AstroHoroscope.online',
+  description: 'Learn about astrological houses with Astrology. Understand the 12 life areas in your astro horoscope at AstroHoroscope.online.',
   keywords: [
     'astrological houses',
-    'AI astrology houses',
+    'Astrology houses',
     'birth chart houses',
     'astro horoscope houses',
     '12 astrological houses',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'cosmic life areas'
   ],
   openGraph: {
-    title: 'Astrological Houses: AI Astrology Guide to Life Areas',
-    description: 'Learn about astrological houses with AI astrology. Understand the 12 life areas in your astro horoscope.',
+    title: 'Astrological Houses: Astrology Guide to Life Areas',
+    description: 'Learn about astrological houses with Astrology. Understand the 12 life areas in your astro horoscope.',
     type: 'article',
     publishedTime: '2024-01-08T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -45,11 +45,11 @@ export default function AstrologicalHousesPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Astrological Houses: AI Astrology Guide to Life Areas
+            Astrological Houses: Astrology Guide to Life Areas
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Learn about astrological houses with AI astrology. Understand the 12 life areas in your astro horoscope and how they influence different aspects of your life.
+            Learn about astrological houses with Astrology. Understand the 12 life areas in your astro horoscope and how they influence different aspects of your life.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -73,11 +73,11 @@ export default function AstrologicalHousesPage() {
             
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Astrological Houses in AI Astrology
+                Understanding Astrological Houses in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 The 12 astrological houses represent different areas of life in your birth chart. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes house placements to reveal how cosmic energies manifest in specific life areas.
+                our structured reading methodology analyzes house placements to reveal how cosmic energies manifest in specific life areas.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Understanding houses helps you identify where planetary energies are most active and how they influence your experiences in different life domains.

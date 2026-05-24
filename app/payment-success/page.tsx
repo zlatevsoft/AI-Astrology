@@ -108,7 +108,7 @@ function PaymentSuccessContent() {
         partnerData = JSON.parse(partnerChartData)
       }
 
-              // Generate AI analysis
+              // Request analysis generation
         const requestBody: any = {
           birthChart: {
             id: birthChart.id || `chart_${Date.now()}`,
@@ -172,7 +172,7 @@ function PaymentSuccessContent() {
           }
         }
 
-        console.log('Sending request body to AI analysis:', JSON.stringify(requestBody, null, 2))
+        console.log('Sending request body to analysis API:', JSON.stringify(requestBody, null, 2))
         
         const analysisResponse = await fetch('/api/ai-analysis', {
           method: 'POST',

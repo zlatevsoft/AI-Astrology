@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Astro Horoscope Blog - AI Astrology & Birth Chart',
-  description: 'AI astrology articles and birth chart tips at AstroHoroscope.online. Prices in EUR.',
+  title: 'Astro Horoscope Blog - Astrology & Birth Chart',
+  description: 'Astrology articles and birth chart tips at AstroHoroscope.online. Prices in EUR.',
   keywords: [
     'astro horoscope blog',
-    'AI astrology',
+    'Astrology',
     'birth chart',
     'natal chart',
     'AstroHoroscope.online',

@@ -3,7 +3,7 @@ import type { SiteLocale } from '@/lib/locale'
 export const siteNav = {
   en: {
     home: 'Home',
-    features: 'Why AI Astrology?',
+    features: 'What you get',
     blog: 'Blog',
     pricing: 'Pricing',
     faq: 'FAQ',
@@ -12,7 +12,7 @@ export const siteNav = {
   },
   bg: {
     home: 'Начало',
-    features: 'Защо AI astrology?',
+    features: 'Какво получаваш',
     blog: 'Блог',
     pricing: 'Цени',
     faq: 'Въпроси',
@@ -26,7 +26,7 @@ export const footerLocale = {
     plansHeading: 'Plans',
     importantHeading: 'Important Links',
     tagline:
-      'Get your personalized AI astrology birth chart. Professional analysis with cosmic insights at AstroHoroscope.online. Prices in EUR.',
+      'Personalized astro horoscope and birth chart at AstroHoroscope.online. Professional analysis with cosmic insights. Prices in EUR.',
     rights: '© 2024 AstroHoroscope.online. All rights reserved.',
     ssl: 'SSL Secured',
     faq: 'FAQ',
@@ -38,7 +38,7 @@ export const footerLocale = {
     plansHeading: 'Планове',
     importantHeading: 'Важни връзки',
     tagline:
-      'Персонална натална карта с AI. Професионален анализ на AstroHoroscope.online. Цените са в евро (€).',
+      'Персонална натална карта и професионален астрологичен анализ на AstroHoroscope.online. Цените са в евро (€).',
     rights: '© 2024 AstroHoroscope.online. Всички права запазени.',
     ssl: 'SSL защита',
     faq: 'Въпроси',
@@ -55,11 +55,11 @@ export const ctaHome = {
     title1: 'Discover Your',
     title2: 'Cosmic Blueprint',
     title3: 'Today',
-    body: 'Get your personalized birth chart with AI-powered insights from €19. Understand your personality, life lessons, and cosmic guidance in minutes.',
+    body: 'Personalized birth chart reading from €19. Understand personality, recurring themes, and practical guidance—in minutes.',
     benefits: [
       'Accurate birth chart calculations',
-      'AI-powered personality analysis',
-      'Comprehensive life path insights',
+      'Personalized written interpretation',
+      'Life path highlights and themes',
       'Beautiful visual charts',
       'Instant results delivery',
       'Secure data protection',
@@ -72,8 +72,8 @@ export const ctaHome = {
     oneTime: 'One-time payment',
     cardBullets: [
       'Complete birth chart',
-      'AI personality analysis',
-      'Life path insights',
+      'Detailed personality angles',
+      'Life path highlights',
       'Planetary positions',
       'Aspect interpretations',
       'Lifetime access',
@@ -85,10 +85,10 @@ export const ctaHome = {
     title1: 'Открий',
     title2: 'космическия си почерк',
     title3: 'днес',
-    body: 'Персонална натална карта с AI от 19 €. Личност, уроци и ориентири за минути.',
+    body: 'Персонална натална карта от 19 € — характер, акценти и житейски ориентири за минути.',
     benefits: [
       'Точни изчисления на картата',
-      'AI анализ на личността',
+      'Персонален текстов анализ',
       'Житейски и духовни акценти',
       'Визуални схеми',
       'Бърз резултат',
@@ -102,7 +102,7 @@ export const ctaHome = {
     oneTime: 'Еднократно плащане',
     cardBullets: [
       'Пълна натална карта',
-      'AI личност',
+      'Интерпретация на личността',
       'Житейски фокус',
       'Планети',
       'Аспекти',
@@ -117,7 +117,7 @@ export const paymentCheckout = {
   en: {
     title: 'Complete Your Purchase',
     subtitle:
-      "You're one step away from your cosmic blueprint. Complete payment to receive your personalized AI astrological analysis.",
+      "You're one step away from your reading. Complete payment to receive your personalized astrological analysis.",
     testModeBanner:
       'Test mode: checkout is free (set FREE_CHECKOUT=1 on the server; remove for production).',
     orderSummary: 'Order Summary',
@@ -153,7 +153,7 @@ export const paymentCheckout = {
   bg: {
     title: 'Завърши покупката',
     subtitle:
-      'Остава още една стъпка до твоя анализ. Плати, за да получиш персонализираната си AI астрологична интерпретация.',
+      'Остава още една стъпка до твоя анализ. Плати, за да получиш персонализираната си астрологична интерпретация.',
     testModeBanner: 'Тестов режим: плащането е безплатно (сървър env FREE_CHECKOUT=1; махни го в продакшън).',
     orderSummary: 'Обобщение на поръчката',
     total: 'Общо:',
@@ -189,30 +189,30 @@ export const paymentCheckout = {
 /** Home hero (matches `HeroSection` copy). */
 export const heroHome = {
   en: {
-    badge: 'AstroHoroscope.online - AI Astrology',
-    titleLine1: 'Professional Astro',
-    titleLine2: 'Horoscope Birth Chart',
+    badge: 'AstroHoroscope.online',
+    titleLine1: 'Professional astro horoscope',
+    titleLine2: '& birth chart',
     description:
-      'Get your personalized AI astrology birth chart reading at AstroHoroscope.online. Professional astro horoscope analysis with cosmic insights from €19.',
+      'Personal birth chart interpretation at AstroHoroscope.online — clear astro horoscope reading with planetary highlights from €19.',
     cta: 'Choose Your Plan',
     feat1: 'Accurate Calculations',
-    feat2: 'AI Analysis',
+    feat2: 'Personalized Reading',
     feat3: 'Instant Results',
-    stat1: '10,000+ Charts Generated',
+    stat1: 'Trusted by seekers worldwide',
     stat2: '4.9/5 Rating',
     stat3: '100% Secure',
   },
   bg: {
-    badge: 'AstroHoroscope.online – AI астрология',
+    badge: 'AstroHoroscope.online',
     titleLine1: 'Професионален астрологичен хороскоп',
-    titleLine2: 'и натална карта с AI',
+    titleLine2: 'и персонална натална карта',
     description:
       'Персонализирана интерпретация на наталната ви карта на AstroHoroscope.online. Ясен анализ и космически акценти – от 19 €.',
     cta: 'Избери план',
     feat1: 'Точни изчисления',
-    feat2: 'AI анализ',
+    feat2: 'Ясен персонален анализ',
     feat3: 'Мигновени резултати',
-    stat1: '10 000+ генерирани карти',
+    stat1: '⭐ Любим избор на хиляди потребители',
     stat2: 'Рейтинг 4.9/5',
     stat3: '100% сигурност',
   },

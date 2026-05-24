@@ -1,10 +1,10 @@
-# 🌟 AI Astrology - Your Cosmic Birth Chart
+# 🌟 Astro Horoscope - Birth Chart Readings
 
-A modern, AI-powered Progressive Web App (PWA) for generating personalized birth charts and astrological insights. Built with Next.js, TypeScript, and Tailwind CSS.
+A modern Progressive Web App (PWA) for professional natal chart synthesis and structured astro horoscope narratives. Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## ✨ Features
 
-- **🎯 AI-Powered Analysis**: Advanced artificial intelligence provides deep, personalized insights
+- **🎯 Structured readings**: Clear, placement-driven interpretations you can revisit
 - **📊 Accurate Calculations**: Swiss Ephemeris-based calculations for professional-grade accuracy
 - **🔒 Privacy & Security**: Encrypted data handling with complete privacy protection
 - **📱 PWA Ready**: Install as a native app with offline capabilities
@@ -18,7 +18,7 @@ A modern, AI-powered Progressive Web App (PWA) for generating personalized birth
 - **Frontend**: Next.js 14, React 18, TypeScript
 - **Styling**: Tailwind CSS, Framer Motion
 - **PWA**: next-pwa, Service Workers
-- **AI**: OpenAI GPT-4/Claude integration
+- **Language models** (optional hosted): OpenAI / similar for draft text when configured
 - **Payments**: Stripe Checkout
 - **Astronomy**: Swiss Ephemeris calculations
 - **Authentication**: NextAuth.js
@@ -179,7 +179,7 @@ npm run test:watch   # Run tests in watch mode
 - **Output**: Planetary positions, houses, aspects
 
 ### `/api/ai-analysis`
-- **POST**: Generate AI-powered analysis
+- **POST**: Generate structured analysis
 - **Input**: Birth chart data
 - **Output**: Personalized insights and interpretations
 
@@ -309,7 +309,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Swiss Ephemeris**: For accurate astronomical calculations
-- **OpenAI**: For AI-powered insights
+- **OpenAI** (optional): For hosted text drafting when keys are set
 - **Stripe**: For secure payment processing
 - **Vercel**: For hosting and deployment
 - **Tailwind CSS**: For the amazing utility-first CSS framework
@@ -323,4 +323,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ and 🌟 by the AI Astrology Team**
+**Made with ❤️ and 🌟 by the Astro Horoscope team**

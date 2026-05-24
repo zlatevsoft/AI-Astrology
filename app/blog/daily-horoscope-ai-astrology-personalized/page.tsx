@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon, SunIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Daily Horoscope: AI Astrology Personalized Predictions | AstroHoroscope.online',
-  description: 'Get your personalized daily horoscope with AI astrology. Discover how your astro horoscope provides daily guidance at AstroHoroscope.online.',
+  title: 'Daily Horoscope: Astrology Personalized Predictions | AstroHoroscope.online',
+  description: 'Get your personalized daily horoscope with Astrology. Discover how your astro horoscope provides daily guidance at AstroHoroscope.online.',
   keywords: [
     'daily horoscope',
-    'AI astrology predictions',
+    'Astrology predictions',
     'personalized horoscope',
     'astro horoscope daily',
     'zodiac daily reading',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'daily zodiac predictions'
   ],
   openGraph: {
-    title: 'Daily Horoscope: AI Astrology Personalized Predictions',
-    description: 'Get your personalized daily horoscope with AI astrology. Discover how your astro horoscope provides daily guidance.',
+    title: 'Daily Horoscope: Astrology Personalized Predictions',
+    description: 'Get your personalized daily horoscope with Astrology. Discover how your astro horoscope provides daily guidance.',
     type: 'article',
     publishedTime: '2024-01-11T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -47,11 +47,11 @@ export default function DailyHoroscopePage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Daily Horoscope: AI Astrology Personalized Predictions
+            Daily Horoscope: Astrology Personalized Predictions
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Get your personalized daily horoscope with AI astrology. Discover how your astro horoscope provides daily guidance and cosmic insights for every aspect of your life.
+            Get your personalized daily horoscope with Astrology. Discover how your astro horoscope provides daily guidance and cosmic insights for every aspect of your life.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -77,14 +77,14 @@ export default function DailyHoroscopePage() {
             {/* Introduction */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Why Daily Horoscopes Matter in AI Astrology
+                Why Daily Horoscopes Matter in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Daily horoscopes provide valuable guidance for navigating life's daily challenges and opportunities. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology creates personalized daily predictions based on your unique birth chart and current planetary transits.
+                our structured reading methodology creates personalized daily predictions based on your unique birth chart and current planetary transits.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-                Unlike generic horoscope readings, AI-powered daily predictions consider your specific planetary positions, aspects, and life circumstances 
+                Unlike generic horoscope readings, Personalized daily predictions consider your specific planetary positions, aspects, and life circumstances 
                 to provide truly personalized guidance for love, career, health, and personal growth.
               </p>
             </section>
@@ -92,7 +92,7 @@ export default function DailyHoroscopePage() {
             {/* Benefits Section */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Benefits of AI-Powered Daily Horoscopes
+                Benefits of Personalized Daily Horoscopes
               </h2>
               
               <div className="grid md:grid-cols-2 gap-8">
@@ -141,7 +141,7 @@ export default function DailyHoroscopePage() {
                   Get Your Daily Horoscope
                 </h3>
                 <p className="text-lg mb-6 opacity-90">
-                  Start your day with personalized AI astrology guidance at AstroHoroscope.online. 
+                  Start your day with personalized Astrology guidance at AstroHoroscope.online. 
                   Receive daily predictions tailored to your unique cosmic blueprint.
                 </p>
                 <Link href="/pricing" className="inline-flex items-center px-8 py-4 bg-white text-cosmic-600 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105">

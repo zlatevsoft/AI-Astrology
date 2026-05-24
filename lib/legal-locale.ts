@@ -3,21 +3,22 @@ import type { SiteLocale } from '@/lib/locale'
 export const legalSeo = {
   privacy: {
     en: {
-      title: 'Privacy Policy - AI Astrology',
-      description: 'Privacy Policy for AI Astrology: how we collect, use, and protect your data (GDPR).',
+      title: 'Privacy Policy - Astro Horoscope',
+      description:
+        'Privacy Policy for Astro Horoscope / AstroHoroscope.online: how we collect, use, and protect your data (GDPR).',
     },
     bg: {
-      title: 'Политика за поверителност - AI Astrology',
+      title: 'Политика за поверителност - Astro Horoscope',
       description: 'Политика за поверителност: как съхраняваме и защитаваме личните данни (GDPR).',
     },
   },
   terms: {
     en: {
-      title: 'Terms of Service - AI Astrology',
+      title: 'Terms of Service - Astro Horoscope',
       description: 'Terms and conditions of use, payments in EUR, and disclaimers for AstroHoroscope.online.',
     },
     bg: {
-      title: 'Общи условия - AI Astrology',
+      title: 'Общи условия - Astro Horoscope',
       description: 'Общи условия, плащания в евро (EUR) и откази от отговорност за AstroHoroscope.online.',
     },
   },
@@ -69,7 +70,7 @@ export const privacyByLocale: Record<SiteLocale, { h1: string; lastUpdated: stri
         heading: '6. Third-Party Services',
         blocks: [
           '**Stripe** — payments',
-          '**OpenAI** — AI text generation, subject to their policies',
+          '**OpenAI** — hosted language-model drafting of interpretations, subject to their policies',
           '**Hosting / analytics** — e.g. Vercel, as applicable',
         ],
       },
@@ -137,7 +138,7 @@ export const privacyByLocale: Record<SiteLocale, { h1: string; lastUpdated: stri
         heading: '6. Трети страни',
         blocks: [
           '**Stripe** – плащания',
-          '**OpenAI** – генериране на текст, според техните политики',
+          '**OpenAI** – хоствано текстово оформяне на интерпретации, според техните политики',
           '**Хостинг/аналитика** – при нужда (напр. Vercel)',
         ],
       },
@@ -172,13 +173,13 @@ export const termsByLocale: Record<SiteLocale, { h1: string; lastUpdated: string
       {
         heading: '1. Acceptance of Terms',
         blocks: [
-          'By using AI Astrology and AstroHoroscope.online (“Service”), you agree to these terms. If you do not agree, do not use the Service.',
+          'By using AstroHoroscope.online (“Service”), you agree to these terms. If you do not agree, do not use the Service.',
         ],
       },
       {
         heading: '2. Description of Service',
         blocks: [
-          'We offer AI-assisted astrological analysis (e.g. basic, detailed, comprehensive options), PDF or on-screen delivery, in **euro (EUR)** as shown at checkout. Astrology is for self-reflection and entertainment, not a substitute for professional, medical, or legal advice.',
+          'We offer structured astrological readings (for example basic, detailed, comprehensive options visible on site), PDF or on-screen delivery, priced in **euro (EUR)** as shown at checkout. Astrology is for self-reflection and entertainment, not a substitute for professional, medical, or legal advice.',
         ],
       },
       {
@@ -257,13 +258,13 @@ export const termsByLocale: Record<SiteLocale, { h1: string; lastUpdated: string
       {
         heading: '1. Приемане на условията',
         blocks: [
-          'С използване на AI Astrology / AstroHoroscope.online („Услугата“) приемате настоящите общи условия. Ако не сте съгласни, не използвайте Услугата.',
+          'С използване на AstroHoroscope.online („Услугата“) приемате настоящите общи условия. Ако не сте съгласни, не използвайте Услугата.',
         ],
       },
       {
         heading: '2. Описание на услугата',
         blocks: [
-          'Предлагаме AI-подпомогнат астрологичен анализ (базов, задълбочен, пълен и др. варианти, видими на сайта) с отчет на екрана или PDF. **Цените са в евро (EUR).** Анализът е за личен размисъл и забавление, **не** замества медицински, психологичен или правен съвет.',
+          'Предлагаме структуриран астрологичен текстов анализ (базов, задълбочен, пълен и др. варианти, видими на сайта) като екран или PDF. **Цените са в евро (EUR).** Анализът е за личен размисъл и забавление, **не** замества медицински, психологичен или правен съвет.',
         ],
       },
       {

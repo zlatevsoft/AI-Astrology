@@ -11,6 +11,7 @@ import { siteNav } from '@/lib/dictionaries'
 import { LOCALE_CHANGE_EVENT, setClientLocaleCache, type SiteLocale } from '@/lib/locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
 import { LanguageSwitcher } from '@/components/layout/language-switcher'
+import { SITE_DISPLAY_NAME } from '@/lib/brand'
 
 export function Header() {
   const locale = useSiteLocale()
@@ -71,7 +72,7 @@ export function Header() {
                <div className="absolute inset-0 bg-cosmic-400/30 rounded-full blur-lg group-hover:bg-cosmic-300/40 transition-all duration-300 animate-pulse" />
              </div>
              <span className="text-xl font-bold font-display text-cosmic-800 dark:text-white group-hover:text-cosmic-600 dark:group-hover:text-cosmic-300 transition-all duration-300">
-               AI Astrology
+               {SITE_DISPLAY_NAME}
              </span>
            </Link>
 
@@ -163,7 +164,7 @@ export function Header() {
                 <div className="flex items-center justify-between p-6 border-b border-cosmic-200 dark:border-cosmic-700 bg-gradient-to-r from-cosmic-50 to-purple-50 dark:from-cosmic-800 dark:to-purple-800">
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
                     <SparklesIcon className="h-6 w-6 text-cosmic-600 dark:text-cosmic-300" />
-                    <span className="text-lg font-bold font-display text-cosmic-800 dark:text-white">AI Astrology</span>
+                    <span className="text-lg font-bold font-display text-cosmic-800 dark:text-white">{SITE_DISPLAY_NAME}</span>
                   </Link>
                   <Button
                     variant="ghost"

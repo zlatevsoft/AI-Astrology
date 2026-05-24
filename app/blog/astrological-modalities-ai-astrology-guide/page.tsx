@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Astrological Modalities: AI Astrology Guide to Cardinal, Fixed & Mutable | AstroHoroscope.online',
-  description: 'Learn about astrological modalities with AI astrology. Understand Cardinal, Fixed & Mutable signs in your astro horoscope at AstroHoroscope.online.',
+  title: 'Astrological Modalities: Astrology Guide to Cardinal, Fixed & Mutable | AstroHoroscope.online',
+  description: 'Learn about astrological modalities with Astrology. Understand Cardinal, Fixed & Mutable signs in your astro horoscope at AstroHoroscope.online.',
   keywords: [
     'astrological modalities',
-    'AI astrology modalities',
+    'Astrology modalities',
     'cardinal fixed mutable',
     'astro horoscope modalities',
     'zodiac modalities',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'astrological approach'
   ],
   openGraph: {
-    title: 'Astrological Modalities: AI Astrology Guide to Cardinal, Fixed & Mutable',
-    description: 'Learn about astrological modalities with AI astrology. Understand Cardinal, Fixed & Mutable signs in your astro horoscope.',
+    title: 'Astrological Modalities: Astrology Guide to Cardinal, Fixed & Mutable',
+    description: 'Learn about astrological modalities with Astrology. Understand Cardinal, Fixed & Mutable signs in your astro horoscope.',
     type: 'article',
     publishedTime: '2024-01-06T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -45,11 +45,11 @@ export default function AstrologicalModalitiesPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Astrological Modalities: AI Astrology Guide to Cardinal, Fixed & Mutable
+            Astrological Modalities: Astrology Guide to Cardinal, Fixed & Mutable
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Learn about astrological modalities with AI astrology. Understand how Cardinal, Fixed & Mutable signs influence your astro horoscope and approach to life.
+            Learn about astrological modalities with Astrology. Understand how Cardinal, Fixed & Mutable signs influence your astro horoscope and approach to life.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -73,11 +73,11 @@ export default function AstrologicalModalitiesPage() {
             
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Astrological Modalities in AI Astrology
+                Understanding Astrological Modalities in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 The three astrological modalities - Cardinal, Fixed, and Mutable - represent different approaches to life and change. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes modality patterns to reveal your natural approach to challenges and opportunities.
+                our structured reading methodology analyzes modality patterns to reveal your natural approach to challenges and opportunities.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Understanding modalities helps you recognize your leadership style, adaptability, and how you handle transitions in life.

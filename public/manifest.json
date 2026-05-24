@@ -1,7 +1,7 @@
 {
-  "name": "AI Astrology - Your Cosmic Birth Chart",
-  "short_name": "AstroAI",
-  "description": "Discover your cosmic destiny with AI-powered birth chart analysis and personalized astrological insights",
+  "name": "Astro Horoscope - Your Cosmic Birth Chart",
+  "short_name": "AstroHoro",
+  "description": "Discover your cosmic blueprint with a professional birth chart interpretation and structured astrological guidance",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -69,7 +69,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "AI Analysis Dashboard"
+      "label": "Structured reading dashboard"
     },
     {
       "src": "/screenshots/mobile-1.png",

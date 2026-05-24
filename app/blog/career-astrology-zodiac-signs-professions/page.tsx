@@ -1,15 +1,15 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon, BriefcaseIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
   title: 'Career Astrology: Best Professions for Each Zodiac Sign | AstroHoroscope.online',
-  description: 'Discover the best career paths for your zodiac sign with AI astrology. Learn how your astro horoscope reveals your professional strengths at AstroHoroscope.online.',
+  description: 'Discover the best career paths for your zodiac sign with Astrology. Learn how your astro horoscope reveals your professional strengths at AstroHoroscope.online.',
   keywords: [
     'career astrology',
     'zodiac career paths',
-    'AI astrology professions',
+    'Astrology professions',
     'astro horoscope career',
     'zodiac work compatibility',
     'birth chart career',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Career Astrology: Best Professions for Each Zodiac Sign',
-    description: 'Discover the best career paths for your zodiac sign with AI astrology. Learn how your astro horoscope reveals your professional strengths.',
+    description: 'Discover the best career paths for your zodiac sign with Astrology. Learn how your astro horoscope reveals your professional strengths.',
     type: 'article',
     publishedTime: '2024-01-12T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -126,7 +126,7 @@ export default function CareerAstrologyPage() {
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Discover the best career paths for your zodiac sign with AI astrology. Learn how your astro horoscope reveals your professional strengths and ideal work environment.
+            Discover the best career paths for your zodiac sign with Astrology. Learn how your astro horoscope reveals your professional strengths and ideal work environment.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -156,11 +156,11 @@ export default function CareerAstrologyPage() {
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Your zodiac sign reveals much about your professional strengths, work style, and ideal career path. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes your birth chart to identify the careers where you'll naturally excel and find fulfillment.
+                our structured reading methodology analyzes your birth chart to identify the careers where you'll naturally excel and find fulfillment.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Whether you're choosing a career path, considering a job change, or seeking to maximize your professional potential, 
-                AI astrology provides insights that can guide your career decisions and help you find work that aligns with your cosmic blueprint.
+                Astrology provides insights that can guide your career decisions and help you find work that aligns with your cosmic blueprint.
               </p>
             </section>
 
@@ -215,7 +215,7 @@ export default function CareerAstrologyPage() {
                   Discover Your Career Path
                 </h3>
                 <p className="text-lg mb-6 opacity-90">
-                  Get your personalized AI astrology career analysis at AstroHoroscope.online. 
+                  Get your personalized Astrology career analysis at AstroHoroscope.online. 
                   Find the perfect profession that aligns with your cosmic strengths.
                 </p>
                 <Link href="/pricing" className="inline-flex items-center px-8 py-4 bg-white text-cosmic-600 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105">

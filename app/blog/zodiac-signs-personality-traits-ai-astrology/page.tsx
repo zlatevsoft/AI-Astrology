@@ -1,15 +1,15 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Zodiac Signs Personality Traits: Complete AI Astrology Guide | AstroHoroscope.online',
-  description: 'Discover your zodiac sign personality traits with AI astrology. Learn how your astro horoscope reveals your unique character at AstroHoroscope.online.',
+  title: 'Zodiac Signs Personality Traits: Complete Astrology Guide | AstroHoroscope.online',
+  description: 'Discover your zodiac sign personality traits with Astrology. Learn how your astro horoscope reveals your unique character at AstroHoroscope.online.',
   keywords: [
     'zodiac signs personality',
     'astrological traits',
-    'AI astrology zodiac',
+    'Astrology zodiac',
     'astro horoscope personality',
     'zodiac characteristics',
     'birth chart personality',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'zodiac compatibility traits'
   ],
   openGraph: {
-    title: 'Zodiac Signs Personality Traits: Complete AI Astrology Guide',
-    description: 'Discover your zodiac sign personality traits with AI astrology. Learn how your astro horoscope reveals your unique character.',
+    title: 'Zodiac Signs Personality Traits: Complete Astrology Guide',
+    description: 'Discover your zodiac sign personality traits with Astrology. Learn how your astro horoscope reveals your unique character.',
     type: 'article',
     publishedTime: '2024-01-14T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -149,11 +149,11 @@ export default function ZodiacSignsPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Zodiac Signs Personality Traits: Complete AI Astrology Guide
+            Zodiac Signs Personality Traits: Complete Astrology Guide
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Discover your zodiac sign personality traits with AI astrology. Learn how your astro horoscope reveals your unique character and life path.
+            Discover your zodiac sign personality traits with Astrology. Learn how your astro horoscope reveals your unique character and life path.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -179,11 +179,11 @@ export default function ZodiacSignsPage() {
             {/* Introduction */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Zodiac Signs in AI Astrology
+                Understanding Zodiac Signs in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Your zodiac sign is one of the most fundamental aspects of your astro horoscope. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes how your zodiac sign influences your personality, behavior patterns, and life choices.
+                our structured reading methodology analyzes how your zodiac sign influences your personality, behavior patterns, and life choices.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Each of the 12 zodiac signs has unique characteristics, strengths, and challenges. Understanding your sign's personality 
@@ -231,7 +231,7 @@ export default function ZodiacSignsPage() {
             {/* Elements Section */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                The Four Elements in AI Astrology
+                The Four Elements in Astrology
               </h2>
               
               <div className="grid md:grid-cols-2 gap-8">
@@ -241,7 +241,7 @@ export default function ZodiacSignsPage() {
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
                     Fire signs are passionate, energetic, and dynamic. They are natural leaders with enthusiasm and creativity. 
-                    AI astrology reveals how their fiery nature influences their approach to life and relationships.
+                    Astrology reveals how their fiery nature influences their approach to life and relationships.
                   </p>
                 </div>
                 
@@ -251,7 +251,7 @@ export default function ZodiacSignsPage() {
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
                     Earth signs are practical, reliable, and grounded. They value stability and work hard to achieve their goals. 
-                    Our AI astrology system analyzes their methodical approach to life.
+                    Our Astrology system analyzes their methodical approach to life.
                   </p>
                 </div>
                 
@@ -261,7 +261,7 @@ export default function ZodiacSignsPage() {
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
                     Air signs are intellectual, communicative, and social. They are adaptable and value mental stimulation. 
-                    AI astrology examines their analytical and innovative nature.
+                    Astrology examines their analytical and innovative nature.
                   </p>
                 </div>
                 
@@ -271,7 +271,7 @@ export default function ZodiacSignsPage() {
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
                     Water signs are emotional, intuitive, and compassionate. They are deeply connected to their feelings and others. 
-                    Our AI astrology technology explores their emotional intelligence and empathy.
+                    our structured reading methodology explores their emotional intelligence and empathy.
                   </p>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export default function ZodiacSignsPage() {
                   Discover Your Complete Zodiac Profile
                 </h3>
                 <p className="text-lg mb-6 opacity-90">
-                  Get your personalized AI astrology birth chart analysis at AstroHoroscope.online. 
+                  Get your personalized Astrology birth chart analysis at AstroHoroscope.online. 
                   Learn how your zodiac sign influences your personality and life path.
                 </p>
                 <Link 

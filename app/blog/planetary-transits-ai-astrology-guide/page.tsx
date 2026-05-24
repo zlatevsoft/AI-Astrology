@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Planetary Transits: AI Astrology Guide to Cosmic Influences | AstroHoroscope.online',
-  description: 'Understand planetary transits with AI astrology. Learn how cosmic movements affect your astro horoscope at AstroHoroscope.online.',
+  title: 'Planetary Transits: Astrology Guide to Cosmic Influences | AstroHoroscope.online',
+  description: 'Understand planetary transits with Astrology. Learn how cosmic movements affect your astro horoscope at AstroHoroscope.online.',
   keywords: [
     'planetary transits',
-    'AI astrology transits',
+    'Astrology transits',
     'cosmic influences',
     'astro horoscope transits',
     'birth chart transits',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'cosmic timing'
   ],
   openGraph: {
-    title: 'Planetary Transits: AI Astrology Guide to Cosmic Influences',
-    description: 'Understand planetary transits with AI astrology. Learn how cosmic movements affect your astro horoscope.',
+    title: 'Planetary Transits: Astrology Guide to Cosmic Influences',
+    description: 'Understand planetary transits with Astrology. Learn how cosmic movements affect your astro horoscope.',
     type: 'article',
     publishedTime: '2024-01-10T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -45,11 +45,11 @@ export default function PlanetaryTransitsPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Planetary Transits: AI Astrology Guide to Cosmic Influences
+            Planetary Transits: Astrology Guide to Cosmic Influences
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Understand planetary transits with AI astrology. Learn how cosmic movements affect your astro horoscope and daily life.
+            Understand planetary transits with Astrology. Learn how cosmic movements affect your astro horoscope and daily life.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -73,11 +73,11 @@ export default function PlanetaryTransitsPage() {
             
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Planetary Transits in AI Astrology
+                Understanding Planetary Transits in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Planetary transits are the ongoing movements of planets as they travel through the zodiac and form aspects to your birth chart. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology tracks these cosmic movements to provide insights into how they influence your life.
+                our structured reading methodology tracks these cosmic movements to provide insights into how they influence your life.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Understanding transits helps you navigate life's changes, recognize opportunities, and prepare for challenges with cosmic wisdom.

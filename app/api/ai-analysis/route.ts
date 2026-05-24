@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       }
       if (locale === 'bg' && mockAnalysis.content) {
         mockAnalysis.content =
-          `> **Бележка:** Демо режим без OpenAI API ключ. По-долу е примерен анализ на английски; с настроен API ключ пълният анализ ще бъде на български.\n\n` +
+          `> **Бележка:** Демо режим без свързан ключ за текстов генератор. По-долу е примерен анализ на английски; при активна услуга пълният текст може да бъде изцяло на български.\n\n` +
           mockAnalysis.content
       }
       return NextResponse.json({
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
     const analysis = completion.choices[0]?.message?.content
 
     if (!analysis) {
-      throw new Error('Failed to generate AI analysis')
+      throw new Error('Failed to generate analysis')
     }
 
     // Structure the response
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('AI analysis error:', error)
+    console.error('Analysis generation error:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'AI service temporarily unavailable' 
+          error: 'Text generation service temporarily unavailable' 
         },
         { status: 503 }
       )
@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to generate AI analysis' 
+        error: 'Failed to generate analysis' 
       },
       { status: 500 }
     )
@@ -543,7 +543,7 @@ function generateMockAnalysis(birthChart: any, analysisType: string) {
   // Different mock content based on analysis type
   switch (analysisType) {
     case 'basic':
-      const basicContent = `🌟 **AI Astrological Analysis - Basic Reading**
+      const basicContent = `🌟 **Professional Astrological Analysis - Basic Reading**
 
 **Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
 
@@ -593,7 +593,7 @@ Remember, you have everything you need within you to create the life you desire.
       }
 
     case 'detailed':
-      const detailedContent = `🌟 **AI Astrological Analysis - Detailed Reading**
+      const detailedContent = `🌟 **Professional Astrological Analysis - Detailed Reading**
 
 **Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
 
@@ -674,7 +674,7 @@ This is a powerful time of growth and transformation. Trust your intuition and e
       }
 
     case 'comprehensive':
-      const comprehensiveContent = `🌟 **AI Astrological Analysis - Comprehensive Reading**
+      const comprehensiveContent = `🌟 **Professional Astrological Analysis - Comprehensive Reading**
 
 **Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
 

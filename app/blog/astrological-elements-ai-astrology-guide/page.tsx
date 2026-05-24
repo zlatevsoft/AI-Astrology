@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Astrological Elements: AI Astrology Guide to Fire, Earth, Air & Water | AstroHoroscope.online',
-  description: 'Learn about astrological elements with AI astrology. Understand Fire, Earth, Air & Water in your astro horoscope at AstroHoroscope.online.',
+  title: 'Astrological Elements: Astrology Guide to Fire, Earth, Air & Water | AstroHoroscope.online',
+  description: 'Learn about astrological elements with Astrology. Understand Fire, Earth, Air & Water in your astro horoscope at AstroHoroscope.online.',
   keywords: [
     'astrological elements',
-    'AI astrology elements',
+    'Astrology elements',
     'fire earth air water',
     'astro horoscope elements',
     'zodiac elements',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'astrological energy'
   ],
   openGraph: {
-    title: 'Astrological Elements: AI Astrology Guide to Fire, Earth, Air & Water',
-    description: 'Learn about astrological elements with AI astrology. Understand Fire, Earth, Air & Water in your astro horoscope.',
+    title: 'Astrological Elements: Astrology Guide to Fire, Earth, Air & Water',
+    description: 'Learn about astrological elements with Astrology. Understand Fire, Earth, Air & Water in your astro horoscope.',
     type: 'article',
     publishedTime: '2024-01-07T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -44,11 +44,11 @@ export default function AstrologicalElementsPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Astrological Elements: AI Astrology Guide to Fire, Earth, Air & Water
+            Astrological Elements: Astrology Guide to Fire, Earth, Air & Water
           </h1>
 
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Learn about astrological elements with AI astrology. Understand how Fire, Earth, Air & Water influence your astro horoscope and personality.
+            Learn about astrological elements with Astrology. Understand how Fire, Earth, Air & Water influence your astro horoscope and personality.
           </p>
 
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -71,11 +71,11 @@ export default function AstrologicalElementsPage() {
           <div className="bg-white dark:bg-cosmic-800 rounded-2xl shadow-xl p-8 md:p-12 border border-gray-200 dark:border-cosmic-700">
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Astrological Elements in AI Astrology
+                Understanding Astrological Elements in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 The four astrological elements — Fire, Earth, Air, and Water — represent fundamental energy types in your birth chart. At <strong>AstroHoroscope.online</strong>,
-                our AI astrology technology analyzes elemental balance to reveal your natural energy patterns and personality traits.
+                our structured reading methodology analyzes elemental balance to reveal your natural energy patterns and personality traits.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Understanding elements helps you recognize your natural strengths, challenges, and how to achieve balance in your life.

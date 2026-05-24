@@ -33,7 +33,7 @@ export default function AboutPage() {
             {/* Header */}
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-                About AI Astrology
+                About Astro Horoscope
               </h1>
               <p className="text-xl text-cosmic-700 dark:text-cosmic-300">
                 Bridging ancient wisdom with modern technology
@@ -53,10 +53,9 @@ export default function AboutPage() {
                 </h2>
               </div>
               <p className="text-lg text-cosmic-700 dark:text-cosmic-300 leading-relaxed text-center">
-                We believe that everyone deserves access to personalized astrological insights that can guide their life journey. 
-                By combining the ancient wisdom of astrology with cutting-edge AI technology, we provide accurate, 
-                meaningful, and accessible birth chart readings that help people understand themselves better and make 
-                informed decisions about their future.
+                We believe that everyone deserves access to thoughtful astrological interpretations that can illuminate their life journey.
+                By pairing classical chart techniques with structured writing, we aim to make professional birth chart readings clear,
+                respectful, and accessible—so you can reflect on yourself with nuance and practical context.
               </p>
             </motion.div>
 
@@ -74,7 +73,7 @@ export default function AboutPage() {
                   Innovation
                 </h3>
                 <p className="text-cosmic-700 dark:text-cosmic-300">
-                  We leverage the latest AI technology to provide accurate and personalized astrological insights.
+                  We focus on clear methodology, careful chart synthesis, and wording you can actually use in daily life.
                 </p>
               </motion.div>
 
@@ -116,10 +115,9 @@ export default function AboutPage() {
               </h2>
               <div className="prose prose-cosmic dark:prose-invert max-w-none">
                 <p className="text-lg text-cosmic-700 dark:text-cosmic-300 leading-relaxed mb-6">
-                  AI Astrology was born from a simple yet powerful idea: what if we could make the ancient wisdom of astrology 
-                  accessible to everyone through modern technology? Our team of astrologers, developers, and AI specialists 
-                  came together to create a platform that combines the precision of astronomical calculations with the 
-                  insight of artificial intelligence.
+                  Astro Horoscope was shaped by a simple question: how can timeless chart wisdom stay precise and still feel approachable online?
+                  Our collaborators—astrologers, developers, and editorial specialists—built a workflow that keeps calculations rigorous
+                  while turning placements into readable narratives you can revisit.
                 </p>
                 <p className="text-lg text-cosmic-700 dark:text-cosmic-300 leading-relaxed mb-6">
                   We understand that astrology is more than just a tool for prediction—it's a language for understanding 
@@ -160,10 +158,10 @@ export default function AboutPage() {
                     <span className="text-white text-2xl font-bold">I</span>
                   </div>
                   <h3 className="text-xl font-bold text-cosmic-900 dark:text-white mb-2">
-                    AI Specialists
+                    Editorial & product
                   </h3>
                   <p className="text-cosmic-700 dark:text-cosmic-300">
-                    Machine learning experts and data scientists
+                    Specialists who shape tone, clarity, and ethical presentation of chart material
                   </p>
                 </div>
 

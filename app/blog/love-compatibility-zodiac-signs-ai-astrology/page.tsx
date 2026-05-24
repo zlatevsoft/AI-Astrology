@@ -1,15 +1,15 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Love Compatibility: Zodiac Signs & AI Astrology Guide | AstroHoroscope.online',
-  description: 'Discover love compatibility between zodiac signs with AI astrology. Learn how your astro horoscope reveals relationship harmony at AstroHoroscope.online.',
+  title: 'Love Compatibility: Zodiac Signs & Astrology Guide | AstroHoroscope.online',
+  description: 'Discover love compatibility between zodiac signs with Astrology. Learn how your astro horoscope reveals relationship harmony at AstroHoroscope.online.',
   keywords: [
     'love compatibility zodiac',
     'astrological compatibility',
-    'AI astrology love',
+    'Astrology love',
     'astro horoscope relationships',
     'zodiac love matches',
     'birth chart compatibility',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'relationship astrology'
   ],
   openGraph: {
-    title: 'Love Compatibility: Zodiac Signs & AI Astrology Guide',
-    description: 'Discover love compatibility between zodiac signs with AI astrology. Learn how your astro horoscope reveals relationship harmony.',
+    title: 'Love Compatibility: Zodiac Signs & Astrology Guide',
+    description: 'Discover love compatibility between zodiac signs with Astrology. Learn how your astro horoscope reveals relationship harmony.',
     type: 'article',
     publishedTime: '2024-01-13T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -140,11 +140,11 @@ export default function LoveCompatibilityPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Love Compatibility: Zodiac Signs & AI Astrology Guide
+            Love Compatibility: Zodiac Signs & Astrology Guide
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Discover love compatibility between zodiac signs with AI astrology. Learn how your astro horoscope reveals relationship harmony and romantic potential.
+            Discover love compatibility between zodiac signs with Astrology. Learn how your astro horoscope reveals relationship harmony and romantic potential.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -170,15 +170,15 @@ export default function LoveCompatibilityPage() {
             {/* Introduction */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Love Compatibility in AI Astrology
+                Understanding Love Compatibility in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Love compatibility in astrology goes far beyond simple sun sign matches. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes multiple factors including planetary positions, aspects, and elemental harmony 
+                our structured reading methodology analyzes multiple factors including planetary positions, aspects, and elemental harmony 
                 to provide comprehensive relationship insights.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-                Whether you're seeking to understand your current relationship or looking for romantic guidance, AI astrology 
+                Whether you're seeking to understand your current relationship or looking for romantic guidance, Astrology 
                 can reveal the deeper dynamics of love compatibility and help you navigate the complexities of relationships.
               </p>
             </section>
@@ -270,10 +270,10 @@ export default function LoveCompatibilityPage() {
               </div>
             </section>
 
-            {/* AI Astrology Benefits */}
+            {/* Astrology Benefits */}
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Why Use AI Astrology for Love Compatibility?
+                Why Use Astrology for Love Compatibility?
               </h2>
               
               <div className="grid md:grid-cols-2 gap-8">
@@ -282,7 +282,7 @@ export default function LoveCompatibilityPage() {
                     🌟 Comprehensive Analysis
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    AI astrology analyzes thousands of data points including planetary positions, aspects, and house placements 
+                    Astrology analyzes thousands of data points including planetary positions, aspects, and house placements 
                     to provide detailed compatibility insights that go beyond simple sun sign matches.
                   </p>
                 </div>
@@ -312,7 +312,7 @@ export default function LoveCompatibilityPage() {
                     🎯 Personalized Approach
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Every relationship is unique. AI astrology provides customized compatibility analysis tailored to your 
+                    Every relationship is unique. Astrology provides customized compatibility analysis tailored to your 
                     specific birth charts and relationship dynamics.
                   </p>
                 </div>
@@ -326,7 +326,7 @@ export default function LoveCompatibilityPage() {
                   Discover Your Love Compatibility
                 </h3>
                 <p className="text-lg mb-6 opacity-90">
-                  Get your personalized AI astrology love compatibility analysis at AstroHoroscope.online. 
+                  Get your personalized Astrology love compatibility analysis at AstroHoroscope.online. 
                   Understand your relationship dynamics and find your perfect match.
                 </p>
                 <Link 

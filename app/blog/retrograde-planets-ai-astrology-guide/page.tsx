@@ -1,14 +1,14 @@
-import React from 'react'
+﻿import React from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
-  title: 'Retrograde Planets: AI Astrology Guide to Planetary Retrogrades | AstroHoroscope.online',
-  description: 'Learn about retrograde planets with AI astrology. Understand Mercury, Venus, Mars retrogrades in your astro horoscope at AstroHoroscope.online.',
+  title: 'Retrograde Planets: Astrology Guide to Planetary Retrogrades | AstroHoroscope.online',
+  description: 'Learn about retrograde planets with Astrology. Understand Mercury, Venus, Mars retrogrades in your astro horoscope at AstroHoroscope.online.',
   keywords: [
     'retrograde planets',
-    'AI astrology retrogrades',
+    'Astrology retrogrades',
     'mercury retrograde',
     'venus retrograde',
     'mars retrograde',
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     'cosmic retrogrades'
   ],
   openGraph: {
-    title: 'Retrograde Planets: AI Astrology Guide to Planetary Retrogrades',
-    description: 'Learn about retrograde planets with AI astrology. Understand Mercury, Venus, Mars retrogrades in your astro horoscope.',
+    title: 'Retrograde Planets: Astrology Guide to Planetary Retrogrades',
+    description: 'Learn about retrograde planets with Astrology. Understand Mercury, Venus, Mars retrogrades in your astro horoscope.',
     type: 'article',
     publishedTime: '2024-01-05T00:00:00.000Z',
     authors: ['AstroHoroscope.online Team'],
@@ -45,11 +45,11 @@ export default function RetrogradePlanetsPage() {
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Retrograde Planets: AI Astrology Guide to Planetary Retrogrades
+            Retrograde Planets: Astrology Guide to Planetary Retrogrades
           </h1>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center mb-8 max-w-4xl mx-auto">
-            Learn about retrograde planets with AI astrology. Understand how Mercury, Venus, Mars retrogrades influence your astro horoscope and life experiences.
+            Learn about retrograde planets with Astrology. Understand how Mercury, Venus, Mars retrogrades influence your astro horoscope and life experiences.
           </p>
           
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -73,11 +73,11 @@ export default function RetrogradePlanetsPage() {
             
             <section className="mb-12">
               <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-                Understanding Retrograde Planets in AI Astrology
+                Understanding Retrograde Planets in Astrology
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Retrograde planets appear to move backward in the sky, creating unique energy patterns in your birth chart. At <strong>AstroHoroscope.online</strong>, 
-                our AI astrology technology analyzes retrograde influences to reveal how these cosmic reversals affect your personality and life path.
+                our structured reading methodology analyzes retrograde influences to reveal how these cosmic reversals affect your personality and life path.
               </p>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                 Understanding retrogrades helps you recognize internalized energy, past-life themes, and areas where you need to review and revise your approach.

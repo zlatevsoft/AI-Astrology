@@ -9,11 +9,13 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
-  title: 'AI Astrology - Discover Your Cosmic Destiny',
-  description: 'Get your personalized AI-powered birth chart analysis. Discover your zodiac traits, planetary influences, and life path with our advanced astrological insights.',
+  title: 'Astro Horoscope | Discover Your Cosmic Blueprint',
+  description:
+    'Get a personalized birth chart interpretation. Explore zodiac traits, planetary emphasis, and life themes with AstroHoroscope.online.',
   openGraph: {
-    title: 'AI Astrology - Discover Your Cosmic Destiny',
-    description: 'Get your personalized AI-powered birth chart analysis. Discover your zodiac traits, planetary influences, and life path.',
+    title: 'Astro Horoscope | Discover Your Cosmic Blueprint',
+    description:
+      'Get a personalized birth chart interpretation. Explore zodiac traits, planetary emphasis, and life themes.',
   },
 }
 

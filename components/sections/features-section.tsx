@@ -61,13 +61,19 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-cosmic-100 text-cosmic-800 dark:bg-cosmic-800 dark:text-cosmic-200 mb-6">
-            {h.badge}
-          </span>
+          {h.badge ? (
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-cosmic-100 text-cosmic-800 dark:bg-cosmic-800 dark:text-cosmic-200 mb-6">
+              {h.badge}
+            </span>
+          ) : null}
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
             <span className="gradient-text">{h.line1}</span>
-            <br />
-            <span className="text-cosmic-900 dark:text-white">{h.line2}</span>
+            {h.line2?.trim() ? (
+              <>
+                <br />
+                <span className="text-cosmic-900 dark:text-white">{h.line2}</span>
+              </>
+            ) : null}
           </h2>
           <p className="text-xl text-cosmic-600 dark:text-cosmic-300 max-w-3xl mx-auto">{h.intro}</p>
         </motion.div>

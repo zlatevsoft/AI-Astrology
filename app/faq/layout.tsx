@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'FAQ – AI Astrology',
-  description: 'Questions and answers about AI astrology readings, privacy, and payments in EUR.',
+  title: 'FAQ – Astro Horoscope',
+  description: 'Questions and answers about natal-chart readings, privacy, and EUR payments.',
 }
 
 export default function FAQLayout({ children }: { children: React.ReactNode }) {
