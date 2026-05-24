@@ -60,6 +60,15 @@ export function formatEur(amount: number): string {
   return `€${amount.toFixed(2)}`
 }
 
+/** FAQ / small cards: format a list price from euros (values may come from `/api/pricing`). */
+export function formatListPriceForFaq(amount: number, locale: SiteLocale): string {
+  if (amount <= 0) {
+    return locale === 'bg' ? 'Безплатно' : 'Free'
+  }
+  const n = Math.round(amount)
+  return locale === 'bg' ? `${n} €` : `€${n}`
+}
+
 /** EUR list price shown in UI (whole euros); matches `LIST_PRICE_EUR` / free-checkout display. */
 export function formatMarketingListPriceEUR(tier: AnalysisTier, locale: SiteLocale): string {
   const { current } = getMarketingPriceDisplay(tier)

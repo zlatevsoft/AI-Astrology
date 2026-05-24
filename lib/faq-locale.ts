@@ -1,5 +1,6 @@
 import type { SiteLocale } from '@/lib/locale'
-import { formatMarketingListPriceEUR } from '@/lib/pricing'
+import type { AnalysisTier } from '@/lib/pricing'
+import { formatListPriceForFaq, LIST_PRICE_EUR } from '@/lib/pricing'
 
 export const faqPage = {
   en: {
@@ -19,13 +20,13 @@ export const faqPage = {
 
 type Qa = { q: string; a: string }
 
-/** Index of “three plans differ” QA — answer uses live prices from `lib/pricing`. */
+/** Index of “three plans differ” QA — injected prices from Postgres via `/api/pricing` when available. */
 const PLAN_DIFF_INDEX = 3
 
-function dynamicPlanDifferenceAnswer(locale: SiteLocale): string {
-  const b = formatMarketingListPriceEUR('basic', locale)
-  const detailed = formatMarketingListPriceEUR('detailed', locale)
-  const comp = formatMarketingListPriceEUR('comprehensive', locale)
+function dynamicPlanDifferenceAnswer(locale: SiteLocale, listEur: Record<AnalysisTier, number>): string {
+  const b = formatListPriceForFaq(listEur.basic, locale)
+  const detailed = formatListPriceForFaq(listEur.detailed, locale)
+  const comp = formatListPriceForFaq(listEur.comprehensive, locale)
 
   if (locale === 'bg') {
     return `<strong>Базов (${b}):</strong> личност и житейски фокус.<br/><strong>Задълбочен (${detailed}):</strong> всичко от Базов + душевни теми, по-пълен профил.<br/><strong>Пълна съвместимост (${comp}):</strong> анализ за двама, синастрия и партньорство.`
@@ -143,11 +144,14 @@ const bgQa: Qa[] = [
   },
 ]
 
-export function getFaqItems(locale: SiteLocale): Qa[] {
+export function getFaqItems(
+  locale: SiteLocale,
+  listEur: Record<AnalysisTier, number> = LIST_PRICE_EUR
+): Qa[] {
   const base = locale === 'bg' ? [...bgQa] : [...enQa]
   base[PLAN_DIFF_INDEX] = {
     ...base[PLAN_DIFF_INDEX],
-    a: dynamicPlanDifferenceAnswer(locale),
+    a: dynamicPlanDifferenceAnswer(locale, listEur),
   }
   return base
 }

@@ -1,12 +1,28 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { faqPage, getFaqItems } from '@/lib/faq-locale'
+import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
 export function FAQPageContent() {
   const locale = useSiteLocale()
   const t = faqPage[locale]
-  const items = getFaqItems(locale)
+  const [items, setItems] = useState(() => getFaqItems(locale))
+
+  useEffect(() => {
+    let cancelled = false
+    setItems(getFaqItems(locale))
+    fetch('/api/pricing')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p: PublicPricingPayload | null) => {
+        if (!cancelled && p?.listEur) setItems(getFaqItems(locale, p.listEur))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [locale])
 
   return (
     <main className="relative min-h-screen overflow-hidden pt-24 pb-20">

@@ -142,7 +142,8 @@ export default function AdminPricingPage() {
             <div>
               <h1 className="text-3xl font-bold text-cosmic-900 dark:text-white">Plan pricing (EUR)</h1>
               <p className="mt-1 text-sm text-cosmic-600 dark:text-cosmic-400">
-                Charged amounts (Stripe) and &quot;compare at&quot; on / and /pricing. Stored in Postgres.
+                Charged amounts (Stripe). Saved in Postgres; homepage, FAQ and checkout load them via `/api/pricing`.
+                Dev only: set <code className="text-xs">PRICING_FORCE_CODE=1</code> to ignore the database and pin repo constants.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

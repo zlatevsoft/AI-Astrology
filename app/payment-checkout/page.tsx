@@ -9,6 +9,7 @@ import { CreditCardIcon, CheckCircleIcon, StarIcon, SparklesIcon, HeartIcon, Arr
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { LIST_PRICE_EUR, COMPARE_AT_EUR, formatEur } from '@/lib/pricing'
+import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { paymentCheckout } from '@/lib/dictionaries'
 import { getPlanRowsForLocale, type PlanProductName } from '@/lib/plan-locale'
 import { getClientLocale } from '@/lib/locale'
@@ -33,6 +34,7 @@ export default function PaymentCheckoutPage() {
   const [promoCode, setPromoCode] = useState('')
   const [promoPreview, setPromoPreview] = useState<PromoPreview>({ status: 'idle' })
   const [freeFromServer, setFreeFromServer] = useState<boolean | null>(null)
+  const [apiPrices, setApiPrices] = useState<PublicPricingPayload | null>(null)
   const locale = useSiteLocale()
   const router = useRouter()
   const t = paymentCheckout[locale]
@@ -44,6 +46,14 @@ export default function PaymentCheckoutPage() {
       .catch(() => setFreeFromServer(false))
   }, [])
 
+  useEffect(() => {
+    fetch('/api/pricing')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p: PublicPricingPayload | null) => {
+        if (p?.listEur && p?.compareEur) setApiPrices(p)
+      })
+      .catch(() => {})
+  }, [])
   useEffect(() => {
     const plan = sessionStorage.getItem('selectedPlan')
     const birthChart = sessionStorage.getItem('birthChartData')
@@ -84,7 +94,9 @@ export default function PaymentCheckoutPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             code,
-            baseAmountCents: Math.round(LIST_PRICE_EUR[planRow.tier] * 100),
+            baseAmountCents: Math.round(
+              (apiPrices?.listEur[planRow.tier] ?? LIST_PRICE_EUR[planRow.tier]) * 100
+            ),
           }),
         })
         const d = (await r.json()) as {
@@ -108,7 +120,7 @@ export default function PaymentCheckoutPage() {
     }, 450)
 
     return () => window.clearTimeout(timeout)
-  }, [promoCode, selectedPlan, locale])
+  }, [promoCode, selectedPlan, locale, apiPrices])
 
   const handlePayment = async () => {
     if (!selectedPlan) return
@@ -199,8 +211,8 @@ export default function PaymentCheckoutPage() {
 
   const PlanIcon = PLAN_ICONS[planName]
   /** What the product costs in the price list (always shown; independent of test/free-charge mode). */
-  const listPriceEur = LIST_PRICE_EUR[planRow.tier]
-  const compareAtEur = COMPARE_AT_EUR[planRow.tier]
+  const listPriceEur = apiPrices?.listEur[planRow.tier] ?? LIST_PRICE_EUR[planRow.tier]
+  const compareAtEur = apiPrices?.compareEur[planRow.tier] ?? COMPARE_AT_EUR[planRow.tier]
   const finalPriceEur =
     promoPreview.status === 'valid' ? promoPreview.finalAmountCents / 100 : listPriceEur
   /** Only server env FREE_CHECKOUT=1 (via /api/site-config). Do not use NEXT_PUBLIC here — old builds would stay on "free" UI after env changes without redeploy. */

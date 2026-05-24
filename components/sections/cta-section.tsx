@@ -1,9 +1,16 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { ctaHome } from '@/lib/dictionaries'
-import { formatMarketingListPriceEUR, type AnalysisTier } from '@/lib/pricing'
+import {
+  formatListPriceForFaq,
+  formatMarketingListPriceEUR,
+  isFreeCheckoutDisplayEnabled,
+  type AnalysisTier,
+} from '@/lib/pricing'
+import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
 const trustMeta = [ShieldCheckIcon, BoltIcon, StarIcon] as const
@@ -17,7 +24,27 @@ export function CTASection() {
   const benefits = t.benefits as unknown as string[]
   const cardBullets = t.cardBullets as unknown as string[]
   const trustLabels = [t.trust1, t.trust2, t.trust3]
-  const premiumPrice = formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale)
+  const [premiumPrice, setPremiumPrice] = useState(() =>
+    formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale)
+  )
+
+  useEffect(() => {
+    if (isFreeCheckoutDisplayEnabled()) {
+      setPremiumPrice(formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale))
+      return
+    }
+    let cancelled = false
+    fetch('/api/pricing')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p: PublicPricingPayload | null) => {
+        if (cancelled || p?.listEur?.basic == null) return
+        setPremiumPrice(formatListPriceForFaq(p.listEur.basic, locale))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [locale])
 
   return (
     <section id="pricing" className="py-20 bg-gradient-to-br from-cosmic-900 via-purple-900 to-cosmic-800 relative overflow-hidden">

@@ -1,11 +1,13 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { LIST_PRICE_EUR, COMPARE_AT_EUR, type AnalysisTier } from '@/lib/pricing'
 import { getPlanRowsForLocale, pricingSection, isBasicProductName, type PlanProductName } from '@/lib/plan-locale'
+import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
 const PlanIcon: Record<AnalysisTier, typeof StarIcon> = {
@@ -29,9 +31,21 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
   const t = pricingSection[locale]
   const plans = getPlanRowsForLocale(locale)
 
-  /** Mirrors `pricingSnapshotFromCode()` — DB override only via TRUST_DATABASE_PRICES on API; UI stays consistent with repo prices. */
-  const listOf = (tier: AnalysisTier) => LIST_PRICE_EUR[tier]
-  const compareOf = (tier: AnalysisTier) => COMPARE_AT_EUR[tier]
+  const [pricing, setPricing] = useState<PublicPricingPayload>({
+    listEur: LIST_PRICE_EUR,
+    compareEur: COMPARE_AT_EUR,
+  })
+  useEffect(() => {
+    fetch('/api/pricing')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p: PublicPricingPayload | null) => {
+        if (p?.listEur && p?.compareEur) setPricing(p)
+      })
+      .catch(() => {})
+  }, [])
+
+  const listOf = (tier: AnalysisTier) => pricing.listEur[tier]
+  const compareOf = (tier: AnalysisTier) => pricing.compareEur[tier]
 
   const handlePlanSelect = (productName: PlanProductName) => {
     sessionStorage.setItem('selectedPlan', productName)

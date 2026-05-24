@@ -24,11 +24,12 @@ export function pricingSnapshotFromCode(): PricingSnapshot {
   }
 }
 
-/** Baseline snapshot (always matches code prices). Keep DB row optional for admins who set TRUST_DATABASE_PRICES. */
+/** Snapshot matching `LIST_PRICE_EUR` in code — seed for first DB row and fallback when DB is offline. */
 export const PRICING_DEFAULTS = pricingSnapshotFromCode()
 
-function trustDatabasePricing(): boolean {
-  const v = process.env.TRUST_DATABASE_PRICES
+/** When true, ignore Postgres and always use `LIST_PRICE_EUR` (local/dev escape hatch only). */
+function forcePricingFromCode(): boolean {
+  const v = process.env.PRICING_FORCE_CODE
   return typeof v !== 'undefined' && /^(1|true|yes)$/i.test(v.trim())
 }
 
@@ -57,7 +58,7 @@ export async function ensurePricingDefaultsRow(): Promise<void> {
 
 export async function getPricingSnapshot(): Promise<PricingSnapshot> {
   const code = pricingSnapshotFromCode()
-  if (!trustDatabasePricing() || !isDatabaseConfigured()) return code
+  if (forcePricingFromCode() || !isDatabaseConfigured()) return code
 
   await ensurePricingDefaultsRow()
   try {
