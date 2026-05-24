@@ -67,6 +67,13 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6.875rem;
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 7.5rem;
+  }
 }
 
 body {
@@ -316,6 +323,17 @@ html[lang='bg'] body {
 }
 
 @layer utilities {
+  /* Clears fixed site header (h-16 / h-20); use on main page content below <Header />. */
+  .pt-page-header-safe {
+    padding-top: 6.875rem;
+  }
+
+  @media (min-width: 1024px) {
+    .pt-page-header-safe {
+      padding-top: 7.5rem;
+    }
+  }
+
   /* Text gradients */
   .text-gradient-cosmic {
     @apply bg-gradient-to-r from-cosmic-600 to-purple-600 bg-clip-text text-transparent;

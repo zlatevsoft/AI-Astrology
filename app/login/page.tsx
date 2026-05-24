@@ -10,14 +10,14 @@ export const metadata: Metadata = {
 }
 
 function LoginFormShell() {
-  return <SignInForm title="Staff login" showFirstTimeLink />
+  return <SignInForm title="Staff login" showFirstTimeLink={false} />
 }
 
 export default function LoginPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 px-4 py-24">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 px-4 pb-24 pt-page-header-safe">
         <Suspense
           fallback={
             <div className="mx-auto w-full max-w-md animate-pulse rounded-2xl bg-white/5 p-8 text-center text-white/60">

@@ -25,7 +25,7 @@ export function FAQPageContent() {
   }, [locale])
 
   return (
-    <main className="relative min-h-screen overflow-hidden pt-24 pb-20">
+    <main className="relative min-h-screen overflow-hidden pt-page-header-safe pb-20">
       {/* Deep cosmic gradient */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950 via-[#10081e] to-slate-950" />
       <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_70%_-20%,rgba(139,92,246,0.42),transparent_55%)]" />

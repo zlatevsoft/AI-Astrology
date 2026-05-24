@@ -21,7 +21,7 @@ export function LegalDocument({ doc }: { doc: Doc }) {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 py-20">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 pt-page-header-safe pb-20">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
             <h1 className="text-4xl font-bold text-white mb-8">{data.h1}</h1>

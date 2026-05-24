@@ -21,6 +21,24 @@ export const siteNav = {
   },
 } as const satisfies Record<SiteLocale, Record<string, string>>
 
+/** SEO lead block displayed above tier cards on landing (localized). */
+export const homePlansSeoIntro = {
+  en: {
+    title: 'Natal astrology that reads like a blueprint—not a crossword',
+    subtitle:
+      'Interpret your astro horoscope and birth chart with analyst-level rigor: houses, planetary aspects, elemental balance, and timing cues—then receive a polished PDF you can revisit whenever life accelerates.',
+    highlight:
+      'Whether you explore love, career, or inner growth, AstroHoroscope.online turns cosmic geometry into practical language so every insight stays usable on mobile or desktop.',
+  },
+  bg: {
+    title: 'Натална астрология, която четеш като карта към живота — не като клише',
+    subtitle:
+      'Персонализирана натална карта и хороскоп с фокус върху домове, аспекти, стихии и ключови житейски теми — с ясен PDF текст, който стои до теб след всяко важно решение.',
+    highlight:
+      'Любов, кариера или себепознание: AstroHoroscope.online превежда звездната математика в език, който веднага разбираш — на телефон или компютър, без претрупани обещания.',
+  },
+} as const satisfies Record<SiteLocale, { title: string; subtitle: string; highlight: string }>
+
 export const footerLocale = {
   en: {
     plansHeading: 'Plans',
@@ -68,7 +86,7 @@ export const ctaHome = {
     trust1: '100% Secure',
     trust2: 'Instant Results',
     trust3: '4.9/5 Rating',
-    cardTitle: 'Premium Analysis',
+    cardTitle: 'Premium stellar analysis',
     oneTime: 'One-time payment',
     cardBullets: [
       'Complete birth chart',
@@ -98,7 +116,7 @@ export const ctaHome = {
     trust1: '100% сигурност',
     trust2: 'Мигновено',
     trust3: 'Рейтинг 4.9/5',
-    cardTitle: 'Премиум анализ',
+    cardTitle: 'Премиум звезден анализ',
     oneTime: 'Еднократно плащане',
     cardBullets: [
       'Пълна натална карта',

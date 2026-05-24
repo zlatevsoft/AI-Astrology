@@ -17,7 +17,7 @@ type Props = {
   showFirstTimeLink?: boolean
 }
 
-export function SignInForm({ title = 'Sign in', showForbiddenNote = true, showFirstTimeLink = true }: Props) {
+export function SignInForm({ title = 'Sign in', showForbiddenNote = true, showFirstTimeLink = false }: Props) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)

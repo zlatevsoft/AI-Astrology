@@ -225,7 +225,7 @@ export default function AdminAffiliatesPage() {
     return (
       <>
         <Header />
-        <div className="container mx-auto max-w-lg px-4 py-24 text-center">
+        <div className="container mx-auto max-w-lg px-4 pb-20 pt-page-header-safe text-center">
           <h1 className="text-2xl font-bold">Admin access</h1>
           <p className="mt-2 text-cosmic-600 dark:text-cosmic-300">Sign in as a super admin to continue.</p>
           <Link
@@ -243,7 +243,7 @@ export default function AdminAffiliatesPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-b from-cosmic-50 to-white py-20 dark:from-cosmic-950 dark:to-cosmic-900">
+      <main className="min-h-screen bg-gradient-to-b from-cosmic-50 to-white pt-page-header-safe pb-20 dark:from-cosmic-950 dark:to-cosmic-900">
         <div className="container mx-auto max-w-5xl px-4">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <h1 className="text-3xl font-bold text-cosmic-900 dark:text-white">Affiliates & promo codes</h1>

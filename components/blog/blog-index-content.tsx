@@ -1,9 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { CalendarIcon, ClockIcon, UserIcon } from '@heroicons/react/24/outline'
 import { blogIndexCopy, getBlogListPosts } from '@/lib/blog-index-locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
+
+const POST_COVER = '/astrohoroscope.png'
 
 export function BlogIndexContent() {
   const locale = useSiteLocale()
@@ -11,8 +14,8 @@ export function BlogIndexContent() {
   const blogPosts = getBlogListPosts(locale)
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
-      <div className="container mx-auto px-4 py-16">
+    <main className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 pt-page-header-safe dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
+      <div className="container mx-auto px-4 pb-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cosmic-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
             {t.h1}
@@ -28,10 +31,22 @@ export function BlogIndexContent() {
               <div className="bg-white dark:bg-cosmic-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-cosmic-700">
                 <div className="md:flex">
                   <div className="md:w-1/2">
-                    <div className="h-64 md:h-full bg-gradient-to-br from-cosmic-500 to-purple-600 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <div className="text-6xl mb-4">🌟</div>
-                        <div className="text-sm opacity-80">{t.featured}</div>
+                    <div className="relative h-64 min-h-[16rem] w-full md:h-full md:min-h-[20rem]">
+                      <Image
+                        src={POST_COVER}
+                        alt=""
+                        fill
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        className="object-cover object-[center_18%]"
+                        unoptimized
+                      />
+                      <div
+                        className="absolute inset-0 bg-gradient-to-t from-black/55 via-purple-950/25 to-transparent"
+                        aria-hidden
+                      />
+                      <div className="absolute bottom-4 left-0 right-0 text-center">
+                        <div className="text-4xl text-white md:text-5xl">✨</div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-white/90">{t.featured}</div>
                       </div>
                     </div>
                   </div>
@@ -82,10 +97,22 @@ export function BlogIndexContent() {
                 key={post.id}
                 className="bg-white dark:bg-cosmic-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-cosmic-700 hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <div className="h-48 bg-gradient-to-br from-cosmic-400 to-purple-500 flex items-center justify-center">
-                  <div className="text-white text-center">
-                    <div className="text-4xl mb-2">✨</div>
-                    <div className="text-xs opacity-80">{t.cardHint}</div>
+                <div className="relative h-52 w-full">
+                  <Image
+                    src={POST_COVER}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover object-[center_15%]"
+                    unoptimized
+                  />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/45 via-purple-950/15 to-transparent"
+                    aria-hidden
+                  />
+                  <div className="absolute bottom-3 left-3 right-3 text-center text-white drop-shadow-lg">
+                    <div className="text-3xl mb-1">⭐️</div>
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-white/90">{t.cardHint}</div>
                   </div>
                 </div>
                 <div className="p-6">

@@ -179,7 +179,7 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
+      <main className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 pt-page-header-safe dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
         <div className="container mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

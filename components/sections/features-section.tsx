@@ -45,7 +45,7 @@ export function FeaturesSection() {
   )
 
   return (
-    <section id="features" className="py-20 bg-gradient-to-b from-white to-cosmic-50 dark:from-cosmic-900 dark:to-cosmic-800 relative overflow-hidden">
+    <section id="features" className="scroll-mt-28 py-20 bg-gradient-to-b from-white to-cosmic-50 dark:from-cosmic-900 dark:to-cosmic-800 relative overflow-hidden lg:scroll-mt-36">
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 text-6xl text-cosmic-400">♈</div>
         <div className="absolute top-40 right-20 text-5xl text-purple-400">♉</div>

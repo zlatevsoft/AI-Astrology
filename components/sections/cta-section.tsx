@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { CheckIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { ctaHome } from '@/lib/dictionaries'
 import {
@@ -15,10 +16,11 @@ import { useSiteLocale } from '@/lib/use-site-locale'
 
 const trustMeta = [ShieldCheckIcon, BoltIcon, StarIcon] as const
 
-/** Matches "Premium / Премиум" card on home — entry tier in `LIST_PRICE_EUR`. */
-const HOME_PREMIUM_PREVIEW_TIER: AnalysisTier = 'basic'
+/** Mid tier "Premium stellar analysis" preview — aligns with Detailed Analysis checkout. */
+const HOME_PREMIUM_PREVIEW_TIER: AnalysisTier = 'detailed'
 
 export function CTASection() {
+  const router = useRouter()
   const locale = useSiteLocale()
   const t = ctaHome[locale]
   const benefits = t.benefits as unknown as string[]
@@ -37,8 +39,8 @@ export function CTASection() {
     fetch('/api/pricing')
       .then((r) => (r.ok ? r.json() : null))
       .then((p: PublicPricingPayload | null) => {
-        if (cancelled || p?.listEur?.basic == null) return
-        setPremiumPrice(formatListPriceForFaq(p.listEur.basic, locale))
+        if (cancelled || p?.listEur?.detailed == null) return
+        setPremiumPrice(formatListPriceForFaq(p.listEur.detailed, locale))
       })
       .catch(() => {})
     return () => {
@@ -202,12 +204,18 @@ export function CTASection() {
                   ))}
                 </div>
 
-                <a
-                  href="/pricing"
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem('selectedPlan', 'Detailed Analysis')
+                    }
+                    router.push('/birth-chart')
+                  }}
                   className="block w-full bg-gradient-to-r from-cosmic-500 to-purple-500 hover:from-cosmic-600 hover:to-purple-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-center"
                 >
                   {t.button}
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>

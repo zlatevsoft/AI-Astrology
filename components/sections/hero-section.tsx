@@ -20,7 +20,7 @@ export function HeroSection() {
     : 'text-xl md:text-2xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed'
   const badgeClass = isBg ? 'text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5' : 'text-sm px-6 py-3'
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-[5.25rem] sm:pt-24 lg:pt-28 pb-10">
       {/* Full-bleed hero image (configured in `/public`). */}
       <div className="absolute inset-0 z-0">
         <Image

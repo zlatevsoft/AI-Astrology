@@ -29,6 +29,11 @@ export const blogIndexCopy = {
   },
 } as const satisfies Record<SiteLocale, Record<string, string>>
 
+export const blogArticleChrome = {
+  en: { back: 'Back to blog' },
+  bg: { back: 'Обратно към блога' },
+} as const satisfies Record<SiteLocale, { back: string }>
+
 export type BlogListPost = {
   id: number
   slug: string
@@ -45,7 +50,8 @@ export type BlogListPost = {
 const teamEn = 'AstroHoroscope.online Team'
 const teamBg = 'Екип AstroHoroscope.online'
 
-const raw: Array<{
+/** Canonical list (used by blog index, metadata, slug validation). */
+export const BLOG_POSTS_SOURCE: Array<{
   id: number
   slug: string
   date: string
@@ -267,8 +273,31 @@ const raw: Array<{
   },
 ]
 
+export function resolveBlogMeta(slug: string, locale: SiteLocale): BlogListPost | null {
+  const p = BLOG_POSTS_SOURCE.find((x) => x.slug === slug)
+  if (!p) return null
+  const s = locale === 'bg' ? p.bg : p.en
+  return {
+    id: p.id,
+    slug: p.slug,
+    date: p.date,
+    image: p.image,
+    featured: p.featured,
+    title: s.title,
+    excerpt: s.excerpt,
+    category: s.category,
+    readTime: s.read,
+    author: locale === 'bg' ? teamBg : teamEn,
+  }
+}
+
+/** Slugs guaranteed to exist in `BLOG_POSTS_SOURCE`. */
+export function getAllBlogSlugs(): string[] {
+  return BLOG_POSTS_SOURCE.map((p) => p.slug)
+}
+
 export function getBlogListPosts(locale: SiteLocale): BlogListPost[] {
-  return raw.map((p) => {
+  return BLOG_POSTS_SOURCE.map((p) => {
     const s = locale === 'bg' ? p.bg : p.en
     return {
       id: p.id,
