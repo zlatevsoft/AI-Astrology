@@ -6,9 +6,9 @@ export type PlanProductName = 'Basic Reading' | 'Detailed Analysis' | 'Comprehen
 
 export const pricingSection = {
   en: {
-    title: 'Choose Your Astrological Journey',
+    title: 'What do the stars reveal about you?',
     subtitle:
-      'Discover your cosmic blueprint with a personalized astrological analysis. Choose the plan that fits your journey.',
+      'Get a personal astrological forecast for love, character, and future opportunities in your life!',
     oneTimeLine: 'One-time payment • Instant access • PDF download included',
     popular: 'Most Popular',
     oneTimePayment: 'one-time payment',

@@ -1,19 +1,37 @@
 import type { SiteLocale } from '@/lib/locale'
+import { formatMarketingListPriceEUR } from '@/lib/pricing'
 
 export const faqPage = {
   en: {
     title: 'Frequently Asked Questions',
+    intro:
+      'Clear answers about the service, privacy, and checkout — optimised for readability on any device.',
     still: 'Still have questions?',
     contact: 'Contact Us',
   },
   bg: {
     title: 'Често задавани въпроси',
+    intro: 'Ясни отговори за услуги, поверителност и поръчка — текстът се чете добре и на мобилен.',
     still: 'Още въпроси?',
     contact: 'Свържи се с нас',
   },
 } as const satisfies Record<SiteLocale, Record<string, string>>
 
 type Qa = { q: string; a: string }
+
+/** Index of “three plans differ” QA — answer uses live prices from `lib/pricing`. */
+const PLAN_DIFF_INDEX = 3
+
+function dynamicPlanDifferenceAnswer(locale: SiteLocale): string {
+  const b = formatMarketingListPriceEUR('basic', locale)
+  const detailed = formatMarketingListPriceEUR('detailed', locale)
+  const comp = formatMarketingListPriceEUR('comprehensive', locale)
+
+  if (locale === 'bg') {
+    return `<strong>Базов (${b}):</strong> личност и житейски фокус.<br/><strong>Задълбочен (${detailed}):</strong> всичко от Базов + душевни теми, по-пълен профил.<br/><strong>Пълна съвместимост (${comp}):</strong> анализ за двама, синастрия и партньорство.`
+  }
+  return `<strong>Basic Reading (${b}):</strong> Core personality insights and life path guidance.<br/><strong>Detailed Analysis (${detailed}):</strong> Everything in Basic plus a comprehensive personality profile, soul mission, and advanced insights.<br/><strong>Comprehensive Reading (${comp}):</strong> Relationship compatibility for two people, including synastry and compatibility insights.`
+}
 
 const enQa: Qa[] = [
   {
@@ -30,7 +48,7 @@ const enQa: Qa[] = [
   },
   {
     q: "What's the difference between the three plans?",
-    a: '<strong>Basic Reading (€19):</strong> Core personality insights and life path guidance.<br/><strong>Detailed Analysis (€29):</strong> Everything in Basic plus a comprehensive personality profile, soul mission, and advanced insights.<br/><strong>Comprehensive Reading (€39):</strong> Relationship compatibility for two people, including synastry and compatibility insights.',
+    a: '',
   },
   {
     q: 'How do I get my PDF report?',
@@ -85,7 +103,7 @@ const bgQa: Qa[] = [
   },
   {
     q: 'С какво се различават трите плана?',
-    a: '<strong>Базов (19 €):</strong> личност и житейски фокус.<br/><strong>Задълбочен (29 €):</strong> всичко от Базов + душевни теми, по-пълен профил.<br/><strong>Пълна съвместимост (39 €):</strong> анализ за двама, синастрия и партньорство.',
+    a: '',
   },
   {
     q: 'Как да сваля PDF отчета?',
@@ -126,5 +144,10 @@ const bgQa: Qa[] = [
 ]
 
 export function getFaqItems(locale: SiteLocale): Qa[] {
-  return locale === 'bg' ? bgQa : enQa
+  const base = locale === 'bg' ? [...bgQa] : [...enQa]
+  base[PLAN_DIFF_INDEX] = {
+    ...base[PLAN_DIFF_INDEX],
+    a: dynamicPlanDifferenceAnswer(locale),
+  }
+  return base
 }

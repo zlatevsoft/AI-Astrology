@@ -105,8 +105,12 @@ export function HeroSection() {
           <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
             {t.titleLine1}
           </span>
-          <br />
-          <span className={`text-white ${isBg ? 'drop-shadow-lg' : 'drop-shadow-2xl'}`}>{t.titleLine2}</span>
+          {t.titleLine2.trim() ? (
+            <>
+              <br />
+              <span className={`text-white ${isBg ? 'drop-shadow-lg' : 'drop-shadow-2xl'}`}>{t.titleLine2}</span>
+            </>
+          ) : null}
         </motion.h1>
 
         <motion.p

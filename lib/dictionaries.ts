@@ -52,10 +52,11 @@ export const footerLocale = {
 export const ctaHome = {
   en: {
     badge: '⭐ Limited Time Offer',
-    title1: 'Discover Your',
-    title2: 'Cosmic Blueprint',
-    title3: 'Today',
-    body: 'Personalized birth chart reading from €19. Understand personality, recurring themes, and practical guidance—in minutes.',
+    title1: '',
+    title2: 'What do the stars reveal about you?',
+    title3: '',
+    body:
+      'Get a personal astrological forecast for love, character, and future opportunities in your life!',
     benefits: [
       'Accurate birth chart calculations',
       'Personalized written interpretation',
@@ -68,7 +69,6 @@ export const ctaHome = {
     trust2: 'Instant Results',
     trust3: '4.9/5 Rating',
     cardTitle: 'Premium Analysis',
-    price: '€19',
     oneTime: 'One-time payment',
     cardBullets: [
       'Complete birth chart',
@@ -82,10 +82,11 @@ export const ctaHome = {
   },
   bg: {
     badge: '⭐ Оферта за ограничено време',
-    title1: 'Открий',
-    title2: 'космическия си почерк',
-    title3: 'днес',
-    body: 'Персонална натална карта от 19 € — характер, акценти и житейски ориентири за минути.',
+    title1: '',
+    title2: 'Какво разкриват звездите за теб?',
+    title3: '',
+    body:
+      'Получи персонална астрологична прогноза за любовта, характера и бъдещите възможности в живота ти!',
     benefits: [
       'Точни изчисления на картата',
       'Персонален текстов анализ',
@@ -98,7 +99,6 @@ export const ctaHome = {
     trust2: 'Мигновено',
     trust3: 'Рейтинг 4.9/5',
     cardTitle: 'Премиум анализ',
-    price: '19 €',
     oneTime: 'Еднократно плащане',
     cardBullets: [
       'Пълна натална карта',
@@ -190,10 +190,10 @@ export const paymentCheckout = {
 export const heroHome = {
   en: {
     badge: 'AstroHoroscope.online',
-    titleLine1: 'Professional astro horoscope',
-    titleLine2: '& birth chart',
+    titleLine1: 'What do the stars reveal about you?',
+    titleLine2: '',
     description:
-      'Personal birth chart interpretation at AstroHoroscope.online — clear astro horoscope reading with planetary highlights from €19.',
+      'Get a personal astrological forecast for love, character, and future opportunities in your life!',
     cta: 'Choose Your Plan',
     feat1: 'Accurate Calculations',
     feat2: 'Personalized Reading',
@@ -204,10 +204,10 @@ export const heroHome = {
   },
   bg: {
     badge: 'AstroHoroscope.online',
-    titleLine1: 'Професионален астрологичен хороскоп',
-    titleLine2: 'и персонална натална карта',
+    titleLine1: 'Какво разкриват звездите за теб?',
+    titleLine2: '',
     description:
-      'Персонализирана интерпретация на наталната ви карта на AstroHoroscope.online. Ясен анализ и космически акценти – от 19 €.',
+      'Получи персонална астрологична прогноза за любовта, характера и бъдещите възможности в живота ти!',
     cta: 'Избери план',
     feat1: 'Точни изчисления',
     feat2: 'Ясен персонален анализ',

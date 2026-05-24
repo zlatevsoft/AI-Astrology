@@ -3,9 +3,13 @@
 import { motion } from 'framer-motion'
 import { CheckIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { ctaHome } from '@/lib/dictionaries'
+import { formatMarketingListPriceEUR, type AnalysisTier } from '@/lib/pricing'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
 const trustMeta = [ShieldCheckIcon, BoltIcon, StarIcon] as const
+
+/** Matches "Premium / Премиум" card on home — entry tier in `LIST_PRICE_EUR`. */
+const HOME_PREMIUM_PREVIEW_TIER: AnalysisTier = 'basic'
 
 export function CTASection() {
   const locale = useSiteLocale()
@@ -13,6 +17,7 @@ export function CTASection() {
   const benefits = t.benefits as unknown as string[]
   const cardBullets = t.cardBullets as unknown as string[]
   const trustLabels = [t.trust1, t.trust2, t.trust3]
+  const premiumPrice = formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale)
 
   return (
     <section id="pricing" className="py-20 bg-gradient-to-br from-cosmic-900 via-purple-900 to-cosmic-800 relative overflow-hidden">
@@ -91,11 +96,25 @@ export function CTASection() {
             </span>
 
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              {t.title1}
-              <br />
-              <span className="text-gradient-cosmic">{t.title2}</span>
-              <br />
-              {t.title3}
+              {t.title1 || t.title3 ? (
+                <>
+                  {t.title1 ? (
+                    <>
+                      {t.title1}
+                      <br />
+                    </>
+                  ) : null}
+                  {t.title2 ? <span className="text-gradient-cosmic">{t.title2}</span> : null}
+                  {t.title3 ? (
+                    <>
+                      <br />
+                      {t.title3}
+                    </>
+                  ) : null}
+                </>
+              ) : t.title2 ? (
+                <span className="text-gradient-cosmic">{t.title2}</span>
+              ) : null}
             </h2>
 
             <p className="text-xl text-cosmic-200 mb-8 leading-relaxed">{t.body}</p>
@@ -137,7 +156,7 @@ export function CTASection() {
               <div className="relative z-10">
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold text-white mb-2">{t.cardTitle}</h3>
-                  <div className="text-4xl font-bold text-white mb-2">{t.price}</div>
+                  <div className="text-4xl font-bold text-white mb-2">{premiumPrice}</div>
                   <p className="text-cosmic-200">{t.oneTime}</p>
                 </div>
 
