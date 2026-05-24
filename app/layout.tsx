@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
-import { cookies } from 'next/headers'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { Providers } from '@/components/providers'
+import { getServerPreferredLocale } from '@/lib/server-locale'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext'],
@@ -125,7 +125,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const htmlLang = cookies().get('NEXT_LOCALE')?.value === 'bg' ? 'bg' : 'en'
+  const preferredLocale = getServerPreferredLocale()
+  const htmlLang = preferredLocale === 'bg' ? 'bg' : 'en'
   return (
     <html lang={htmlLang} className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <head>
@@ -182,7 +183,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <Providers>
+        <Providers initialLocale={preferredLocale}>
           <div className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950">
             {children}
           </div>
