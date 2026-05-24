@@ -104,7 +104,11 @@ export function CTASection() {
                       <br />
                     </>
                   ) : null}
-                  {t.title2 ? <span className="text-gradient-cosmic">{t.title2}</span> : null}
+                  {t.title2 ? (
+                    <span className="bg-gradient-to-r from-fuchsia-200 via-purple-100 to-purple-200 bg-clip-text text-transparent drop-shadow-[0_2px_16px_rgba(0,0,0,.5)]">
+                      {t.title2}
+                    </span>
+                  ) : null}
                   {t.title3 ? (
                     <>
                       <br />
@@ -113,11 +117,13 @@ export function CTASection() {
                   ) : null}
                 </>
               ) : t.title2 ? (
-                <span className="text-gradient-cosmic">{t.title2}</span>
+                <span className="bg-gradient-to-r from-fuchsia-200 via-purple-100 to-purple-200 bg-clip-text text-transparent drop-shadow-[0_2px_16px_rgba(0,0,0,.5)]">
+                  {t.title2}
+                </span>
               ) : null}
             </h2>
 
-            <p className="text-xl text-cosmic-200 mb-8 leading-relaxed">{t.body}</p>
+            <p className="mb-8 text-xl leading-relaxed text-purple-50/96 drop-shadow-sm">{t.body}</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {benefits.map((benefit, index) => (

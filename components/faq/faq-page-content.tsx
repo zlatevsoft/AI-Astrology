@@ -31,8 +31,8 @@ export function FAQPageContent() {
                 className="group rounded-2xl border border-white/[0.16] bg-slate-950/40 p-5 shadow-inner shadow-black/20 transition-colors hover:border-fuchsia-400/35 hover:bg-slate-900/55 md:p-6"
               >
                 <h2 className="mb-3 text-lg font-semibold leading-snug text-white md:text-xl">{item.q}</h2>
-                <div
-                  className="text-[0.965rem] leading-relaxed text-slate-50/96 md:text-base [&_a]:underline [&_a]:decoration-purple-400/80 [&_a]:underline-offset-2 [&_a]:transition-colors [&_a]:hover:text-fuchsia-50 [&_br]:leading-normal [&_strong]:font-semibold [&_strong]:text-white"
+                  <div
+                  className={`faq-rich-text text-[0.965rem] leading-relaxed text-slate-50 md:text-base [&_br]:leading-normal [&_a]:underline [&_a]:decoration-purple-300 [&_a]:underline-offset-2 [&_a]:hover:text-white [&_strong]:font-semibold`}
                   dangerouslySetInnerHTML={{ __html: item.a }}
                 />
               </section>

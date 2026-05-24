@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { isDatabaseConfigured } from '@/lib/database-url'
 import type { AnalysisTier } from '@/lib/pricing'
+import { COMPARE_AT_EUR, LIST_PRICE_EUR } from '@/lib/pricing'
 
 export type PricingSnapshot = {
   basicCents: number
@@ -11,13 +12,24 @@ export type PricingSnapshot = {
   compareComprehensiveCents: number
 }
 
-export const PRICING_DEFAULTS: PricingSnapshot = {
-  basicCents: 1900,
-  detailedCents: 2900,
-  comprehensiveCents: 3900,
-  compareBasicCents: 2900,
-  compareDetailedCents: 3900,
-  compareComprehensiveCents: 4900,
+/** Single marketing + charge cents source from `LIST_PRICE_EUR` / `COMPARE_AT_EUR` (see `lib/pricing.ts`). */
+export function pricingSnapshotFromCode(): PricingSnapshot {
+  return {
+    basicCents: Math.round(LIST_PRICE_EUR.basic * 100),
+    detailedCents: Math.round(LIST_PRICE_EUR.detailed * 100),
+    comprehensiveCents: Math.round(LIST_PRICE_EUR.comprehensive * 100),
+    compareBasicCents: Math.round(COMPARE_AT_EUR.basic * 100),
+    compareDetailedCents: Math.round(COMPARE_AT_EUR.detailed * 100),
+    compareComprehensiveCents: Math.round(COMPARE_AT_EUR.comprehensive * 100),
+  }
+}
+
+/** Baseline snapshot (always matches code prices). Keep DB row optional for admins who set TRUST_DATABASE_PRICES. */
+export const PRICING_DEFAULTS = pricingSnapshotFromCode()
+
+function trustDatabasePricing(): boolean {
+  const v = process.env.TRUST_DATABASE_PRICES
+  return typeof v !== 'undefined' && /^(1|true|yes)$/i.test(v.trim())
 }
 
 /** English product titles as used in sessionStorage / Stripe metadata. */
@@ -32,9 +44,10 @@ export function analysisTierFromProductName(productName: string): AnalysisTier |
 export async function ensurePricingDefaultsRow(): Promise<void> {
   if (!isDatabaseConfigured()) return
   try {
+    const snap = pricingSnapshotFromCode()
     await prisma.pricingSettings.upsert({
       where: { id: 1 },
-      create: { id: 1, ...PRICING_DEFAULTS },
+      create: { id: 1, ...snap },
       update: {},
     })
   } catch {
@@ -43,11 +56,13 @@ export async function ensurePricingDefaultsRow(): Promise<void> {
 }
 
 export async function getPricingSnapshot(): Promise<PricingSnapshot> {
-  if (!isDatabaseConfigured()) return { ...PRICING_DEFAULTS }
+  const code = pricingSnapshotFromCode()
+  if (!trustDatabasePricing() || !isDatabaseConfigured()) return code
+
   await ensurePricingDefaultsRow()
   try {
     const row = await prisma.pricingSettings.findUnique({ where: { id: 1 } })
-    if (!row) return { ...PRICING_DEFAULTS }
+    if (!row) return code
     return {
       basicCents: row.basicCents,
       detailedCents: row.detailedCents,
@@ -57,7 +72,7 @@ export async function getPricingSnapshot(): Promise<PricingSnapshot> {
       compareComprehensiveCents: row.compareComprehensiveCents,
     }
   } catch {
-    return { ...PRICING_DEFAULTS }
+    return code
   }
 }
 

@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { LIST_PRICE_EUR, COMPARE_AT_EUR, type AnalysisTier } from '@/lib/pricing'
-import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { getPlanRowsForLocale, pricingSection, isBasicProductName, type PlanProductName } from '@/lib/plan-locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
@@ -30,17 +28,10 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
   const locale = useSiteLocale()
   const t = pricingSection[locale]
   const plans = getPlanRowsForLocale(locale)
-  const [apiPrices, setApiPrices] = useState<PublicPricingPayload | null>(null)
 
-  useEffect(() => {
-    fetch('/api/pricing')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: PublicPricingPayload | null) => (d?.listEur && d?.compareEur ? setApiPrices(d) : null))
-      .catch(() => {})
-  }, [])
-
-  const listOf = (tier: AnalysisTier) => apiPrices?.listEur[tier] ?? LIST_PRICE_EUR[tier]
-  const compareOf = (tier: AnalysisTier) => apiPrices?.compareEur[tier] ?? COMPARE_AT_EUR[tier]
+  /** Mirrors `pricingSnapshotFromCode()` — DB override only via TRUST_DATABASE_PRICES on API; UI stays consistent with repo prices. */
+  const listOf = (tier: AnalysisTier) => LIST_PRICE_EUR[tier]
+  const compareOf = (tier: AnalysisTier) => COMPARE_AT_EUR[tier]
 
   const handlePlanSelect = (productName: PlanProductName) => {
     sessionStorage.setItem('selectedPlan', productName)
@@ -78,7 +69,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
             <h1
               className={
                 darkHome
-                  ? 'mb-6 bg-gradient-to-r from-purple-50 via-white to-fuchsia-200 bg-clip-text text-4xl font-bold tracking-tight text-transparent drop-shadow-[0_0_32px_rgba(168,85,247,0.45)] md:text-5xl'
+                  ? 'mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-[0_3px_28px_rgba(0,0,0,0.78)] md:text-5xl'
                   : 'gradient-text mb-6 text-4xl font-bold md:text-5xl'
               }
             >
@@ -88,7 +79,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
             <h2
               className={
                 darkHome
-                  ? 'mb-6 bg-gradient-to-r from-purple-50 via-white to-fuchsia-200 bg-clip-text text-4xl font-bold tracking-tight text-transparent drop-shadow-[0_0_32px_rgba(168,85,247,0.45)] md:text-5xl'
+                  ? 'mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-[0_3px_28px_rgba(0,0,0,0.78)] md:text-5xl'
                   : 'gradient-text mb-6 text-4xl font-bold md:text-5xl'
               }
             >
@@ -96,15 +87,15 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
             </h2>
           )}
           <p
-            className={`mx-auto mb-8 max-w-3xl text-xl ${
-              darkHome ? 'text-purple-50/93 drop-shadow-sm' : 'text-cosmic-700 dark:text-cosmic-300'
+            className={`mx-auto mb-8 max-w-3xl text-xl font-medium leading-relaxed ${
+              darkHome ? 'text-slate-100 drop-shadow-[0_1px_12px_rgba(0,0,0,.6)]' : 'text-cosmic-700 dark:text-cosmic-300'
             }`}
           >
             {t.subtitle}
           </p>
           <div className="mb-8 flex items-center justify-center gap-4">
             <span
-              className={`text-sm ${darkHome ? 'text-purple-200/82' : 'text-cosmic-600 dark:text-cosmic-400'}`}
+              className={`text-sm ${darkHome ? 'text-purple-50/92' : 'text-cosmic-600 dark:text-cosmic-400'}`}
             >
               {t.oneTimeLine}
             </span>
@@ -116,9 +107,10 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
             const listPrice = listOf(plan.tier)
             const compareAt = compareOf(plan.tier)
             const Icon = PlanIcon[plan.tier]
+            const cardPadding = plan.popular && darkHome ? 'px-8 pb-8 pt-14' : plan.popular ? 'p-8 pt-14' : 'p-8'
             const cardShell = darkHome
-              ? `relative rounded-2xl border-2 bg-white/[0.07] p-8 shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_28px_64px_-24px_rgba(0,0,0,0.85)] backdrop-blur-md backdrop-saturate-150 transition-colors duration-300 hover:bg-white/[0.1] ${plan.borderColor} border-white/25`
-              : `relative rounded-2xl border-2 bg-white/80 p-8 shadow-xl backdrop-blur-sm dark:bg-cosmic-800/80 ${plan.borderColor}`
+              ? `relative rounded-2xl border-2 bg-white/[0.09] shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_28px_64px_-24px_rgba(0,0,0,0.85)] backdrop-blur-md backdrop-saturate-150 transition-colors duration-300 hover:bg-white/[0.12] ${plan.borderColor} border-white/30 ${cardPadding}`
+              : `relative rounded-2xl border-2 bg-white/80 shadow-xl backdrop-blur-sm dark:bg-cosmic-800/80 ${plan.borderColor} ${cardPadding}`
             const emph = darkHome ? 'ring-2 ring-fuchsia-400/55 shadow-fuchsia-500/16 scale-105' : 'ring-2 ring-cosmic-500 scale-105'
             return (
               <motion.div
@@ -130,8 +122,8 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                 className={`${cardShell}${plan.popular ? ` ${emph}` : ''}`}
               >
                 {plan.popular && (
-                  <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2">
-                    <span className="rounded-full bg-gradient-to-r from-purple-500 to-pink-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-900/50">
+                  <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-[40%]">
+                    <span className="inline-block max-w-[min(94vw,20rem)] whitespace-nowrap rounded-full bg-gradient-to-r from-purple-500 to-pink-600 px-3 py-2 text-center text-[11px] font-semibold leading-tight tracking-wide text-white shadow-lg shadow-purple-900/55 sm:max-w-none sm:px-4 sm:text-sm">
                       {plan.popularLabel ?? t.popular}
                     </span>
                   </div>
@@ -151,7 +143,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                     {plan.name}
                   </h3>
                   <p
-                    className={`mb-6 ${darkHome ? 'text-purple-100/87' : 'text-cosmic-600 dark:text-cosmic-400'}`}
+                    className={`mb-6 ${darkHome ? 'text-slate-100/95 drop-shadow-[0_1px_8px_rgba(0,0,0,.5)]' : 'text-cosmic-600 dark:text-cosmic-400'}`}
                   >
                     {plan.description}
                   </p>
@@ -168,7 +160,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                       {compareAt > listPrice && (
                         <span
                           className={`text-lg line-through ${
-                            darkHome ? 'text-purple-400/92' : 'text-cosmic-500'
+                            darkHome ? 'text-purple-200/85' : 'text-cosmic-500'
                           }`}
                         >
                           {formatEur(compareAt)}
@@ -188,8 +180,8 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                         className={`mt-0.5 h-5 w-5 flex-shrink-0 ${darkHome ? 'text-green-400' : 'text-green-500'}`}
                       />
                       <span
-                        className={`text-sm ${
-                          darkHome ? 'text-purple-50/[0.93]' : 'text-cosmic-700 dark:text-cosmic-300'
+                        className={`text-sm leading-relaxed ${
+                          darkHome ? 'text-slate-100/[0.98]' : 'text-cosmic-700 dark:text-cosmic-300'
                         }`}
                       >
                         {feature}
@@ -201,7 +193,7 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
                 {plan.emotionalLine ? (
                   <p
                     className={`mb-6 px-1 text-center text-sm font-medium leading-snug ${
-                      darkHome ? 'text-purple-50/93' : 'text-cosmic-700 dark:text-cosmic-200'
+                      darkHome ? 'text-slate-100' : 'text-cosmic-700 dark:text-cosmic-200'
                     }`}
                   >
                     {plan.emotionalLine}

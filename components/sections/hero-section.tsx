@@ -102,13 +102,13 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className={titleClass}
         >
-          <span className="bg-gradient-to-r from-cosmic-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
-            {t.titleLine1}
-          </span>
+          <span className="text-white drop-shadow-[0_3px_32px_rgba(0,0,0,.88)]">{t.titleLine1}</span>
           {t.titleLine2.trim() ? (
             <>
               <br />
-              <span className={`text-white ${isBg ? 'drop-shadow-lg' : 'drop-shadow-2xl'}`}>{t.titleLine2}</span>
+              <span className={`bg-gradient-to-r from-purple-50 to-fuchsia-100 bg-clip-text text-transparent ${isBg ? 'drop-shadow-md' : 'drop-shadow-lg'}`}>
+                {t.titleLine2}
+              </span>
             </>
           ) : null}
         </motion.h1>
