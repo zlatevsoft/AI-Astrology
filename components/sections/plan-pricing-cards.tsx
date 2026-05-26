@@ -72,42 +72,20 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
       ) : null}
 
       <div className="container relative z-10 mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
-          {layout === 'page' ? (
-            <h1
-              className={
-                darkHome
-                  ? 'mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-[0_3px_28px_rgba(0,0,0,0.78)] md:text-5xl'
-                  : 'gradient-text mb-6 text-4xl font-bold md:text-5xl'
-              }
-            >
-              {t.title}
-            </h1>
-          ) : (
-            <h2
-              className={
-                darkHome
-                  ? 'mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-[0_3px_28px_rgba(0,0,0,0.78)] md:text-5xl'
-                  : 'gradient-text mb-6 text-4xl font-bold md:text-5xl'
-              }
-            >
-              {t.title}
-            </h2>
-          )}
-          <p
-            className={`mx-auto mb-8 max-w-3xl text-xl font-medium leading-relaxed ${
-              darkHome ? 'text-slate-100 drop-shadow-[0_1px_12px_rgba(0,0,0,.6)]' : 'text-cosmic-700 dark:text-cosmic-300'
-            }`}
+        {layout !== 'home' ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mb-16 text-center"
           >
-            {t.subtitle}
-          </p>
-        </motion.div>
+            <h1 className="gradient-text mb-6 text-4xl font-bold md:text-5xl">{t.title}</h1>
+            <p className="mx-auto mb-8 max-w-3xl text-xl font-medium leading-relaxed text-cosmic-700 dark:text-cosmic-300">
+              {t.subtitle}
+            </p>
+          </motion.div>
+        ) : null}
 
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-3">
           {plans.map((plan, index) => {
