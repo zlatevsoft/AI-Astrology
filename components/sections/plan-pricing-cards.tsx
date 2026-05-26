@@ -107,13 +107,6 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
           >
             {t.subtitle}
           </p>
-          <div className="mb-8 flex items-center justify-center gap-4">
-            <span
-              className={`text-sm ${darkHome ? 'text-purple-50/92' : 'text-cosmic-600 dark:text-cosmic-400'}`}
-            >
-              {t.oneTimeLine}
-            </span>
-          </div>
         </motion.div>
 
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-3">

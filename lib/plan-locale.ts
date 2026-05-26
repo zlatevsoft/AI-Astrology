@@ -9,7 +9,6 @@ export const pricingSection = {
     title: 'What do the stars reveal about you?',
     subtitle:
       'Get a personal astrological forecast for love, character, and future opportunities in your life!',
-    oneTimeLine: 'One-time payment • Instant access • PDF download included',
     popular: 'Most Popular',
     oneTimePayment: 'one-time payment',
     trustSsl: 'SSL encrypted',
@@ -19,7 +18,6 @@ export const pricingSection = {
     title: 'Какво разкриват звездите за теб?',
     subtitle:
       'Получи персонална астрологична прогноза за любовта, характера и бъдещите възможности в живота ти!',
-    oneTimeLine: 'Еднократно плащане • Мигновен достъп • Включен PDF',
     popular: 'Най-популярен',
     oneTimePayment: 'еднократно плащане',
     trustSsl: 'SSL криптиране',
