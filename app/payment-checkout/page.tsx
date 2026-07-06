@@ -40,7 +40,7 @@ export default function PaymentCheckoutPage() {
   const t = paymentCheckout[locale]
 
   useEffect(() => {
-    fetch('/api/site-config')
+    fetch(`/api/site-config?ts=${Date.now()}`, { cache: 'no-store' })
       .then((r) => r.json())
       .then((d: { freeCheckout?: boolean }) => setFreeFromServer(!!d.freeCheckout))
       .catch(() => setFreeFromServer(false))
