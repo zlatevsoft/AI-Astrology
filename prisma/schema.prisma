@@ -68,5 +68,6 @@ model PricingSettings {
   compareBasicCents            Int      @default(2900)
   compareDetailedCents          Int      @default(3900)
   compareComprehensiveCents     Int      @default(4900)
+  freeCheckoutEnabled           Boolean  @default(false)
   updatedAt                    DateTime @updatedAt
 }

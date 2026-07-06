@@ -5,12 +5,7 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { CheckIcon, StarIcon, ShieldCheckIcon, BoltIcon } from '@heroicons/react/24/outline'
 import { ctaHome } from '@/lib/dictionaries'
-import {
-  formatListPriceForFaq,
-  formatMarketingListPriceEUR,
-  isFreeCheckoutDisplayEnabled,
-  type AnalysisTier,
-} from '@/lib/pricing'
+import { formatListPriceForFaq, LIST_PRICE_EUR, type AnalysisTier } from '@/lib/pricing'
 import type { PublicPricingPayload } from '@/lib/public-pricing'
 import { useSiteLocale } from '@/lib/use-site-locale'
 
@@ -27,14 +22,10 @@ export function CTASection() {
   const cardBullets = t.cardBullets as unknown as string[]
   const trustLabels = [t.trust1, t.trust2, t.trust3]
   const [premiumPrice, setPremiumPrice] = useState(() =>
-    formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale)
+    formatListPriceForFaq(LIST_PRICE_EUR[HOME_PREMIUM_PREVIEW_TIER], locale)
   )
 
   useEffect(() => {
-    if (isFreeCheckoutDisplayEnabled()) {
-      setPremiumPrice(formatMarketingListPriceEUR(HOME_PREMIUM_PREVIEW_TIER, locale))
-      return
-    }
     let cancelled = false
     fetch('/api/pricing')
       .then((r) => (r.ok ? r.json() : null))

@@ -1,7 +1,8 @@
 /**
  * Single source of truth for Stripe charges (EUR, cents).
  *
- * Free test mode: FREE_CHECKOUT=1, NEXT_PUBLIC_FREE_CHECKOUT=1 (see env.example).
+ * Prices in code are fallbacks. Production checkout mode is controlled from admin PricingSettings;
+ * FREE_CHECKOUT remains an env fallback for local/offline DB runs.
  */
 
 import type { SiteLocale } from '@/lib/locale'

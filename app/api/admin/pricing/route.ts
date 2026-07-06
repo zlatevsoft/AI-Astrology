@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
-import { ensurePricingDefaultsRow, getPricingSnapshot, snapshotToPublicJson } from '@/lib/pricing-settings'
+import {
+  ensurePricingDefaultsRow,
+  getPricingSnapshot,
+  getSiteRuntimeSettings,
+  snapshotToPublicJson,
+} from '@/lib/pricing-settings'
 import { isDatabaseConfigured } from '@/lib/database-url'
 
 /** Coerce from JSON numbers or numeric strings so validation never fails silently in production. */
@@ -15,6 +20,7 @@ const PutBody = z.object({
   compareBasicCents: centsField,
   compareDetailedCents: centsField,
   compareComprehensiveCents: centsField,
+  freeCheckoutEnabled: z.boolean().optional().default(false),
 })
 
 async function requireSuperAdmin(request: NextRequest) {
@@ -48,7 +54,8 @@ export async function GET(request: NextRequest) {
 
   await ensurePricingDefaultsRow()
   const snap = await getPricingSnapshot()
-  return NextResponse.json({ cents: snap, public: snapshotToPublicJson(snap) })
+  const settings = await getSiteRuntimeSettings()
+  return NextResponse.json({ cents: snap, public: snapshotToPublicJson(snap), settings })
 }
 
 export async function PUT(request: NextRequest) {
@@ -91,5 +98,6 @@ export async function PUT(request: NextRequest) {
   }
 
   const snap = await getPricingSnapshot()
-  return NextResponse.json({ ok: true, cents: snap, public: snapshotToPublicJson(snap) })
+  const settings = await getSiteRuntimeSettings()
+  return NextResponse.json({ ok: true, cents: snap, public: snapshotToPublicJson(snap), settings })
 }

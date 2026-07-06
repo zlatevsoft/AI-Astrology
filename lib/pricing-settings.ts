@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { isDatabaseConfigured } from '@/lib/database-url'
 import type { AnalysisTier } from '@/lib/pricing'
-import { COMPARE_AT_EUR, LIST_PRICE_EUR } from '@/lib/pricing'
+import { COMPARE_AT_EUR, isFreeCheckoutEnabled, LIST_PRICE_EUR } from '@/lib/pricing'
 
 export type PricingSnapshot = {
   basicCents: number
@@ -10,6 +10,10 @@ export type PricingSnapshot = {
   compareBasicCents: number
   compareDetailedCents: number
   compareComprehensiveCents: number
+}
+
+export type SiteRuntimeSettings = {
+  freeCheckoutEnabled: boolean
 }
 
 /** Single marketing + charge cents source from `LIST_PRICE_EUR` / `COMPARE_AT_EUR` (see `lib/pricing.ts`). */
@@ -48,7 +52,7 @@ export async function ensurePricingDefaultsRow(): Promise<void> {
     const snap = pricingSnapshotFromCode()
     await prisma.pricingSettings.upsert({
       where: { id: 1 },
-      create: { id: 1, ...snap },
+      create: { id: 1, ...snap, freeCheckoutEnabled: isFreeCheckoutEnabled() },
       update: {},
     })
   } catch {
@@ -88,6 +92,27 @@ export async function getChargeCentsForProductName(productName: string): Promise
   const tier = analysisTierFromProductName(productName)
   if (!tier) return null
   return getChargeCentsForTier(tier)
+}
+
+export async function getSiteRuntimeSettings(): Promise<SiteRuntimeSettings> {
+  const fallback = { freeCheckoutEnabled: isFreeCheckoutEnabled() }
+  if (!isDatabaseConfigured()) return fallback
+
+  await ensurePricingDefaultsRow()
+  try {
+    const row = await prisma.pricingSettings.findUnique({
+      where: { id: 1 },
+      select: { freeCheckoutEnabled: true },
+    })
+    return { freeCheckoutEnabled: row?.freeCheckoutEnabled ?? fallback.freeCheckoutEnabled }
+  } catch {
+    return fallback
+  }
+}
+
+export async function isFreeCheckoutActive(): Promise<boolean> {
+  const s = await getSiteRuntimeSettings()
+  return s.freeCheckoutEnabled
 }
 
 export function snapshotToPublicJson(p: PricingSnapshot) {

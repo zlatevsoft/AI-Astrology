@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
-import { isFreeCheckoutEnabled } from '@/lib/pricing'
+import { getSiteRuntimeSettings } from '@/lib/pricing-settings'
 
-/** Runtime flag so client UI can show test mode with only FREE_CHECKOUT (no NEXT_PUBLIC rebuild quirks). */
-export function GET() {
+/** Runtime flags so client UI can react without NEXT_PUBLIC rebuild quirks. */
+export async function GET() {
+  const settings = await getSiteRuntimeSettings()
   return NextResponse.json({
-    freeCheckout: isFreeCheckoutEnabled(),
+    freeCheckout: settings.freeCheckoutEnabled,
   })
 }

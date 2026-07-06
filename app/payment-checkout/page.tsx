@@ -215,7 +215,7 @@ export default function PaymentCheckoutPage() {
   const compareAtEur = apiPrices?.compareEur[planRow.tier] ?? COMPARE_AT_EUR[planRow.tier]
   const finalPriceEur =
     promoPreview.status === 'valid' ? promoPreview.finalAmountCents / 100 : listPriceEur
-  /** Only server env FREE_CHECKOUT=1 (via /api/site-config). Do not use NEXT_PUBLIC here — old builds would stay on "free" UI after env changes without redeploy. */
+  /** Runtime setting from the admin panel (via `/api/site-config`). */
   const isFreeUI = freeFromServer === true
 
   return (

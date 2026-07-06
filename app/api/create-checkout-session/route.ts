@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getProduct } from '@/lib/stripe'
-import { getChargeCentsForProductName } from '@/lib/pricing-settings'
+import { getChargeCentsForProductName, isFreeCheckoutActive } from '@/lib/pricing-settings'
 import Stripe from 'stripe'
 import { stripeConfigSchema } from '@/lib/validation'
-import { isFreeCheckoutEnabled } from '@/lib/pricing'
 import { findActivePromoByCode, amountAfterDiscountCents, commissionCentsForOrder } from '@/lib/promo'
 import { isDatabaseConfigured } from '@/lib/database-url'
 
@@ -61,9 +60,9 @@ export async function POST(request: NextRequest) {
 
     const dynamicCents = await getChargeCentsForProductName(productName)
 
-    if (isFreeCheckoutEnabled()) {
+    if (await isFreeCheckoutActive()) {
       const mockSessionId = `free_checkout_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
-      console.log('FREE_CHECKOUT: skipping Stripe, redirecting to success')
+      console.log('Free checkout mode: skipping Stripe, redirecting to success')
       return NextResponse.json({
         sessionId: mockSessionId,
         url: `${request.nextUrl.origin}/payment-success?session_id=${mockSessionId}`,

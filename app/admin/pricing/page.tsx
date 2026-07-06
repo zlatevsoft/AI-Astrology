@@ -18,6 +18,10 @@ type CentsPayload = {
   compareComprehensiveCents: number
 }
 
+type RuntimeSettingsPayload = {
+  freeCheckoutEnabled: boolean
+}
+
 export default function AdminPricingPage() {
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
@@ -29,13 +33,18 @@ export default function AdminPricingPage() {
     compareBasicEur: 29,
     compareDetailedEur: 39,
     compareComprehensiveEur: 49,
+    freeCheckoutEnabled: false,
   })
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
       const r = await fetch('/api/admin/pricing', { credentials: 'include' })
-      const d = (await r.json()) as { cents?: CentsPayload; error?: string }
+      const d = (await r.json()) as {
+        cents?: CentsPayload
+        settings?: RuntimeSettingsPayload
+        error?: string
+      }
       if (!r.ok) throw new Error(d.error || 'Failed to load pricing')
       const c = d.cents!
       setForm({
@@ -45,6 +54,7 @@ export default function AdminPricingPage() {
         compareBasicEur: c.compareBasicCents / 100,
         compareDetailedEur: c.compareDetailedCents / 100,
         compareComprehensiveEur: c.compareComprehensiveCents / 100,
+        freeCheckoutEnabled: !!d.settings?.freeCheckoutEnabled,
       })
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Load failed')
@@ -65,7 +75,7 @@ export default function AdminPricingPage() {
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault()
     const toCent = (n: number) => Math.round(n * 100)
-    const body: CentsPayload = {
+    const cents: CentsPayload = {
       basicCents: toCent(form.basicEur),
       detailedCents: toCent(form.detailedEur),
       comprehensiveCents: toCent(form.comprehensiveEur),
@@ -73,8 +83,12 @@ export default function AdminPricingPage() {
       compareDetailedCents: toCent(form.compareDetailedEur),
       compareComprehensiveCents: toCent(form.compareComprehensiveEur),
     }
+    const body = {
+      ...cents,
+      freeCheckoutEnabled: form.freeCheckoutEnabled,
+    }
     if (
-      Object.values(body).some(
+      Object.values(cents).some(
         (x) => typeof x !== 'number' || !Number.isFinite(x) || !Number.isInteger(x) || x < 50
       )
     ) {
@@ -100,7 +114,11 @@ export default function AdminPricingPage() {
             : ''
         throw new Error((d.error || 'Записът се провали.') + extra)
       }
-      toast.success('Pricing updated. Homepage and checkout use these amounts.')
+      toast.success(
+        form.freeCheckoutEnabled
+          ? 'Безплатното генериране е включено.'
+          : 'Настройките са записани. Плащането е активно.'
+      )
       await load()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Save failed')
@@ -157,6 +175,38 @@ export default function AdminPricingPage() {
           </div>
 
           <form onSubmit={(e) => void onSave(e)} className="space-y-6 rounded-2xl border border-cosmic-200 bg-white p-6 shadow dark:border-cosmic-700 dark:bg-cosmic-900">
+            <fieldset className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/35 dark:bg-amber-500/10">
+              <legend className="px-1 text-sm font-semibold text-amber-950 dark:text-amber-100">
+                Free horoscope generation
+              </legend>
+              <label className="mt-2 flex cursor-pointer items-start justify-between gap-4">
+                <span>
+                  <span className="block text-sm font-semibold text-cosmic-900 dark:text-white">
+                    Безплатно генериране на хороскопи
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-cosmic-700 dark:text-cosmic-200">
+                    Когато е включено, сайтът прескача Stripe и потребителят получава анализа без плащане. Когато е изключено,
+                    checkout работи с текущите цени.
+                  </span>
+                  <span
+                    className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                      form.freeCheckoutEnabled
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-100'
+                        : 'bg-cosmic-100 text-cosmic-700 dark:bg-cosmic-800 dark:text-cosmic-200'
+                    }`}
+                  >
+                    {form.freeCheckoutEnabled ? 'Включено: без плащане' : 'Изключено: нормално плащане'}
+                  </span>
+                </span>
+                <input
+                  type="checkbox"
+                  className="mt-1 h-6 w-6 rounded border-cosmic-300 text-cosmic-600 focus:ring-cosmic-500"
+                  checked={form.freeCheckoutEnabled}
+                  onChange={(e) => setForm((f) => ({ ...f, freeCheckoutEnabled: e.target.checked }))}
+                />
+              </label>
+            </fieldset>
+
             <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-cosmic-900 dark:text-white">Amount charged at checkout</legend>
               <div>

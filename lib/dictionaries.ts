@@ -137,7 +137,7 @@ export const paymentCheckout = {
     subtitle:
       "You're one step away from your reading. Complete payment to receive your personalized astrological analysis.",
     testModeBanner:
-      'Test mode: checkout is free (set FREE_CHECKOUT=1 on the server; remove for production).',
+      'Free generation is enabled by the admin: no payment will be charged.',
     orderSummary: 'Order Summary',
     total: 'Total:',
     freeLabel: 'Free',
@@ -165,14 +165,14 @@ export const paymentCheckout = {
     toastSessionError: 'Failed to create payment session. Please try again.',
     toastNetwork: 'Network error. Check your connection and try again.',
     toastPaymentError: 'Payment system error. Please try again.',
-    toastMockFree: 'Test mode: no charge — opening your report',
+    toastMockFree: 'Free generation: no charge — opening your report',
     toastMockDev: 'Development mode: opening analysis',
   },
   bg: {
     title: 'Завърши покупката',
     subtitle:
       'Остава още една стъпка до твоя анализ. Плати, за да получиш персонализираната си астрологична интерпретация.',
-    testModeBanner: 'Тестов режим: плащането е безплатно (сървър env FREE_CHECKOUT=1; махни го в продакшън).',
+    testModeBanner: 'Безплатното генериране е включено от админа: няма да има плащане.',
     orderSummary: 'Обобщение на поръчката',
     total: 'Общо:',
     freeLabel: 'Безплатно',
@@ -189,7 +189,7 @@ export const paymentCheckout = {
     promoLabel: 'Промо или код на инфлуенсър (по избор)',
     promoPlaceholder: 'напр. STARS20',
     payButtonTemplate: 'Плати %s и получи анализа',
-    continueFree: 'Продължи — тест, без плащане',
+    continueFree: 'Продължи — без плащане',
     processing: 'Обработка...',
     trustSsl: 'SSL',
     trustInstant: 'Веднага достъп',
@@ -199,7 +199,7 @@ export const paymentCheckout = {
     toastSessionError: 'Неуспешна сесия за плащане. Опитай пак.',
     toastNetwork: 'Мрежова грешка. Провери връзката.',
     toastPaymentError: 'Грешка в плащането. Опитай пак.',
-    toastMockFree: 'Тест: без плащане — пренасочваме към анализа',
+    toastMockFree: 'Безплатно генериране — пренасочваме към анализа',
     toastMockDev: 'Dev режим: отваряне на анализ',
   },
 } as const satisfies Record<SiteLocale, Record<string, string>>

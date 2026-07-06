@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Stripe from 'stripe'
-import { getChargeCentsForTier } from '@/lib/pricing-settings'
-import { isFreeCheckoutEnabled, type AnalysisTier } from '@/lib/pricing'
+import { getChargeCentsForTier, isFreeCheckoutActive } from '@/lib/pricing-settings'
+import type { AnalysisTier } from '@/lib/pricing'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       cancelUrl 
     } = validatedData
 
-    if (isFreeCheckoutEnabled()) {
+    if (await isFreeCheckoutActive()) {
       const mockSessionId = `mock_session_${Date.now()}`
       return NextResponse.json({
         success: true,
