@@ -71,10 +71,13 @@ function PaymentSuccessContent() {
     setIsGenerating(true)
 
     try {
-      // Check if this is a test session
-      const isTestSession = sessionId.startsWith('test_session_')
+      // Free/admin and local mock sessions are already trusted by the server-side checkout endpoints.
+      const isMockOrFreeSession =
+        sessionId.startsWith('test_session_') ||
+        sessionId.startsWith('free_checkout_') ||
+        sessionId.startsWith('mock_session_')
       
-      if (!isTestSession) {
+      if (!isMockOrFreeSession) {
         // Get Stripe config from localStorage
         const savedConfig = localStorage.getItem('stripeConfig')
         const stripeConfig = savedConfig ? JSON.parse(savedConfig) : null
@@ -185,6 +188,7 @@ function PaymentSuccessContent() {
       const analysisResult = await analysisResponse.json()
 
       if (!analysisResult.success) {
+        console.error('Analysis API returned an error:', analysisResult)
         throw new Error(analysisResult.error || 'Failed to generate analysis')
       }
 

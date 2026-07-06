@@ -78,6 +78,9 @@ const AIAnalysisSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  let fallbackBirthChart: z.infer<typeof AIAnalysisSchema>['birthChart'] | null = null
+  let fallbackAnalysisType: z.infer<typeof AIAnalysisSchema>['analysisType'] | null = null
+
   try {
     const body = await request.json()
     
@@ -117,6 +120,8 @@ export async function POST(request: NextRequest) {
     }
     
     const { birthChart, analysisType, locale } = validatedData
+    fallbackBirthChart = birthChart
+    fallbackAnalysisType = analysisType
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
@@ -240,14 +245,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (error instanceof Error && error.message.includes('OpenAI')) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Text generation service temporarily unavailable' 
+    if (fallbackBirthChart && fallbackAnalysisType) {
+      console.error('AI provider failed after validation, returning fallback analysis:', error)
+      return NextResponse.json({
+        success: true,
+        data: {
+          ...generateMockAnalysis(fallbackBirthChart, fallbackAnalysisType),
+          isFallback: true,
+          fallbackReason: error instanceof Error ? error.message : 'AI provider error',
         },
-        { status: 503 }
-      )
+        isMock: true,
+      })
     }
 
     return NextResponse.json(
