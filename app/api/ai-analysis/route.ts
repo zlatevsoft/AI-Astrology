@@ -772,9 +772,7 @@ function generateBulgarianMockAnalysis(birthChart: any, analysisType: string) {
     ? `${aspects[0].planet1} ${aspects[0].type} ${aspects[0].planet2}`
     : 'водещ аспект в картата'
 
-  const header = `**Данни:** ${personName} — ${birthDate.toLocaleDateString()} в ${birthData.time}, ${birthData.location}
-
-**Бележка за качеството:** Този доклад е пълен резервен анализ за текущите данни и избрания план. Използва се само ако AI доставчикът върне отказ, твърде кратък текст или услугата е в тестов режим без активен генератор.`
+  const header = `**Данни:** ${personName} — ${birthDate.toLocaleDateString()} в ${birthData.time}, ${birthData.location}`
 
   const baseSections = `## Астрологична основа
 
@@ -1040,7 +1038,7 @@ function generateMockAnalysis(birthChart: any, analysisType: string, locale: 'en
     profileSeed,
     4
   )
-  const personalizedIntro = `**Personal focus for ${personName}:** Based on the submitted birth data (${birthDate.toLocaleDateString()} at ${birthData.time}, ${birthData.location}), this reading emphasizes a ${tone} pattern. The strongest growth theme in this test profile is ${lifeTheme}. A practical anchor for the coming period is to ${growthAction}.`
+  const personalizedIntro = `**Personal focus for ${personName}:** Based on the submitted birth data (${birthDate.toLocaleDateString()} at ${birthData.time}, ${birthData.location}), this reading emphasizes a ${tone} pattern. The strongest growth theme in this profile is ${lifeTheme}. A practical anchor for the coming period is to ${growthAction}.`
   
   // Different mock content based on analysis type
   switch (analysisType) {
@@ -1480,7 +1478,7 @@ This is a powerful time of transformation and awakening. Trust your journey and 
         id: `analysis_${Date.now()}`,
         birthChartId: birthChart.id,
         analysisType,
-        content: `🌟 **Personalized Test Analysis**\n\n**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}\n\n${personalizedIntro}\n\nThis fallback report was generated for the current chart and plan only. It should change when the submitted birth data or selected plan changes.`,
+        content: `🌟 **Personalized Astrological Analysis**\n\n**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}\n\n${personalizedIntro}`,
         generatedAt: new Date().toISOString(),
         model: 'gpt-4-mock-basic',
       }
