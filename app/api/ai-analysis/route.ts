@@ -352,82 +352,108 @@ Keep the tone warm, encouraging, and easy to understand. Focus on practical insi
     case 'detailed':
       return `${chartInfo}
 
-You are an expert astrologer providing a DETAILED astrological reading. This is a comprehensive analysis that goes deeper into psychological patterns and life themes.
+You are an expert astrologer and psychologically literate life-strategy guide providing a PREMIUM / DETAILED reading. The purpose is not only to describe the person, but to help them recognize patterns, make better decisions, and know what to do with the information.
 
-Please provide an in-depth analysis covering:
+IMPORTANT STYLE RULES:
+- Do not present astrology as absolute fact. Use phrasing such as "this may suggest", "one useful interpretation is", "watch for", "a likely pattern is", "if this resonates".
+- For every astrological statement, explain the cause-and-effect chain: placement/aspect -> daily behavior -> advantage -> risk -> signal that the pattern is becoming unhealthy -> practical response.
+- Avoid vague advice like "develop emotional intelligence". Translate every recommendation into observable behavior.
+- Include concrete examples from real life.
+- Use headings, bullets, short paragraphs, and checklists. The result should feel like a practical self-analysis manual, not a poetic description.
+- Prioritize. Make clear what matters most and what can wait.
 
-1. **Complete Personality Profile (4-5 paragraphs)**
-   - Exhaustive personality analysis using all planets
-   - Psychological archetypes and behavioral patterns
-   - Cognitive processes and learning styles
-   - Emotional intelligence and sensitivity levels
-   - How they process and integrate experiences
+Please structure the analysis exactly like this:
 
-2. **Soul Mission & Karmic Patterns (3-4 paragraphs)**
-   - Deep soul lessons and past life influences
-   - Karmic contracts and spiritual agreements
-   - Evolutionary purpose and soul growth
-   - What they're here to heal and transform
-   - Spiritual gifts and psychic abilities
+1. **Executive Summary: What This Chart Is Really About**
+   - 5-7 bullet points.
+   - The strongest qualities.
+   - The 3 biggest risks.
+   - The one pattern they should work on first.
+   - One sentence: "If you work on only one thing, work on..."
 
-3. **Relationship Blueprint (4-5 paragraphs)**
-   - Complete relationship patterns and needs
-   - Partnership compatibility and attraction factors
-   - Family dynamics and generational patterns
-   - Social circles and community involvement
-   - How they give and receive love
-   - Relationship timing and cycles
+2. **How Your Main Traits Work in Daily Life**
+   For the strongest Sun/Moon/Mercury/Venus/Mars themes:
+   - What this looks like day to day.
+   - Where it helps.
+   - Where it hurts.
+   - "Warning sign:" how they know they crossed the line.
+   - "Do this instead:" one practical corrective action.
 
-4. **Career & Life Purpose (4-5 paragraphs)**
-   - Complete career analysis and potential paths
-   - Professional strengths and development areas
-   - Financial patterns and abundance consciousness
-   - Business and entrepreneurial potential
-   - Public image and reputation management
-   - Life purpose alignment and fulfillment
+3. **Repeated Life Patterns**
+   - Situations likely to repeat until understood.
+   - Types of people/situations they may repeatedly attract.
+   - What lesson may be hidden there.
+   - Phrase karmic themes as hypotheses for reflection, not certainties.
 
-5. **Complete House Analysis (3-4 paragraphs)**
-   - House-by-house detailed interpretation
-   - Life areas of focus and development
-   - How houses interact and influence each other
-   - Timing for different life areas
-   - House rulerships and their significance
+4. **Self-Sabotage and Shadow Patterns**
+   - How they sabotage themselves under stress.
+   - What they avoid admitting.
+   - What they overcompensate for.
+   - Use direct "If you notice X, it may mean Y" warnings.
 
-6. **Advanced Aspect Analysis (3-4 paragraphs)**
-   - All major and minor aspects and their meanings
-   - Aspect patterns (grand trines, T-squares, etc.)
-   - Psychological implications of aspect combinations
-   - How to work with challenging aspects
-   - Aspect timing and activation periods
+5. **Stress Response and Decision-Making**
+   - How they react when pressured, rejected, ignored, criticized, or rushed.
+   - How they make good decisions vs bad decisions.
+   - Include decision rules such as "wait one night", "ask for specifics", "do not promise while emotionally activated", when astrologically appropriate.
 
-7. **Life Cycles & Timing (3-4 paragraphs)**
-   - Current life phase and developmental stage
-   - Major life transitions and timing
-   - Saturn returns and other important cycles
-   - When to make important decisions
-   - Timing for relationships, career, and personal growth
+6. **Relationships: Needs, Traps, and Boundaries**
+   - What they need emotionally.
+   - How that need appears in behavior (e.g. contact, distance, reassurance, control, avoidance).
+   - Most common relationship traps.
+   - People to approach carefully / avoid.
+   - Non-negotiables they should not compromise on.
+   - 5 reflection questions.
 
-8. **Shadow Work & Healing (3-4 paragraphs)**
-   - Deep shadow patterns and unconscious blocks
-   - Healing opportunities and transformation areas
-   - Past trauma and how to release it
-   - Self-sabotage patterns and how to overcome them
-   - Integration of light and shadow aspects
+7. **Career and Work Environment**
+   - Suitable work environments.
+   - Unsuitable work environments.
+   - Typical career mistakes (too many starts, over-responsibility, poor delegation, boredom, avoidance of visibility, etc. when supported by chart).
+   - How they should handle: conflict with a boss, being fired, starting a business, changing career.
 
-9. **Practical Application (4-5 paragraphs)**
-   - 15-20 specific, actionable recommendations
-   - Daily practices and rituals for growth
-   - Tools and techniques for self-development
-   - How to work with their unique energy
-   - Long-term growth strategy and planning
+8. **Money and Security**
+   - Likely money patterns.
+   - Common financial risks (impulsive spending, hoarding, excessive caution, undervaluing work, etc.).
+   - Practical rules for financial decisions.
 
-10. **Future Guidance (2-3 paragraphs)**
-    - Upcoming opportunities and challenges
-    - How to prepare for future transitions
-    - Long-term vision and goals alignment
-    - Continued growth and evolution path
+9. **Family / Ancestral / Early Conditioning Patterns**
+   - Only if supported by houses/aspects.
+   - Describe as possible conditioning patterns, not factual claims.
+   - How old family roles may repeat in adult relationships/career.
 
-Use advanced astrological concepts while maintaining clarity. Include psychological depth, spiritual insights, and practical wisdom. This should be a complete life blueprint that they can reference for years to come.`
+10. **Practical Forecast and Timing Guidance**
+    - Do not make deterministic predictions.
+    - Give practical "if/then" guidance for the coming years.
+    - Examples: if an offer abroad appears, if career change arises, if a relationship requires distance, if business ownership becomes possible.
+
+11. **Action Plan**
+    - What to stop doing.
+    - What to start doing.
+    - What to protect at all costs.
+    - What to practice weekly.
+    - What to track for 30 days.
+
+12. **Self-Reflection Questions**
+    - At least 12 specific questions.
+    - They must be uncomfortable enough to produce insight, but not shaming.
+
+13. **Checklist: 10 Signs You Are Off Your Natural Path**
+    - Concrete behavioral signs.
+    - Example: "You keep proving your value through overwork", "you delay a necessary conversation for weeks", etc.
+
+14. **Checklist: 10 Signs You Are Aligned**
+    - Concrete signs of healthy expression of the chart.
+
+15. **Closing Synthesis**
+    - 2-3 paragraphs summarizing the core lesson.
+    - End with grounded encouragement, not grandiose promises.
+
+Use advanced astrological concepts, but translate them into usable psychology and everyday decisions. The final output should help the reader answer:
+- What is most likely to stop me in life?
+- What should I stop doing?
+- What should I start doing?
+- What should I never compromise on?
+- How will I know I am on the right path?
+- How will I know I have drifted away from myself?`
 
     case 'comprehensive':
       if (!partnerBirthChart) {
@@ -658,72 +684,157 @@ Remember, you have everything you need within you to create the life you desire.
 
 ${personalizedIntro}
 
-## 🌟 Personality Deep Dive
+## 1. Executive Summary: What This Chart Is Really About
 
-Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a powerful core identity centered around leadership and self-expression. Combined with your ${planetaryPositions.Moon?.sign || 'Moon sign'}, you have a complex emotional nature that processes feelings deeply and intuitively. In ${personName}'s test profile, this is filtered through ${lifeTheme}, which changes the practical priority of the reading.
+- **Strongest quality:** You can stay with complex situations long enough to understand them, especially when the goal feels meaningful.
+- **Second strength:** Your chart suggests emotional perception; you may notice shifts in tone, silence, or tension before others name them.
+- **Third strength:** You can build trust when you act consistently and do not rush your process.
+- **Biggest risk 1:** Waiting too long before acting, then reacting with more force than the situation requires.
+- **Biggest risk 2:** Taking responsibility for other people's emotions and calling it loyalty.
+- **Biggest risk 3:** Confusing endurance with wisdom.
+- **If you work on only one thing:** act earlier when your body already knows a situation is wrong.
 
-Your ${planetaryPositions.Mercury?.sign || 'Mercury'} placement shows a mind that works through ${planetaryPositions.Mercury?.sign === 'Gemini' ? 'versatility and quick thinking' : planetaryPositions.Mercury?.sign === 'Cancer' ? 'emotional intelligence and memory' : 'analytical depth and precision'}. You process information through your emotional body, making you highly intuitive and empathetic.
+## 2. How Your Main Traits Work in Daily Life
 
-Your emotional nature is deeply sensitive and responsive to your environment. You have a natural ability to read people and situations, often knowing things before they're spoken. This gives you a unique advantage in relationships and social situations.
+Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a core identity that wants direction and meaning. In daily life this may show as wanting to know why something matters before fully committing. When healthy, this gives you purpose. When distorted, you may reject good opportunities because they do not feel perfectly aligned yet.
 
-## 🎯 Life Purpose & Soul Mission
+**Warning sign:** you keep saying "I need more clarity" while avoiding the next practical step.  
+**Do this instead:** choose one reversible action and test reality instead of waiting for total certainty.
 
-Your soul has chosen this incarnation to complete karmic lessons related to ${planetaryPositions.Saturn?.sign || 'responsibility'} and ${planetaryPositions.Jupiter?.sign || 'expansion'}. You're here to learn about the balance between structure and freedom, between serving others and honoring your own needs.
+Your ${planetaryPositions.Moon?.sign || 'Moon sign'} may suggest that emotional safety matters more than you admit. This can look like needing predictable contact, clear answers, and emotional consistency. It helps you build loyalty, but it can become anxiety when another person is vague or unavailable.
 
-Your spiritual growth centers around developing unconditional love and forgiveness, particularly for yourself. You're meant to be a bridge between the spiritual and material worlds, helping others find their own path to enlightenment.
+**Warning sign:** you start monitoring someone's mood more than your own needs.  
+**Do this instead:** ask directly for the information you need instead of interpreting silence.
 
-## 💕 Relationships & Social Dynamics
+Your ${planetaryPositions.Mars?.sign || 'Mars'} describes how you act under pressure. If this energy is slow and steady, the advantage is endurance. The risk is delayed action. You may tolerate discomfort until resentment has built up.
 
-Your ${planetaryPositions.Venus?.sign || 'Venus'} placement reveals a deep need for authentic, soul-level connections. You're not interested in superficial relationships - you crave partnerships that support your growth and allow you to be your true self.
+**Warning sign:** "I will wait a little longer" becomes a pattern, not a conscious choice.  
+**Do this instead:** set a deadline for action before resentment takes over.
 
-In relationships, you bring emotional depth, loyalty, and a natural ability to nurture and support your partner. However, you also need partners who can handle your intensity and emotional complexity. You're attracted to people who are spiritually aware and emotionally mature.
+## 3. Repeated Life Patterns
 
-Your family dynamics have shaped your approach to relationships significantly. You may have learned early on to be the emotional caretaker, which can sometimes lead to codependent patterns. Learning to maintain healthy boundaries while staying open to love is a key lesson.
+A useful karmic interpretation is that you may repeatedly meet situations where you must choose between comfort and growth. This does not mean fate is forcing you. It means similar emotional lessons may appear through different people: the unavailable partner, the demanding boss, the family member who needs too much, or the project that asks you to carry everyone.
 
-## 🚀 Career & Life Path
+The lesson may be: **support others without abandoning your own center**.
 
-Your ${planetaryPositions.Mars?.sign || 'Mars'} energy drives you toward careers that combine creativity with helping others. You excel in fields like psychology, counseling, teaching, healing arts, or any role that allows you to use your intuitive abilities.
+## 4. Self-Sabotage and Shadow Patterns
 
-Your work style is characterized by deep focus and emotional investment. You don't just do a job - you pour your heart into it. This makes you excellent at building trust and creating meaningful connections with clients or colleagues.
+- If you constantly prove your value through work, you may be seeking recognition rather than purpose.
+- If you avoid conflict until it explodes, you may be confusing peace with avoidance.
+- If you over-give in relationships, you may be trying to secure love by being indispensable.
+- If you dismiss your own needs as "not important", resentment will eventually speak for you.
 
-Financial patterns show a tendency to be generous with others, sometimes at the expense of your own needs. Learning to value your worth and charge appropriately for your services is important for your financial growth.
+## 5. Stress Response and Decision-Making
 
-## 🏠 House Analysis
+Under stress you may become either too fixed or too emotionally absorbent. The practical rule is simple: do not make a major promise while activated. If you feel anger, first ask: "Is there hurt, rejection, or fear under this?" If the answer is yes, wait one night before responding.
 
-Your ${houses[0]?.sign || '1st house'} placement emphasizes the importance of self-identity and personal development. You're constantly evolving and redefining who you are, which can sometimes feel unstable but is actually part of your growth process.
+**Decision rule:** if the choice affects money, home, relationship, or career, write down the decision, sleep once, then review whether the body still says yes.
 
-The ${houses[4]?.sign || '4th house'} shows your deep connection to family and home. You may have strong ancestral ties or karmic family patterns to work through. Creating a nurturing home environment is crucial for your emotional well-being.
+## 6. Relationships: Needs, Traps, and Boundaries
 
-The ${houses[10]?.sign || '10th house'} reveals your career aspirations and public image. You're meant to be seen and recognized for your unique gifts, but this can sometimes feel uncomfortable if you're not used to being in the spotlight.
+You likely need consistency, emotional honesty, and respect for your rhythm. This may look like wanting regular contact, clear intentions, and behavior that matches words.
 
-## ⭐ Planetary Aspects
+**Most common traps:**
+- idealizing potential instead of seeing current behavior;
+- giving too much before trust is proven;
+- staying loyal to someone who is not emotionally present;
+- becoming overly self-sufficient and then feeling unseen.
 
-The ${aspects[0]?.planet1 || 'Sun'}-${aspects[0]?.planet2 || 'Moon'} aspect creates a powerful dynamic between your conscious and unconscious mind. This gives you unique insights into human nature and makes you naturally intuitive.
+**Non-negotiable:** do not compromise on emotional respect. If someone repeatedly makes you doubt your reality, that is not depth; it is instability.
 
-Your ${aspects[1]?.planet1 || 'Venus'}-${aspects[1]?.planet2 || 'Mars'} aspect shows a strong drive for passionate, meaningful relationships. You're not afraid of intensity in love, but you need to learn to balance passion with stability.
+**Reflection questions:**
+1. Where do I give more than I receive?
+2. What do I tolerate because I fear losing connection?
+3. When do I call avoidance "patience"?
+4. What kind of distance triggers me?
+5. What boundary would immediately make my relationships healthier?
 
-## 🎯 Current Life Phase
+## 7. Career and Work Environment
 
-You're currently in a period of deep transformation and spiritual awakening. This is a time to:
-- Release old patterns and beliefs that no longer serve you
-- Embrace your intuitive abilities and spiritual gifts
-- Develop deeper self-love and acceptance
-- Build authentic relationships based on mutual growth
-- Step into your power as a healer and guide
+You are likely to function best in environments where responsibility is clear, values matter, and your effort is visible. You may struggle in chaotic teams, vague leadership, or workplaces where emotional labor is expected but not respected.
 
-**Specific Recommendations:**
-1. **Daily Practice:** 20 minutes of meditation focusing on self-love
-2. **Personal Development:** Explore energy healing or intuitive development
-3. **Relationships:** Practice vulnerability and emotional honesty
-4. **Career:** Consider certification in counseling or healing arts
-5. **Health:** Focus on emotional well-being and stress management
-6. **Spiritual Growth:** Study spiritual texts that resonate with you
-7. **Boundaries:** Learn to say no without guilt
-8. **Creativity:** Express yourself through art, writing, or music
-9. **Community:** Connect with like-minded spiritual seekers
-10. **Self-Care:** Prioritize rest and emotional processing time
+**Typical career mistakes:**
+- accepting too much responsibility because you can handle it;
+- delaying a necessary conversation with a manager;
+- staying in a role after growth has stopped;
+- undervaluing your work because it comes naturally.
 
-This is a powerful time of growth and transformation. Trust your intuition and embrace the journey! ✨`
+**Real-life scenarios:**
+- If you are fired, do not read it as personal failure. Ask what structure was no longer compatible with you.
+- If you conflict with a boss, ask for specific expectations in writing.
+- If you start a business, do not build only from inspiration; build a repeatable weekly system.
+- If changing career, you are most likely to succeed when the change is chosen by you, not forced by accumulated resentment.
+
+## 8. Money and Security
+
+Your financial pattern may move between caution and emotional spending. Watch whether purchases are solving a real need or regulating a feeling.
+
+**Money rules:**
+- wait 24 hours before non-essential spending;
+- price your work by value, not by guilt;
+- keep one "security fund" untouched;
+- do not lend money to preserve emotional closeness.
+
+## 9. Practical Forecast and Timing Guidance
+
+If an opportunity for relocation, study, or a new professional environment appears, do not reject it automatically. Ask whether it expands your life or simply scares the familiar part of you.
+
+If a relationship requires constant guessing, treat that as information. If a career change keeps returning as an idea, give it a structured experiment rather than an immediate leap.
+
+## 10. Action Plan
+
+**Stop doing:** waiting until resentment becomes your only source of courage.  
+**Start doing:** naming discomfort while it is still small.  
+**Protect:** your emotional clarity and your right to steady respect.  
+**Practice weekly:** one direct conversation you would normally postpone.  
+**Track for 30 days:** when you say yes while your body says no.
+
+## 11. Self-Reflection Questions
+
+1. What situation keeps repeating in my life under different names?
+2. Where do I confuse loyalty with self-abandonment?
+3. What do I fear would happen if I asked directly?
+4. What kind of work makes me feel useful but drained?
+5. Which relationship pattern have I normalized?
+6. What am I trying to prove through effort?
+7. What decision am I postponing because the next step is uncomfortable?
+8. Where do I need more structure?
+9. Where do I need more freedom?
+10. What would change if I believed my needs were legitimate?
+11. What is my body already telling me?
+12. What boundary would protect my future self?
+
+## 12. Checklist: 10 Signs You Are Off Your Natural Path
+
+1. You overwork to prove your value.
+2. You delay necessary conversations for weeks.
+3. You feel responsible for everyone's mood.
+4. You stay where growth has clearly stopped.
+5. You ignore your body but call it discipline.
+6. You keep explaining someone's inconsistency.
+7. You confuse emotional intensity with intimacy.
+8. You spend or save from fear rather than clarity.
+9. You say "it's fine" while building resentment.
+10. You stop asking what you actually want.
+
+## 13. Checklist: 10 Signs You Are Aligned
+
+1. Your yes feels calm, not forced.
+2. Your work has both meaning and boundaries.
+3. Your relationships allow honesty without punishment.
+4. You act before resentment takes over.
+5. You can rest without guilt.
+6. You choose consistency over drama.
+7. You ask direct questions.
+8. You respect your pace without using it as avoidance.
+9. You protect your energy.
+10. You feel more honest with yourself than impressive to others.
+
+## 14. Closing Synthesis
+
+This chart can be read as a lesson in turning sensitivity and endurance into conscious choice. The goal is not to become harder or more detached, but to stop waiting until pressure makes decisions for you.
+
+Your growth path is practical: notice earlier, name things sooner, choose environments where your loyalty is respected, and build a life where responsibility does not require self-abandonment. ✨`
 
       return {
         id: `analysis_${Date.now()}`,
