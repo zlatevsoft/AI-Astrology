@@ -14,6 +14,20 @@ import { getClientLocale } from '@/lib/locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
 import { paymentSuccessPage } from '@/lib/payment-success-locale'
 
+function isStoredAnalysisForCurrentRequest(
+  analysis: any,
+  birthChart: any,
+  analysisType: string
+): boolean {
+  return (
+    !!analysis &&
+    analysis.birthChartId === birthChart.id &&
+    analysis.analysisType === analysisType &&
+    typeof analysis.content === 'string' &&
+    analysis.content.trim().length > 0
+  )
+}
+
 function PaymentSuccessContent() {
   const locale = useSiteLocale()
   const t = paymentSuccessPage[locale]
@@ -44,13 +58,23 @@ function PaymentSuccessContent() {
       const birthChart = JSON.parse(storedBirthChart)
       setBirthChartData(birthChart)
 
-      // If we already have analysis data (from test mode), use it
+      // Reuse only if it was generated for exactly this chart + plan.
+      // Old sessionStorage caused repeated analyses across different people/plans.
       if (storedAnalysisData) {
         const analysis = JSON.parse(storedAnalysisData)
-        console.log('Using stored analysis data:', analysis)
-        setAnalysisData(analysis)
-        setIsLoading(false)
-        return
+        if (isStoredAnalysisForCurrentRequest(analysis, birthChart, selectedAnalysisType)) {
+          console.log('Using stored analysis data for current chart:', analysis)
+          setAnalysisData(analysis)
+          setIsLoading(false)
+          return
+        }
+        console.warn('Discarding stale analysisData from sessionStorage:', {
+          storedBirthChartId: analysis?.birthChartId,
+          currentBirthChartId: birthChart.id,
+          storedAnalysisType: analysis?.analysisType,
+          currentAnalysisType: selectedAnalysisType,
+        })
+        sessionStorage.removeItem('analysisData')
       }
 
       // Otherwise, generate analysis

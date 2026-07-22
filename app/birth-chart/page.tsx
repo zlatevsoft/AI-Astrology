@@ -68,6 +68,9 @@ function BirthChartForm({ locale }: { locale: SiteLocale }) {
   const onSubmit = async (data: BirthChartFormValues) => {
     setIsLoading(true)
     try {
+      sessionStorage.removeItem('analysisData')
+      sessionStorage.removeItem('partnerChartData')
+
       if (selectedPlan === 'Comprehensive Reading') {
         if (!data.partnerName || !data.partnerBirthDate) {
           toast.error(t.toastPartner)

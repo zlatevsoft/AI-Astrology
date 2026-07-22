@@ -48,6 +48,10 @@ export function PlanPricingCards({ layout = 'home' }: Props) {
   const compareOf = (tier: AnalysisTier) => pricing.compareEur[tier]
 
   const handlePlanSelect = (productName: PlanProductName) => {
+    sessionStorage.removeItem('birthChartData')
+    sessionStorage.removeItem('selectedAnalysisType')
+    sessionStorage.removeItem('analysisData')
+    sessionStorage.removeItem('partnerChartData')
     sessionStorage.setItem('selectedPlan', productName)
     router.push('/birth-chart')
   }

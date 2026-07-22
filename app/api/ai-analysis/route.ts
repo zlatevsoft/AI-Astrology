@@ -544,20 +544,71 @@ Please provide a basic astrological analysis covering personality, life purpose,
   }
 }
 
+function hashString(input: string): number {
+  let hash = 0
+  for (let i = 0; i < input.length; i += 1) {
+    hash = (hash * 31 + input.charCodeAt(i)) | 0
+  }
+  return Math.abs(hash)
+}
+
+function pickVariant<T>(items: T[], seed: number, offset = 0): T {
+  return items[(seed + offset) % items.length]
+}
+
 function generateMockAnalysis(birthChart: any, analysisType: string) {
   const { birthData, planetaryPositions, houses, aspects } = birthChart
   const birthDate = new Date(birthData.date)
+  const personName = birthData.name || 'User'
+  const profileSeed = hashString(
+    `${personName}|${birthData.date}|${birthData.time}|${birthData.location}|${analysisType}`
+  )
+  const tone = pickVariant(
+    [
+      'focused, practical and self-directed',
+      'sensitive, observant and emotionally intelligent',
+      'curious, adaptive and naturally communicative',
+      'steady, loyal and oriented toward long-term growth',
+      'intuitive, creative and drawn to meaningful change',
+    ],
+    profileSeed
+  )
+  const lifeTheme = pickVariant(
+    [
+      'building confidence without losing empathy',
+      'turning inner sensitivity into clear decisions',
+      'balancing freedom with reliable structure',
+      'transforming pressure into mature leadership',
+      'choosing relationships and work that respect your rhythm',
+    ],
+    profileSeed,
+    2
+  )
+  const growthAction = pickVariant(
+    [
+      'write down one concrete intention every morning',
+      'track emotional patterns after important conversations',
+      'protect focused time before taking on new obligations',
+      'practice saying no early instead of overextending',
+      'review major choices against your long-term values',
+    ],
+    profileSeed,
+    4
+  )
+  const personalizedIntro = `**Personal focus for ${personName}:** Based on the submitted birth data (${birthDate.toLocaleDateString()} at ${birthData.time}, ${birthData.location}), this reading emphasizes a ${tone} pattern. The strongest growth theme in this test profile is ${lifeTheme}. A practical anchor for the coming period is to ${growthAction}.`
   
   // Different mock content based on analysis type
   switch (analysisType) {
     case 'basic':
       const basicContent = `🌟 **Professional Astrological Analysis - Basic Reading**
 
-**Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+
+${personalizedIntro}
 
 ## 🌟 Core Personality
 
-Your ${planetaryPositions.Sun?.sign || 'Sun sign'} placement reveals a natural leader with strong determination. Combined with your ${planetaryPositions.Moon?.sign || 'Moon sign'}, you have a unique blend of confidence and emotional sensitivity that makes you both inspiring and approachable.
+Your ${planetaryPositions.Sun?.sign || 'Sun sign'} placement reveals a natural leader with strong determination. Combined with your ${planetaryPositions.Moon?.sign || 'Moon sign'}, you have a unique blend of confidence and emotional sensitivity that makes you both inspiring and approachable. For ${personName}, the test signature leans toward ${tone}, so the advice below should be read through that lens.
 
 You naturally express yourself through ${planetaryPositions.Mercury?.sign || 'communication'}, making you excellent at connecting with others and sharing your ideas. Your key personality strength is your ability to adapt to different situations while staying true to your core values.
 
@@ -603,11 +654,13 @@ Remember, you have everything you need within you to create the life you desire.
     case 'detailed':
       const detailedContent = `🌟 **Professional Astrological Analysis - Detailed Reading**
 
-**Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+
+${personalizedIntro}
 
 ## 🌟 Personality Deep Dive
 
-Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a powerful core identity centered around leadership and self-expression. Combined with your ${planetaryPositions.Moon?.sign || 'Moon sign'}, you have a complex emotional nature that processes feelings deeply and intuitively.
+Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a powerful core identity centered around leadership and self-expression. Combined with your ${planetaryPositions.Moon?.sign || 'Moon sign'}, you have a complex emotional nature that processes feelings deeply and intuitively. In ${personName}'s test profile, this is filtered through ${lifeTheme}, which changes the practical priority of the reading.
 
 Your ${planetaryPositions.Mercury?.sign || 'Mercury'} placement shows a mind that works through ${planetaryPositions.Mercury?.sign === 'Gemini' ? 'versatility and quick thinking' : planetaryPositions.Mercury?.sign === 'Cancer' ? 'emotional intelligence and memory' : 'analytical depth and precision'}. You process information through your emotional body, making you highly intuitive and empathetic.
 
@@ -684,11 +737,13 @@ This is a powerful time of growth and transformation. Trust your intuition and e
     case 'comprehensive':
       const comprehensiveContent = `🌟 **Professional Astrological Analysis - Comprehensive Reading**
 
-**Birth Details:** ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}
+
+${personalizedIntro}
 
 ## 🌟 Complete Personality Profile
 
-Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a powerful core identity that radiates leadership, creativity, and spiritual awareness. This placement suggests you're here to be a light for others, showing them the way through your own example of growth and transformation.
+Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a powerful core identity that radiates leadership, creativity, and spiritual awareness. This placement suggests you're here to be a light for others, showing them the way through your own example of growth and transformation. For ${personName}, the dominant test pattern is ${tone}, so the relationship and life-path guidance should be interpreted around ${lifeTheme}.
 
 Your ${planetaryPositions.Moon?.sign || 'Moon sign'} reveals an emotional nature that is deeply intuitive, sensitive, and connected to the collective unconscious. You process emotions through your psychic abilities, often knowing things before they happen or understanding people's feelings without them speaking.
 
@@ -866,7 +921,7 @@ This is a powerful time of transformation and awakening. Trust your journey and 
         id: `analysis_${Date.now()}`,
         birthChartId: birthChart.id,
         analysisType,
-        content: 'Basic analysis content',
+        content: `🌟 **Personalized Test Analysis**\n\n**Birth Details:** ${personName} — ${birthDate.toLocaleDateString()} at ${birthData.time} in ${birthData.location}\n\n${personalizedIntro}\n\nThis fallback report was generated for the current chart and plan only. It should change when the submitted birth data or selected plan changes.`,
         generatedAt: new Date().toISOString(),
         model: 'gpt-4-mock-basic',
       }

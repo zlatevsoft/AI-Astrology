@@ -199,6 +199,10 @@ export function CTASection() {
                   type="button"
                   onClick={() => {
                     if (typeof window !== 'undefined') {
+                      sessionStorage.removeItem('birthChartData')
+                      sessionStorage.removeItem('selectedAnalysisType')
+                      sessionStorage.removeItem('analysisData')
+                      sessionStorage.removeItem('partnerChartData')
                       sessionStorage.setItem('selectedPlan', 'Detailed Analysis')
                     }
                     router.push('/birth-chart')
