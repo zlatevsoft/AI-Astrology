@@ -325,6 +325,15 @@ ${houses.map((house: any) =>
 
 You are an expert astrologer providing a BASIC astrological reading. Focus on essential insights that are immediately practical and actionable.
 
+This BASIC plan must cover everything promised on the pricing card:
+- personality analysis and strengths;
+- love and relationships;
+- career and life guidance;
+- hidden potential and talents;
+- important planetary influences;
+- key life lessons/challenges;
+- clear PDF-ready structure.
+
 Please provide a concise, beginner-friendly analysis covering:
 
 1. **Core Personality (2-3 paragraphs)**
@@ -347,12 +356,28 @@ Please provide a concise, beginner-friendly analysis covering:
    - 3-5 practical tips for personal development
    - Encouragement and positive reinforcement
 
+5. **Hidden Potential & Key Lessons (1-2 paragraphs)**
+   - Hidden talents and strengths they may underestimate
+   - Important planetary influences in plain language
+   - 3 key lessons/challenges and what to do about them
+
 Keep the tone warm, encouraging, and easy to understand. Focus on practical insights that can be applied immediately. Use simple language and avoid complex astrological jargon.`
 
     case 'detailed':
       return `${chartInfo}
 
 You are an expert astrologer and psychologically literate life-strategy guide providing a PREMIUM / DETAILED reading. The purpose is not only to describe the person, but to help them recognize patterns, make better decisions, and know what to do with the information.
+
+This PREMIUM plan must include everything promised on the pricing card:
+- everything from the Basic plan;
+- complete personality and psychological profile;
+- love, relationships, and emotional models;
+- career and financial potential;
+- upcoming opportunities and changes;
+- strong and weak periods;
+- life cycles and timing analysis;
+- personal guidance and practical recommendations;
+- premium PDF-ready structure.
 
 IMPORTANT STYLE RULES:
 - Do not present astrology as absolute fact. Use phrasing such as "this may suggest", "one useful interpretation is", "watch for", "a likely pattern is", "if this resonates".
@@ -371,7 +396,13 @@ Please structure the analysis exactly like this:
    - The one pattern they should work on first.
    - One sentence: "If you work on only one thing, work on..."
 
-2. **How Your Main Traits Work in Daily Life**
+2. **Astrological Foundation: Planets, Houses, and Aspects**
+   - Complete personality profile using Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, and the strongest chart themes.
+   - Explain the most important houses and what life areas they activate.
+   - Explain the most important aspects and their psychological meaning.
+   - For every point: what it describes, how it shows in real life, advantage, risk, and practical use.
+
+3. **How Your Main Traits Work in Daily Life**
    For the strongest Sun/Moon/Mercury/Venus/Mars themes:
    - What this looks like day to day.
    - Where it helps.
@@ -379,51 +410,47 @@ Please structure the analysis exactly like this:
    - "Warning sign:" how they know they crossed the line.
    - "Do this instead:" one practical corrective action.
 
-3. **Repeated Life Patterns**
+4. **Love, Relationships, and Emotional Models**
+   - Relationship needs and attachment patterns.
+   - How emotional security or insecurity appears in behavior.
+   - Common romantic traps and boundary issues.
+   - What kinds of people they attract, and what kinds of dynamics they should avoid.
+   - 5 reflection questions.
+
+5. **Career, Calling, and Financial Potential**
+   - Career inclinations and suitable environments.
+   - Unsuitable work environments.
+   - Financial patterns and risks.
+   - Business/entrepreneurial potential if supported by the chart.
+   - Typical career mistakes and how to correct them.
+
+6. **Life Cycles, Timing, and Strong/Weak Periods**
+   - Current life phase and developmental stage.
+   - Strong periods: when to act, initiate, be visible, ask, negotiate.
+   - Weak/sensitive periods: when to slow down, avoid impulsive commitments, repair, observe.
+   - Practical "if/then" guidance for coming years without deterministic predictions.
+
+7. **Repeated Life Patterns**
    - Situations likely to repeat until understood.
    - Types of people/situations they may repeatedly attract.
    - What lesson may be hidden there.
    - Phrase karmic themes as hypotheses for reflection, not certainties.
 
-4. **Self-Sabotage and Shadow Patterns**
+8. **Self-Sabotage and Shadow Patterns**
    - How they sabotage themselves under stress.
    - What they avoid admitting.
    - What they overcompensate for.
    - Use direct "If you notice X, it may mean Y" warnings.
 
-5. **Stress Response and Decision-Making**
+9. **Stress Response and Decision-Making**
    - How they react when pressured, rejected, ignored, criticized, or rushed.
    - How they make good decisions vs bad decisions.
    - Include decision rules such as "wait one night", "ask for specifics", "do not promise while emotionally activated", when astrologically appropriate.
 
-6. **Relationships: Needs, Traps, and Boundaries**
-   - What they need emotionally.
-   - How that need appears in behavior (e.g. contact, distance, reassurance, control, avoidance).
-   - Most common relationship traps.
-   - People to approach carefully / avoid.
-   - Non-negotiables they should not compromise on.
-   - 5 reflection questions.
-
-7. **Career and Work Environment**
-   - Suitable work environments.
-   - Unsuitable work environments.
-   - Typical career mistakes (too many starts, over-responsibility, poor delegation, boredom, avoidance of visibility, etc. when supported by chart).
-   - How they should handle: conflict with a boss, being fired, starting a business, changing career.
-
-8. **Money and Security**
-   - Likely money patterns.
-   - Common financial risks (impulsive spending, hoarding, excessive caution, undervaluing work, etc.).
-   - Practical rules for financial decisions.
-
-9. **Family / Ancestral / Early Conditioning Patterns**
+10. **Family / Ancestral / Early Conditioning Patterns**
    - Only if supported by houses/aspects.
    - Describe as possible conditioning patterns, not factual claims.
    - How old family roles may repeat in adult relationships/career.
-
-10. **Practical Forecast and Timing Guidance**
-    - Do not make deterministic predictions.
-    - Give practical "if/then" guidance for the coming years.
-    - Examples: if an offer abroad appears, if career change arises, if a relationship requires distance, if business ownership becomes possible.
 
 11. **Action Plan**
     - What to stop doing.
@@ -491,6 +518,16 @@ ${partnerHouses.map((house: any) =>
 ${partnerChartInfo}
 
 You are a master astrologer providing a COMPREHENSIVE RELATIONSHIP COMPATIBILITY ANALYSIS (Synastry). This is the most detailed relationship analysis possible, covering every aspect of their astrological compatibility.
+
+This COMPATIBILITY plan must cover everything promised on the pricing card:
+- comparison between two natal charts;
+- love and emotional compatibility;
+- communication and attraction;
+- strengths of the relationship;
+- potential conflicts;
+- long-term potential;
+- suitable periods for development and important decisions;
+- detailed PDF-ready analysis.
 
 Please provide a complete, master-level relationship analysis covering:
 
@@ -694,7 +731,17 @@ ${personalizedIntro}
 - **Biggest risk 3:** Confusing endurance with wisdom.
 - **If you work on only one thing:** act earlier when your body already knows a situation is wrong.
 
-## 2. How Your Main Traits Work in Daily Life
+## 2. Astrological Foundation: Planets, Houses, and Aspects
+
+Your ${planetaryPositions.Sun?.sign || 'Sun sign'} points to the core way you seek identity and purpose. Your ${planetaryPositions.Moon?.sign || 'Moon sign'} describes the emotional climate underneath your choices. Your ${planetaryPositions.Mercury?.sign || 'Mercury'} shows how the mind processes information, argues, learns, and explains itself. Your ${planetaryPositions.Venus?.sign || 'Venus'} gives clues about love, values, taste, and what feels worthy. Your ${planetaryPositions.Mars?.sign || 'Mars'} shows how desire becomes action.
+
+The house emphasis also matters. The ${houses[0]?.sign || '1st house'} tone points to identity and personal initiative. The ${houses[4]?.sign || '4th house'} area speaks to home, emotional roots, and family conditioning. The ${houses[7]?.sign || '7th house'} area describes partnership lessons, while the ${houses[10]?.sign || '10th house'} area shows career, reputation, and visible responsibility.
+
+Important aspects such as ${aspects[0]?.planet1 || 'Sun'}-${aspects[0]?.planet2 || 'Moon'} and ${aspects[1]?.planet1 || 'Venus'}-${aspects[1]?.planet2 || 'Mars'} describe inner dialogues: what part of you wants safety, what part wants action, what part seeks connection, and what part resists vulnerability. In practical terms, aspects show where life asks for integration rather than one-sided behavior.
+
+**Practical use:** do not read these placements as fixed destiny. Read them as a map of tendencies. The value is in noticing when a tendency is helping you and when it is quietly running your decisions.
+
+## 3. How Your Main Traits Work in Daily Life
 
 Your ${planetaryPositions.Sun?.sign || 'Sun sign'} creates a core identity that wants direction and meaning. In daily life this may show as wanting to know why something matters before fully committing. When healthy, this gives you purpose. When distorted, you may reject good opportunities because they do not feel perfectly aligned yet.
 
@@ -711,26 +758,45 @@ Your ${planetaryPositions.Mars?.sign || 'Mars'} describes how you act under pres
 **Warning sign:** "I will wait a little longer" becomes a pattern, not a conscious choice.  
 **Do this instead:** set a deadline for action before resentment takes over.
 
-## 3. Repeated Life Patterns
+## 4. Love, Relationships, and Emotional Models
+
+Your relationship pattern may combine loyalty with a strong need for emotional clarity. You may be drawn to people who feel deep, complex, or unfinished. This can create meaningful intimacy, but it can also pull you into rescuing, waiting, or explaining away inconsistency.
+
+**What you likely need:** steadiness, honesty, predictable emotional presence, and enough space to keep your own center.  
+**What can hurt you:** vague promises, intermittent attention, relationships where you become the emotional manager, or partners who require you to shrink your needs to keep peace.
+
+## 5. Career, Calling, and Financial Potential
+
+Career-wise, this chart favors environments where your effort matters and your sensitivity is not treated as weakness. You may do well where psychology, guidance, analysis, beauty, teaching, planning, healing, or meaningful service are involved. You are less likely to thrive where chaos is constant, leadership is vague, or speed is valued more than depth.
+
+Financially, watch the link between emotion and security. Sometimes the issue is not money itself but the feeling of being safe, valued, or in control. This is why a money decision may need both numbers and emotional honesty.
+
+## 6. Life Cycles, Timing, and Strong/Weak Periods
+
+Strong periods are those in which you feel clear, grounded, and able to act without proving anything. Use those windows to start projects, negotiate, make visible commitments, or ask for what you need.
+
+Sensitive periods are those in which you feel reactive, resentful, rushed, or emotionally dependent on another person's response. Use those windows for review, repair, and planning rather than dramatic decisions.
+
+## 7. Repeated Life Patterns
 
 A useful karmic interpretation is that you may repeatedly meet situations where you must choose between comfort and growth. This does not mean fate is forcing you. It means similar emotional lessons may appear through different people: the unavailable partner, the demanding boss, the family member who needs too much, or the project that asks you to carry everyone.
 
 The lesson may be: **support others without abandoning your own center**.
 
-## 4. Self-Sabotage and Shadow Patterns
+## 8. Self-Sabotage and Shadow Patterns
 
 - If you constantly prove your value through work, you may be seeking recognition rather than purpose.
 - If you avoid conflict until it explodes, you may be confusing peace with avoidance.
 - If you over-give in relationships, you may be trying to secure love by being indispensable.
 - If you dismiss your own needs as "not important", resentment will eventually speak for you.
 
-## 5. Stress Response and Decision-Making
+## 9. Stress Response and Decision-Making
 
 Under stress you may become either too fixed or too emotionally absorbent. The practical rule is simple: do not make a major promise while activated. If you feel anger, first ask: "Is there hurt, rejection, or fear under this?" If the answer is yes, wait one night before responding.
 
 **Decision rule:** if the choice affects money, home, relationship, or career, write down the decision, sleep once, then review whether the body still says yes.
 
-## 6. Relationships: Needs, Traps, and Boundaries
+## 10. Relationships: Needs, Traps, and Boundaries
 
 You likely need consistency, emotional honesty, and respect for your rhythm. This may look like wanting regular contact, clear intentions, and behavior that matches words.
 
@@ -749,7 +815,7 @@ You likely need consistency, emotional honesty, and respect for your rhythm. Thi
 4. What kind of distance triggers me?
 5. What boundary would immediately make my relationships healthier?
 
-## 7. Career and Work Environment
+## 11. Career and Work Environment
 
 You are likely to function best in environments where responsibility is clear, values matter, and your effort is visible. You may struggle in chaotic teams, vague leadership, or workplaces where emotional labor is expected but not respected.
 
@@ -765,7 +831,7 @@ You are likely to function best in environments where responsibility is clear, v
 - If you start a business, do not build only from inspiration; build a repeatable weekly system.
 - If changing career, you are most likely to succeed when the change is chosen by you, not forced by accumulated resentment.
 
-## 8. Money and Security
+## 12. Money and Security
 
 Your financial pattern may move between caution and emotional spending. Watch whether purchases are solving a real need or regulating a feeling.
 
@@ -775,13 +841,13 @@ Your financial pattern may move between caution and emotional spending. Watch wh
 - keep one "security fund" untouched;
 - do not lend money to preserve emotional closeness.
 
-## 9. Practical Forecast and Timing Guidance
+## 13. Practical Forecast and Timing Guidance
 
 If an opportunity for relocation, study, or a new professional environment appears, do not reject it automatically. Ask whether it expands your life or simply scares the familiar part of you.
 
 If a relationship requires constant guessing, treat that as information. If a career change keeps returning as an idea, give it a structured experiment rather than an immediate leap.
 
-## 10. Action Plan
+## 14. Action Plan
 
 **Stop doing:** waiting until resentment becomes your only source of courage.  
 **Start doing:** naming discomfort while it is still small.  
@@ -789,7 +855,7 @@ If a relationship requires constant guessing, treat that as information. If a ca
 **Practice weekly:** one direct conversation you would normally postpone.  
 **Track for 30 days:** when you say yes while your body says no.
 
-## 11. Self-Reflection Questions
+## 15. Self-Reflection Questions
 
 1. What situation keeps repeating in my life under different names?
 2. Where do I confuse loyalty with self-abandonment?
@@ -804,7 +870,7 @@ If a relationship requires constant guessing, treat that as information. If a ca
 11. What is my body already telling me?
 12. What boundary would protect my future self?
 
-## 12. Checklist: 10 Signs You Are Off Your Natural Path
+## 16. Checklist: 10 Signs You Are Off Your Natural Path
 
 1. You overwork to prove your value.
 2. You delay necessary conversations for weeks.
@@ -817,7 +883,7 @@ If a relationship requires constant guessing, treat that as information. If a ca
 9. You say "it's fine" while building resentment.
 10. You stop asking what you actually want.
 
-## 13. Checklist: 10 Signs You Are Aligned
+## 17. Checklist: 10 Signs You Are Aligned
 
 1. Your yes feels calm, not forced.
 2. Your work has both meaning and boundaries.
@@ -830,7 +896,7 @@ If a relationship requires constant guessing, treat that as information. If a ca
 9. You protect your energy.
 10. You feel more honest with yourself than impressive to others.
 
-## 14. Closing Synthesis
+## 18. Closing Synthesis
 
 This chart can be read as a lesson in turning sensitivity and endurance into conscious choice. The goal is not to become harder or more detached, but to stop waiting until pressure makes decisions for you.
 

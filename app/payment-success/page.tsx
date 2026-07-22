@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import { getClientLocale } from '@/lib/locale'
 import { useSiteLocale } from '@/lib/use-site-locale'
 import { paymentSuccessPage } from '@/lib/payment-success-locale'
+import { buildAnalysisReportHtml } from '@/lib/analysis-document'
 
 function isStoredAnalysisForCurrentRequest(
   analysis: any,
@@ -245,42 +246,30 @@ function PaymentSuccessContent() {
       pdfContainer.style.padding = '40px'
       pdfContainer.style.backgroundColor = 'white'
       pdfContainer.style.color = '#1a1a1a'
-      pdfContainer.style.fontFamily = 'Arial, sans-serif'
-      pdfContainer.style.fontSize = '12px'
+      pdfContainer.style.fontFamily = 'Inter, Arial, sans-serif'
+      pdfContainer.style.fontSize = '13px'
       pdfContainer.style.lineHeight = '1.6'
       
-      // Create PDF content with proper formatting
-      pdfContainer.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #6366f1; font-size: 24px; margin-bottom: 10px;">🌟 ${t.pdfReportTitle}</h1>
-          <div style="border-top: 2px solid #6366f1; width: 100px; margin: 0 auto;"></div>
-        </div>
-        
-        <div style="margin-bottom: 20px; padding: 15px; background-color: #f8fafc; border-radius: 8px;">
-          <h3 style="color: #6366f1; margin-bottom: 10px;">📋 ${t.pdfAnalysisDetails}</h3>
-          <p><strong>${t.pdfAnalysisType}:</strong> ${analysisData.analysisType.charAt(0).toUpperCase() + analysisData.analysisType.slice(1)}</p>
-          <p><strong>${t.pdfGenerated}:</strong> ${new Date(analysisData.generatedAt).toLocaleString()}</p>
-          <p><strong>${t.pdfFor}:</strong> ${birthChartData.userData?.name}</p>
-          <p><strong>${t.pdfBirthDate}:</strong> ${new Date(birthChartData.userData?.birthDate).toLocaleDateString()}</p>
-          <p><strong>${t.pdfLocation}:</strong> ${birthChartData.userData?.location}</p>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          ${(analysisData.content || t.pdfNoContent)
-            .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #6366f1;">$1</strong>')
-            .replace(/## (.*?)/g, '<h2 style="color: #6366f1; font-size: 18px; margin: 25px 0 15px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">$1</h2>')
-            .replace(/##/g, '')
-            .replace(/\n/g, '<br>')
-            .replace(/- (.*?)(?=<br>|$)/g, '<li style="margin: 5px 0;">$1</li>')
-            .replace(/(\d+\.) (.*?)(?=<br>|$)/g, '<li style="margin: 5px 0;">$1 $2</li>')
-          }
-        </div>
-        
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; text-align: center; color: #6b7280;">
-          <p style="margin: 0;">${t.pdfFooter}</p>
-          <p style="margin: 5px 0;">${t.pdfVisit}: https://astrohoroscope.online/</p>
-        </div>
-      `
+      pdfContainer.innerHTML = buildAnalysisReportHtml(
+        {
+          title: t.pdfReportTitle,
+          subtitle: t.readySub,
+          analysisType: analysisData.analysisType,
+          generatedAt: analysisData.generatedAt,
+          name: birthChartData.userData?.name,
+          birthDate: birthChartData.userData?.birthDate,
+          location: birthChartData.userData?.location,
+          labels: {
+            name: t.pdfFor,
+            analysisType: t.pdfAnalysisType,
+            birthDate: t.pdfBirthDate,
+            location: t.pdfLocation,
+            generated: t.pdfGenerated,
+            footer: t.pdfFooter,
+          },
+        },
+        analysisData.content || t.pdfNoContent
+      )
       
       document.body.appendChild(pdfContainer)
       
@@ -463,17 +452,35 @@ function PaymentSuccessContent() {
             </div>
 
             {/* Analysis Content */}
-                         <motion.div
+             <motion.div
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 0.5 }}
-               className="bg-white/80 dark:bg-cosmic-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-cosmic-200/50 dark:border-cosmic-700/50 max-h-none overflow-visible"
+               className="overflow-hidden rounded-[2rem] border border-cosmic-200/70 bg-white p-3 shadow-2xl shadow-purple-950/10 dark:border-cosmic-700/50 dark:bg-white"
              >
-               <div className="prose prose-cosmic dark:prose-invert max-w-none analysis-content">
-                 <div 
-                   className="text-cosmic-800 dark:text-cosmic-200 leading-relaxed whitespace-pre-wrap"
-                   dangerouslySetInnerHTML={{ 
-                     __html: (analysisData.content || t.pdfNoContent).replace(/\n/g, '<br>') 
+               <div className="analysis-content max-w-none">
+                 <div
+                   dangerouslySetInnerHTML={{
+                     __html: buildAnalysisReportHtml(
+                       {
+                         title: t.pdfReportTitle,
+                         subtitle: t.readySub,
+                         analysisType: analysisData.analysisType,
+                         generatedAt: analysisData.generatedAt,
+                         name: birthChartData.userData?.name,
+                         birthDate: birthChartData.userData?.birthDate,
+                         location: birthChartData.userData?.location,
+                         labels: {
+                           name: t.pdfFor,
+                           analysisType: t.pdfAnalysisType,
+                           birthDate: t.pdfBirthDate,
+                           location: t.pdfLocation,
+                           generated: t.pdfGenerated,
+                           footer: t.pdfFooter,
+                         },
+                       },
+                       analysisData.content || t.pdfNoContent
+                     ),
                    }}
                  />
                  {!analysisData.content && (
