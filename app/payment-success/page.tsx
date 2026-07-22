@@ -36,6 +36,7 @@ function PaymentSuccessContent() {
   const [analysisData, setAnalysisData] = useState<any>(null)
   const [birthChartData, setBirthChartData] = useState<any>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [generationError, setGenerationError] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -94,6 +95,7 @@ function PaymentSuccessContent() {
 
   const generateAnalysis = async (birthChart: any, analysisType: string, sessionId: string) => {
     setIsGenerating(true)
+    setGenerationError(null)
 
     try {
       // Free/admin and local mock sessions are already trusted by the server-side checkout endpoints.
@@ -134,6 +136,9 @@ function PaymentSuccessContent() {
       let partnerData = null
       if (partnerChartData) {
         partnerData = JSON.parse(partnerChartData)
+      } else if (birthChart.partnerChartData) {
+        // Comprehensive readings store partner data both as a separate key and inside birthChartData.
+        partnerData = birthChart.partnerChartData
       }
 
               // Request analysis generation
@@ -227,7 +232,8 @@ function PaymentSuccessContent() {
     } catch (error) {
       console.error('Error generating analysis:', error)
       toast.error(paymentSuccessPage[getClientLocale()].toastAnalysisFailed)
-      router.push('/birth-chart')
+      setGenerationError(error instanceof Error ? error.message : paymentSuccessPage[getClientLocale()].toastAnalysisFailed)
+      setIsLoading(false)
     } finally {
       setIsGenerating(false)
     }
@@ -414,6 +420,37 @@ function PaymentSuccessContent() {
   }
 
   if (!analysisData || !birthChartData) {
+    if (generationError && birthChartData) {
+      const selectedAnalysisType = sessionStorage.getItem('selectedAnalysisType') || 'basic'
+      const sessionId = searchParams.get('session_id') || ''
+
+      return (
+        <>
+          <Header />
+          <main className="min-h-screen bg-gradient-to-br from-cosmic-50 via-white to-purple-50 dark:from-cosmic-950 dark:via-cosmic-900 dark:to-purple-950 pt-page-header-safe">
+            <div className="container mx-auto px-4 py-12">
+              <div className="mx-auto max-w-2xl rounded-2xl border border-red-200 bg-white p-8 text-center shadow-xl dark:border-red-900/50 dark:bg-cosmic-900">
+                <h1 className="mb-3 text-2xl font-bold text-cosmic-900 dark:text-white">
+                  {t.toastAnalysisFailed}
+                </h1>
+                <p className="mb-6 text-cosmic-700 dark:text-cosmic-300">
+                  Данните са запазени. Опитай отново, без да попълваш формата повторно.
+                </p>
+                <Button
+                  variant="gradient"
+                  onClick={() => generateAnalysis(birthChartData, selectedAnalysisType, sessionId)}
+                  disabled={!sessionId || isGenerating}
+                >
+                  {isGenerating ? t.generatingTitle : 'Опитай отново'}
+                </Button>
+              </div>
+            </div>
+          </main>
+          <Footer />
+        </>
+      )
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

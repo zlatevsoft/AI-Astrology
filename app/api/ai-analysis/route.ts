@@ -3,6 +3,8 @@ import { z } from 'zod'
 import OpenAI from 'openai'
 import { validateAndSanitizeBirthData, validateAndSanitizePartnerData } from '@/lib/validation'
 
+export const maxDuration = 60
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -156,6 +158,8 @@ const AIAnalysisSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  let recoveryData: z.infer<typeof AIAnalysisSchema> | null = null
+
   try {
     const body = await request.json()
     
@@ -163,6 +167,7 @@ export async function POST(request: NextRequest) {
     
     // Enhanced security: Validate and sanitize input
     const validatedData = AIAnalysisSchema.parse(body)
+    recoveryData = validatedData
     
     // Additional security checks
     if (!validatedData.birthChart?.birthData) {
@@ -230,7 +235,7 @@ export async function POST(request: NextRequest) {
         ],
         max_tokens: analysisType === 'comprehensive' ? 10000 : analysisType === 'detailed' ? 9000 : 4500,
         temperature: 0.7,
-      })
+      }, { timeout: 25000 })
       console.log('GPT-4o used successfully')
     } catch (error) {
       console.log('GPT-4o failed, trying GPT-4...')
@@ -249,7 +254,7 @@ export async function POST(request: NextRequest) {
           ],
           max_tokens: analysisType === 'comprehensive' ? 8000 : analysisType === 'detailed' ? 6500 : 3500,
           temperature: 0.7,
-        })
+        }, { timeout: 20000 })
         console.log('GPT-4 used successfully')
       } catch (error2) {
         console.log('GPT-4 failed, falling back to GPT-3.5 Turbo')
@@ -267,7 +272,7 @@ export async function POST(request: NextRequest) {
           ],
           max_tokens: analysisType === 'comprehensive' ? 5000 : analysisType === 'detailed' ? 4500 : 2500,
           temperature: 0.7,
-        })
+        }, { timeout: 18000 })
         console.log('GPT-3.5 Turbo used successfully')
       }
     }
@@ -305,7 +310,7 @@ export async function POST(request: NextRequest) {
         ],
         max_tokens: analysisType === 'comprehensive' ? 11000 : analysisType === 'detailed' ? 10000 : 5000,
         temperature: 0.55,
-      })
+      }, { timeout: 25000 })
 
       const retryAnalysis = retryCompletion.choices[0]?.message?.content
       const retryValidation = retryAnalysis
@@ -353,6 +358,47 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       )
+    }
+
+    if (recoveryData && process.env.OPENAI_API_KEY) {
+      try {
+        console.error('Trying compact real OpenAI recovery generation after failure:', error)
+        const { birthChart, partnerBirthChart, analysisType, locale } = recoveryData
+        const compactPrompt = createCompactRecoveryPrompt(birthChart, partnerBirthChart, analysisType, locale)
+        const recoveryCompletion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: locale === 'bg' ? SYSTEM_BG : SYSTEM_EN,
+            },
+            {
+              role: 'user',
+              content: compactPrompt,
+            },
+          ],
+          max_tokens: analysisType === 'comprehensive' ? 6500 : analysisType === 'detailed' ? 6500 : 3500,
+          temperature: 0.45,
+        }, { timeout: 30000 })
+        const recoveryAnalysis = recoveryCompletion.choices[0]?.message?.content?.trim()
+        if (recoveryAnalysis && !REFUSAL_PATTERNS.some((pattern) => pattern.test(recoveryAnalysis))) {
+          return NextResponse.json({
+            success: true,
+            data: {
+              id: `analysis_${Date.now()}`,
+              birthChartId: birthChart.id,
+              analysisType,
+              content: recoveryAnalysis,
+              generatedAt: new Date().toISOString(),
+              model: recoveryCompletion.model || 'gpt-4o-mini',
+              tokensUsed: recoveryCompletion.usage?.total_tokens || 0,
+              cost: calculateCost(recoveryCompletion.usage, recoveryCompletion.model),
+            },
+          })
+        }
+      } catch (recoveryError) {
+        console.error('Compact real OpenAI recovery generation failed:', recoveryError)
+      }
     }
 
     return NextResponse.json(
@@ -411,6 +457,128 @@ function createRetryPrompt(originalPrompt: string, analysisType: string, locale:
 ${sectionReminder}
 
 ${originalPrompt}`
+}
+
+function createCompactRecoveryPrompt(
+  birthChart: z.infer<typeof AIAnalysisSchema>['birthChart'],
+  partnerBirthChart: z.infer<typeof AIAnalysisSchema>['partnerBirthChart'],
+  analysisType: z.infer<typeof AIAnalysisSchema>['analysisType'],
+  locale: z.infer<typeof AIAnalysisSchema>['locale']
+) {
+  const { birthData, planetaryPositions, houses, aspects } = birthChart
+  const coreChart = `
+Client:
+- Name: ${birthData.name}
+- Date: ${birthData.date}
+- Time: ${birthData.time}
+- Location: ${birthData.location}
+
+Planets:
+${Object.entries(planetaryPositions)
+  .map(([planet, data]) => `- ${planet}: ${data.sign} ${data.degree}° (House ${data.house})`)
+  .join('\n')}
+
+Houses:
+${houses.map((house) => `- House ${house.house}: ${house.sign} ${house.degree}°`).join('\n')}
+
+Aspects:
+${aspects.map((aspect) => `- ${aspect.planet1} ${aspect.type} ${aspect.planet2} (${aspect.orb}°)`).join('\n')}`
+
+  const partnerChart = partnerBirthChart
+    ? `
+
+Partner:
+- Name: ${partnerBirthChart.birthData.name}
+- Date: ${partnerBirthChart.birthData.date}
+- Time: ${partnerBirthChart.birthData.time}
+- Location: ${partnerBirthChart.birthData.location}
+
+Partner planets:
+${Object.entries(partnerBirthChart.planetaryPositions)
+  .map(([planet, data]) => `- ${planet}: ${data.sign} ${data.degree}° (House ${data.house})`)
+  .join('\n')}
+
+Partner aspects:
+${partnerBirthChart.aspects
+  .map((aspect) => `- ${aspect.planet1} ${aspect.type} ${aspect.planet2} (${aspect.orb}°)`)
+  .join('\n')}`
+    : ''
+
+  if (locale === 'bg') {
+    const sections =
+      analysisType === 'comprehensive'
+        ? `1. **Обща съвместимост**
+2. **Емоционална и любовна динамика**
+3. **Комуникация и мислене**
+4. **Привличане, близост и напрежение**
+5. **Силни страни на връзката**
+6. **Рискове и възможни конфликти**
+7. **Дългосрочен потенциал**
+8. **Подходящи периоди и решения**
+9. **Практически насоки за двамата**`
+        : analysisType === 'detailed'
+          ? `1. **Резюме на наталната карта**
+2. **Планети, домове и аспекти**
+3. **Личност и ежедневни модели**
+4. **Любов и емоционални потребности**
+5. **Кариера, призвание и финансов потенциал**
+6. **Житейски цикли, силни и чувствителни периоди**
+7. **Повтарящи се модели и самосаботаж**
+8. **План за действие**
+9. **Въпроси за саморефлексия**
+10. **Финален синтез**`
+          : `1. **Личност и силни страни**
+2. **Любов и взаимоотношения**
+3. **Кариера и житейски насоки**
+4. **Скрит потенциал и планетарни влияния**
+5. **Практически съвети**`
+
+    return `${coreChart}${partnerChart}
+
+Създай реален астрологичен доклад според избрания план: ${analysisType}.
+Пиши САМО на български език, с правилен правопис и естествен стил. Започни директно с първото заглавие. Без въведения, извинения, технически бележки, fallback обяснения или английски labels.
+Докладът трябва да е завършен, професионален и практически полезен. Използвай markdown заглавия с ## и удебелявай важните изводи.
+
+Задължителна структура:
+${sections}`
+  }
+
+  const sections =
+    analysisType === 'comprehensive'
+      ? `1. **Overall Compatibility**
+2. **Emotional and Love Dynamics**
+3. **Communication**
+4. **Attraction and Tension**
+5. **Relationship Strengths**
+6. **Risks and Conflicts**
+7. **Long-Term Potential**
+8. **Timing and Decisions**
+9. **Practical Guidance**`
+      : analysisType === 'detailed'
+        ? `1. **Birth Chart Summary**
+2. **Planets, Houses, and Aspects**
+3. **Personality and Daily Patterns**
+4. **Love and Emotional Needs**
+5. **Career, Calling, and Financial Potential**
+6. **Life Cycles and Sensitive Periods**
+7. **Repeated Patterns and Self-Sabotage**
+8. **Action Plan**
+9. **Self-Reflection Questions**
+10. **Closing Synthesis**`
+        : `1. **Personality and Strengths**
+2. **Love and Relationships**
+3. **Career and Life Direction**
+4. **Hidden Potential and Planetary Influences**
+5. **Practical Advice**`
+
+  return `${coreChart}${partnerChart}
+
+Create a real astrological report for the selected plan: ${analysisType}.
+Start directly with the first heading. No preamble, apology, technical note, fallback explanation, or placeholder language.
+The report must be complete, professional, and practical. Use markdown headings with ## and bold the key points.
+
+Required structure:
+${sections}`
 }
 
 function createAnalysisPrompt(birthChart: any, partnerBirthChart: any, analysisType: string) {
