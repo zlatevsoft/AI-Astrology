@@ -167,6 +167,9 @@ function PaymentSuccessContent() {
           },
           analysisType,
           locale: getClientLocale(),
+          // Only free/admin-test sessions may use a generated fallback report.
+          // Paid sessions must receive a real AI-generated analysis or fail loudly.
+          allowFallback: isMockOrFreeSession,
         }
 
         // Add partner data if available (for comprehensive plan)

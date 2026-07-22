@@ -130,12 +130,14 @@ const AIAnalysisSchema = z.object({
   }).optional(),
   analysisType: z.enum(['basic', 'detailed', 'comprehensive']).default('basic'),
   locale: z.enum(['en', 'bg']).default('en'),
+  allowFallback: z.boolean().default(false),
 })
 
 export async function POST(request: NextRequest) {
   let fallbackBirthChart: z.infer<typeof AIAnalysisSchema>['birthChart'] | null = null
   let fallbackAnalysisType: z.infer<typeof AIAnalysisSchema>['analysisType'] | null = null
   let fallbackLocale: z.infer<typeof AIAnalysisSchema>['locale'] = 'en'
+  let allowFallback = false
 
   try {
     const body = await request.json()
@@ -179,9 +181,20 @@ export async function POST(request: NextRequest) {
     fallbackBirthChart = birthChart
     fallbackAnalysisType = analysisType
     fallbackLocale = locale
+    allowFallback = validatedData.allowFallback
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
+      if (!allowFallback) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Real AI generation is temporarily unavailable. No fallback is allowed for paid sessions.',
+          },
+          { status: 503 }
+        )
+      }
+
       console.log('No OpenAI API key found, using mock analysis')
       // Return mock analysis for testing without API key
       const mockAnalysis = generateMockAnalysis(birthChart, analysisType, locale) as {
@@ -343,7 +356,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (fallbackBirthChart && fallbackAnalysisType) {
+    if (allowFallback && fallbackBirthChart && fallbackAnalysisType) {
       console.error('AI provider failed after validation, returning fallback analysis:', error)
       return NextResponse.json({
         success: true,
@@ -359,7 +372,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to generate analysis' 
+        error:
+          'Real AI generation failed after retry. Fallback is disabled for this session because it appears to be a paid order.',
       },
       { status: 500 }
     )
