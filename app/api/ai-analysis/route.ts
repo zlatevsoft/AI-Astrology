@@ -8,9 +8,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-const SYSTEM_EN = `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better.`
+const SYSTEM_EN = `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better. Do not calculate, correct, apologize about, or discuss the client's age unless the user explicitly asks for age.`
 
-const SYSTEM_BG = `Ти си опитен астролог с дълбоки познания по западната астрология, планетарните влияния и психологическата астрология. Давай уместни, персонални тълкувания, които са едновременно точни и смислени. Фокусирай се върху практични прозрения, които помагат на човека да се разбира по-добре. Отговаряй изцяло на български език.`
+const SYSTEM_BG = `Ти си опитен астролог с дълбоки познания по западната астрология, планетарните влияния и психологическата астрология. Давай уместни, персонални тълкувания, които са едновременно точни и смислени. Фокусирай се върху практични прозрения, които помагат на човека да се разбира по-добре. Не изчислявай, не поправяй, не се извинявай и не обсъждай възрастта на клиента, освен ако потребителят изрично не попита за възраст. Отговаряй изцяло на български език.`
 
 const BG_COMPLETION_INSTRUCTION = `
 
@@ -432,14 +432,12 @@ function createAnalysisPrompt(birthChart: any, partnerBirthChart: any, analysisT
   const { birthData, planetaryPositions, houses, aspects } = birthChart
   
   const birthDate = new Date(birthData.date)
-  const age = new Date().getFullYear() - birthDate.getFullYear()
   
   // Base chart information
   const chartInfo = `Birth Chart Data:
 - Date: ${birthDate.toLocaleDateString()}
 - Time: ${birthData.time}
 - Location: ${birthData.location}
-- Age: ${age} years
 
 Key Planetary Positions:
 ${Object.entries(planetaryPositions).map(([planet, data]: [string, any]) => 
@@ -519,6 +517,7 @@ This PREMIUM plan must include everything promised on the pricing card:
 
 IMPORTANT STYLE RULES:
 - Do not present astrology as absolute fact. Use phrasing such as "this may suggest", "one useful interpretation is", "watch for", "a likely pattern is", "if this resonates".
+- Do not mention, correct, apologize about, or calculate the client's age. The user enters birth data, not age, and age is not part of the report.
 - For every astrological statement, explain the cause-and-effect chain: placement/aspect -> daily behavior -> advantage -> risk -> signal that the pattern is becoming unhealthy -> practical response.
 - Avoid vague advice like "develop emotional intelligence". Translate every recommendation into observable behavior.
 - Include concrete examples from real life.
@@ -627,14 +626,12 @@ Use advanced astrological concepts, but translate them into usable psychology an
 
       const { birthData: partnerBirthData, planetaryPositions: partnerPlanetaryPositions, houses: partnerHouses, aspects: partnerAspects } = partnerBirthChart
       const partnerBirthDate = new Date(partnerBirthData.date)
-      const partnerAge = new Date().getFullYear() - partnerBirthDate.getFullYear()
 
       const partnerChartInfo = `
 Partner Birth Chart Data:
 - Date: ${partnerBirthDate.toLocaleDateString()}
 - Time: ${partnerBirthData.time}
 - Location: ${partnerBirthData.location}
-- Age: ${partnerAge} years
 
 Partner Key Planetary Positions:
 ${Object.entries(partnerPlanetaryPositions).map(([planet, data]: [string, any]) => 
