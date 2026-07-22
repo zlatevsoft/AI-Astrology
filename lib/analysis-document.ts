@@ -116,7 +116,7 @@ export function analysisContentToHtml(content: string): string {
       const title = cleanHeading(line)
       const accent = sectionAccent(title)
       html += `
-        <section style="margin:28px 0 18px;padding:22px 22px 18px;border:1px solid ${palette.border};border-left:6px solid ${palette.purple};border-radius:18px;background:linear-gradient(135deg,${accent},#ffffff);box-shadow:0 12px 30px rgba(69,39,160,.08);">
+        <section style="break-inside:avoid;page-break-inside:avoid;margin:28px 0 18px;padding:22px 22px 18px;border:1px solid ${palette.border};border-left:6px solid ${palette.purple};border-radius:18px;background:linear-gradient(135deg,${accent},#ffffff);box-shadow:0 12px 30px rgba(69,39,160,.08);">
           <h2 style="margin:0 0 12px;color:${palette.ink};font-size:22px;line-height:1.25;font-weight:900;letter-spacing:-.02em;">
             ${formatInline(title)}
           </h2>

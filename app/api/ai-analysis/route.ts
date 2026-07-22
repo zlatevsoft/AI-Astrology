@@ -15,7 +15,7 @@ const SYSTEM_BG = `Ти си опитен астролог с дълбоки п�
 const BG_COMPLETION_INSTRUCTION = `
 
 ---
-ВАЖНО: Пиши целия анализ на български език. Западна астрология; използвай приети български термини.`
+ВАЖНО: Пиши целия анализ на български език. Западна астрология; използвай приети български термини. Всички заглавия, подзаглавия, списъци, етикети и препоръки трябва да са на български. Не оставяй английски фрази като "Executive Summary", "Warning sign", "Do this instead", "Action Plan", "Checklist" или други английски labels. Използвай правилен правопис, пунктуация и естествен литературен български.`
 
 const ANALYSIS_MIN_LENGTH: Record<string, number> = {
   basic: 2400,
@@ -41,7 +41,11 @@ function countMarkdownSections(content: string): number {
   return (content.match(/^#{1,3}\s+/gm) || []).length
 }
 
-function validateGeneratedAnalysis(content: string, analysisType: string): { valid: true } | { valid: false; reason: string } {
+function validateGeneratedAnalysis(
+  content: string,
+  analysisType: string,
+  locale: 'en' | 'bg'
+): { valid: true } | { valid: false; reason: string } {
   const normalized = content.trim()
   if (!normalized) {
     return { valid: false, reason: 'empty analysis' }
@@ -66,6 +70,25 @@ function validateGeneratedAnalysis(content: string, analysisType: string): { val
     return {
       valid: false,
       reason: `too few sections (${sections}, expected at least ${minSections})`,
+    }
+  }
+
+  if (locale === 'bg') {
+    const englishLabels = [
+      /executive summary/i,
+      /warning sign/i,
+      /do this instead/i,
+      /action plan/i,
+      /checklist/i,
+      /closing synthesis/i,
+      /self-reflection questions/i,
+      /relationships?:/i,
+      /career/i,
+      /money and security/i,
+    ]
+    const englishLabel = englishLabels.find((pattern) => pattern.test(normalized))
+    if (englishLabel) {
+      return { valid: false, reason: `English label detected in Bulgarian report: ${englishLabel}` }
     }
   }
 
@@ -130,15 +153,9 @@ const AIAnalysisSchema = z.object({
   }).optional(),
   analysisType: z.enum(['basic', 'detailed', 'comprehensive']).default('basic'),
   locale: z.enum(['en', 'bg']).default('en'),
-  allowFallback: z.boolean().default(false),
 })
 
 export async function POST(request: NextRequest) {
-  let fallbackBirthChart: z.infer<typeof AIAnalysisSchema>['birthChart'] | null = null
-  let fallbackAnalysisType: z.infer<typeof AIAnalysisSchema>['analysisType'] | null = null
-  let fallbackLocale: z.infer<typeof AIAnalysisSchema>['locale'] = 'en'
-  let allowFallback = false
-
   try {
     const body = await request.json()
     
@@ -178,34 +195,16 @@ export async function POST(request: NextRequest) {
     }
     
     const { birthChart, analysisType, locale } = validatedData
-    fallbackBirthChart = birthChart
-    fallbackAnalysisType = analysisType
-    fallbackLocale = locale
-    allowFallback = validatedData.allowFallback
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
-      if (!allowFallback) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'Real AI generation is temporarily unavailable. No fallback is allowed for paid sessions.',
-          },
-          { status: 503 }
-        )
-      }
-
-      console.log('No OpenAI API key found, using mock analysis')
-      // Return mock analysis for testing without API key
-      const mockAnalysis = generateMockAnalysis(birthChart, analysisType, locale) as {
-        content?: string
-        [key: string]: unknown
-      }
-      return NextResponse.json({
-        success: true,
-        data: mockAnalysis,
-        isMock: true,
-      })
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'OpenAI API key is not configured. A real AI analysis cannot be generated.',
+        },
+        { status: 503 }
+      )
     }
 
     // Create prompt for AI analysis
@@ -279,7 +278,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to generate analysis')
     }
 
-    const firstValidation = validateGeneratedAnalysis(analysis, analysisType)
+    const firstValidation = validateGeneratedAnalysis(analysis, analysisType, locale)
     if (!firstValidation.valid) {
       console.error('AI returned incomplete analysis, retrying once:', {
         reason: firstValidation.reason,
@@ -310,7 +309,7 @@ export async function POST(request: NextRequest) {
 
       const retryAnalysis = retryCompletion.choices[0]?.message?.content
       const retryValidation = retryAnalysis
-        ? validateGeneratedAnalysis(retryAnalysis, analysisType)
+        ? validateGeneratedAnalysis(retryAnalysis, analysisType, locale)
         : { valid: false as const, reason: 'empty retry analysis' }
 
       if (!retryAnalysis || !retryValidation.valid) {
@@ -356,24 +355,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (allowFallback && fallbackBirthChart && fallbackAnalysisType) {
-      console.error('AI provider failed after validation, returning fallback analysis:', error)
-      return NextResponse.json({
-        success: true,
-        data: {
-          ...generateMockAnalysis(fallbackBirthChart, fallbackAnalysisType, fallbackLocale),
-          isFallback: true,
-          fallbackReason: error instanceof Error ? error.message : 'AI provider error',
-        },
-        isMock: true,
-      })
-    }
-
     return NextResponse.json(
       { 
         success: false, 
-        error:
-          'Real AI generation failed after retry. Fallback is disabled for this session because it appears to be a paid order.',
+        error: 'Real AI generation failed after retry. Please try again shortly.',
       },
       { status: 500 }
     )

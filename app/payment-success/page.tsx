@@ -167,9 +167,6 @@ function PaymentSuccessContent() {
           },
           analysisType,
           locale: getClientLocale(),
-          // Only free/admin-test sessions may use a generated fallback report.
-          // Paid sessions must receive a real AI-generated analysis or fail loudly.
-          allowFallback: isMockOrFreeSession,
         }
 
         // Add partner data if available (for comprehensive plan)
@@ -239,21 +236,8 @@ function PaymentSuccessContent() {
   const handleDownloadPDF = async () => {
     try {
       toast.loading(t.pdfLoading, { id: 'pdf-generation' })
-      
-      // Create a temporary div for PDF content
-      const pdfContainer = document.createElement('div')
-      pdfContainer.style.position = 'absolute'
-      pdfContainer.style.left = '-9999px'
-      pdfContainer.style.top = '0'
-      pdfContainer.style.width = '800px'
-      pdfContainer.style.padding = '40px'
-      pdfContainer.style.backgroundColor = 'white'
-      pdfContainer.style.color = '#1a1a1a'
-      pdfContainer.style.fontFamily = 'Inter, Arial, sans-serif'
-      pdfContainer.style.fontSize = '13px'
-      pdfContainer.style.lineHeight = '1.6'
-      
-      pdfContainer.innerHTML = buildAnalysisReportHtml(
+
+      const reportHtml = buildAnalysisReportHtml(
         {
           title: t.pdfReportTitle,
           subtitle: t.readySub,
@@ -273,41 +257,93 @@ function PaymentSuccessContent() {
         },
         analysisData.content || t.pdfNoContent
       )
-      
-      document.body.appendChild(pdfContainer)
-      
-      // Convert to canvas
-      const canvas = await html2canvas(pdfContainer, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      })
-      
-      // Remove temporary container
-      document.body.removeChild(pdfContainer)
-      
-      // Create PDF
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF('p', 'mm', 'a4')
-      const imgWidth = 210
-      const pageHeight = 295
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-      let heightLeft = imgHeight
-      let position = 0
-      
-      // Add first page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
-      
-      // Add additional pages if needed
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
+
+      const sourceContainer = document.createElement('div')
+      sourceContainer.style.position = 'absolute'
+      sourceContainer.style.left = '-9999px'
+      sourceContainer.style.top = '0'
+      sourceContainer.style.width = '800px'
+      sourceContainer.style.backgroundColor = '#ffffff'
+      sourceContainer.innerHTML = reportHtml
+      document.body.appendChild(sourceContainer)
+
+      const pagesContainer = document.createElement('div')
+      pagesContainer.style.position = 'absolute'
+      pagesContainer.style.left = '-9999px'
+      pagesContainer.style.top = '0'
+      pagesContainer.style.width = '800px'
+      pagesContainer.style.backgroundColor = '#ffffff'
+      document.body.appendChild(pagesContainer)
+
+      const pageWidthPx = 800
+      const pageWidthMm = 210
+      const pageHeightMm = 297
+      const pageHeightPx = Math.floor((pageHeightMm * pageWidthPx) / pageWidthMm)
+
+      const createPage = () => {
+        const page = document.createElement('div')
+        page.style.width = `${pageWidthPx}px`
+        page.style.minHeight = `${pageHeightPx}px`
+        page.style.boxSizing = 'border-box'
+        page.style.padding = '40px'
+        page.style.backgroundColor = '#ffffff'
+        page.style.color = '#172033'
+        page.style.fontFamily = 'Inter, Arial, sans-serif'
+        page.style.fontSize = '13px'
+        page.style.lineHeight = '1.6'
+        pagesContainer.appendChild(page)
+        return page
       }
-      
+
+      const reportRoot = sourceContainer.firstElementChild as HTMLElement | null
+      if (!reportRoot) {
+        throw new Error('PDF report content could not be rendered')
+      }
+
+      let currentPage = createPage()
+      const addBlockToPages = (block: Element) => {
+        const clone = block.cloneNode(true) as HTMLElement
+        currentPage.appendChild(clone)
+
+        if (currentPage.scrollHeight > pageHeightPx && currentPage.children.length > 1) {
+          currentPage.removeChild(clone)
+          currentPage = createPage()
+          currentPage.appendChild(clone)
+        }
+      }
+
+      const reportBlocks = Array.from(reportRoot.children)
+      const headerBlock = reportBlocks[0]
+      const contentBlock = reportBlocks[1]
+      const footerBlock = reportBlocks[2]
+
+      if (headerBlock) addBlockToPages(headerBlock)
+      if (contentBlock) {
+        Array.from(contentBlock.children).forEach(addBlockToPages)
+      }
+      if (footerBlock) addBlockToPages(footerBlock)
+
+      document.body.removeChild(sourceContainer)
+
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const pages = Array.from(pagesContainer.children) as HTMLElement[]
+
+      for (let i = 0; i < pages.length; i += 1) {
+        if (i > 0) pdf.addPage()
+
+        const canvas = await html2canvas(pages[i], {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          windowWidth: pageWidthPx,
+        })
+        const imgData = canvas.toDataURL('image/png')
+        pdf.addImage(imgData, 'PNG', 0, 0, pageWidthMm, pageHeightMm)
+      }
+
+      document.body.removeChild(pagesContainer)
+
       // Download PDF
       pdf.save(`professional-astro-horoscope-${analysisData.analysisType}-${Date.now()}.pdf`)
       
