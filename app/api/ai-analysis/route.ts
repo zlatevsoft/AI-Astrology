@@ -8,9 +8,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-const SYSTEM_EN = `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better. Do not calculate, correct, apologize about, or discuss the client's age unless the user explicitly asks for age.`
+const SYSTEM_EN = `You are an expert astrologer with deep knowledge of Western astrology, planetary influences, and psychological astrology. Provide insightful, personalized interpretations that are both accurate and meaningful. Focus on practical insights that can help the person understand themselves better. Do not calculate, correct, apologize about, or discuss the client's age unless the user explicitly asks for age. Start the report directly with the first heading. Do not include conversational preambles such as "of course", "sure", "let's look", or similar setup phrases.`
 
-const SYSTEM_BG = `Ти си опитен астролог с дълбоки познания по западната астрология, планетарните влияния и психологическата астрология. Давай уместни, персонални тълкувания, които са едновременно точни и смислени. Фокусирай се върху практични прозрения, които помагат на човека да се разбира по-добре. Не изчислявай, не поправяй, не се извинявай и не обсъждай възрастта на клиента, освен ако потребителят изрично не попита за възраст. Отговаряй изцяло на български език.`
+const SYSTEM_BG = `Ти си опитен астролог с дълбоки познания по западната астрология, планетарните влияния и психологическата астрология. Давай уместни, персонални тълкувания, които са едновременно точни и смислени. Фокусирай се върху практични прозрения, които помагат на човека да се разбира по-добре. Не изчислявай, не поправяй, не се извинявай и не обсъждай възрастта на клиента, освен ако потребителят изрично не попита за възраст. Започвай доклада директно с първото заглавие. Не добавяй разговорни подводки като "разбира се", "нека разгледаме", "с удоволствие" или подобни фрази. Отговаряй изцяло на български език.`
 
 const BG_COMPLETION_INSTRUCTION = `
 
@@ -405,8 +405,8 @@ function calculateCost(usage: any, model: string): number {
 function createRetryPrompt(originalPrompt: string, analysisType: string, locale: 'en' | 'bg', reason: string) {
   const requiredTone =
     locale === 'bg'
-      ? `Предишният отговор беше невалиден (${reason}). Напиши ПЪЛЕН анализ с всички секции. Не се извинявай, не отказвай и не предлагай кратък вариант. Това е астрологичен развлекателен и саморефлексивен доклад, не медицинска, правна или финансова диагноза. Използвай конкретни, но недетерминистични формулировки: "може да показва", "вероятна тенденция", "ако това резонира".`
-      : `The previous response was invalid (${reason}). Write the FULL analysis with all sections. Do not apologize, refuse, or offer a shorter version. This is an astrology entertainment and self-reflection report, not medical, legal, or financial advice. Use concrete but non-deterministic phrasing: "may suggest", "likely tendency", "if this resonates".`
+      ? `Предишният отговор беше невалиден (${reason}). Напиши ПЪЛЕН анализ с всички секции. Започни директно с първото заглавие. Не добавяй "разбира се", "нека", "с удоволствие" или друга разговорна подводка. Не се извинявай, не отказвай и не предлагай кратък вариант. Това е астрологичен развлекателен и саморефлексивен доклад, не медицинска, правна или финансова диагноза. Използвай конкретни, но недетерминистични формулировки: "може да показва", "вероятна тенденция", "ако това резонира".`
+      : `The previous response was invalid (${reason}). Write the FULL analysis with all sections. Start directly with the first heading. Do not add "of course", "sure", "let's", or any conversational preamble. Do not apologize, refuse, or offer a shorter version. This is an astrology entertainment and self-reflection report, not medical, legal, or financial advice. Use concrete but non-deterministic phrasing: "may suggest", "likely tendency", "if this resonates".`
 
   const sectionReminder =
     locale === 'bg'

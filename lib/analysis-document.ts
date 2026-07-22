@@ -74,8 +74,26 @@ function calloutColor(line: string): string {
   return palette.blueSoft
 }
 
-export function analysisContentToHtml(content: string): string {
+function stripLeadingPreamble(content: string): string {
   const lines = String(content || '').replace(/\r\n/g, '\n').split('\n')
+  const firstHeadingIndex = lines.findIndex((line) => /^#{1,3}\s+/.test(line.trim()))
+
+  if (firstHeadingIndex <= 0) {
+    return lines.join('\n')
+  }
+
+  const leadingText = lines.slice(0, firstHeadingIndex).join(' ').trim().toLowerCase()
+  const looksConversational =
+    /^(разбира се|нека|с удоволствие|добре|sure|of course|let'?s|absolutely)/i.test(leadingText) ||
+    leadingText.includes('нека разгледаме') ||
+    leadingText.includes('let us look') ||
+    leadingText.includes('let’s look')
+
+  return looksConversational ? lines.slice(firstHeadingIndex).join('\n') : lines.join('\n')
+}
+
+export function analysisContentToHtml(content: string): string {
+  const lines = stripLeadingPreamble(content).replace(/\r\n/g, '\n').split('\n')
   let html = ''
   let listType: 'ul' | 'ol' | null = null
 
