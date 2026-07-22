@@ -17,6 +17,61 @@ const BG_COMPLETION_INSTRUCTION = `
 ---
 ВАЖНО: Пиши целия анализ на български език. Западна астрология; използвай приети български термини.`
 
+const ANALYSIS_MIN_LENGTH: Record<string, number> = {
+  basic: 2400,
+  detailed: 6500,
+  comprehensive: 5500,
+}
+
+const REFUSAL_PATTERNS = [
+  /съжалявам/i,
+  /не мога да предоставя/i,
+  /не мога да изготвя/i,
+  /не мога да генерирам/i,
+  /мога да предложа кратък/i,
+  /уведомете ме как/i,
+  /i'?m sorry/i,
+  /i cannot provide/i,
+  /i can'?t provide/i,
+  /unable to provide/i,
+  /as an ai/i,
+]
+
+function countMarkdownSections(content: string): number {
+  return (content.match(/^#{1,3}\s+/gm) || []).length
+}
+
+function validateGeneratedAnalysis(content: string, analysisType: string): { valid: true } | { valid: false; reason: string } {
+  const normalized = content.trim()
+  if (!normalized) {
+    return { valid: false, reason: 'empty analysis' }
+  }
+
+  const refusal = REFUSAL_PATTERNS.find((pattern) => pattern.test(normalized))
+  if (refusal) {
+    return { valid: false, reason: `refusal/apology detected: ${refusal}` }
+  }
+
+  const minLength = ANALYSIS_MIN_LENGTH[analysisType] || ANALYSIS_MIN_LENGTH.basic
+  if (normalized.length < minLength) {
+    return {
+      valid: false,
+      reason: `analysis too short (${normalized.length} chars, expected at least ${minLength})`,
+    }
+  }
+
+  const sections = countMarkdownSections(normalized)
+  const minSections = analysisType === 'detailed' ? 10 : analysisType === 'comprehensive' ? 8 : 4
+  if (sections < minSections) {
+    return {
+      valid: false,
+      reason: `too few sections (${sections}, expected at least ${minSections})`,
+    }
+  }
+
+  return { valid: true }
+}
+
 // Validation schema for AI analysis request
 const AIAnalysisSchema = z.object({
   birthChart: z.object({
@@ -80,6 +135,7 @@ const AIAnalysisSchema = z.object({
 export async function POST(request: NextRequest) {
   let fallbackBirthChart: z.infer<typeof AIAnalysisSchema>['birthChart'] | null = null
   let fallbackAnalysisType: z.infer<typeof AIAnalysisSchema>['analysisType'] | null = null
+  let fallbackLocale: z.infer<typeof AIAnalysisSchema>['locale'] = 'en'
 
   try {
     const body = await request.json()
@@ -122,19 +178,15 @@ export async function POST(request: NextRequest) {
     const { birthChart, analysisType, locale } = validatedData
     fallbackBirthChart = birthChart
     fallbackAnalysisType = analysisType
+    fallbackLocale = locale
 
     // Check if OpenAI API key is configured
     if (!process.env.OPENAI_API_KEY) {
       console.log('No OpenAI API key found, using mock analysis')
       // Return mock analysis for testing without API key
-      const mockAnalysis = generateMockAnalysis(birthChart, analysisType) as {
+      const mockAnalysis = generateMockAnalysis(birthChart, analysisType, locale) as {
         content?: string
         [key: string]: unknown
-      }
-      if (locale === 'bg' && mockAnalysis.content) {
-        mockAnalysis.content =
-          `> **Бележка:** Демо режим без свързан ключ за текстов генератор. По-долу е примерен анализ на английски; при активна услуга пълният текст може да бъде изцяло на български.\n\n` +
-          mockAnalysis.content
       }
       return NextResponse.json({
         success: true,
@@ -164,7 +216,7 @@ export async function POST(request: NextRequest) {
             content: userPrompt
           }
         ],
-        max_tokens: analysisType === 'comprehensive' ? 8000 : analysisType === 'detailed' ? 6000 : 4000,
+        max_tokens: analysisType === 'comprehensive' ? 10000 : analysisType === 'detailed' ? 9000 : 4500,
         temperature: 0.7,
       })
       console.log('GPT-4o used successfully')
@@ -183,7 +235,7 @@ export async function POST(request: NextRequest) {
               content: userPrompt
             }
           ],
-          max_tokens: analysisType === 'comprehensive' ? 6000 : analysisType === 'detailed' ? 4000 : 2500,
+          max_tokens: analysisType === 'comprehensive' ? 8000 : analysisType === 'detailed' ? 6500 : 3500,
           temperature: 0.7,
         })
         console.log('GPT-4 used successfully')
@@ -201,17 +253,63 @@ export async function POST(request: NextRequest) {
               content: userPrompt
             }
           ],
-          max_tokens: analysisType === 'comprehensive' ? 4000 : analysisType === 'detailed' ? 3000 : 2000,
+          max_tokens: analysisType === 'comprehensive' ? 5000 : analysisType === 'detailed' ? 4500 : 2500,
           temperature: 0.7,
         })
         console.log('GPT-3.5 Turbo used successfully')
       }
     }
 
-    const analysis = completion.choices[0]?.message?.content
+    let analysis = completion.choices[0]?.message?.content
 
     if (!analysis) {
       throw new Error('Failed to generate analysis')
+    }
+
+    const firstValidation = validateGeneratedAnalysis(analysis, analysisType)
+    if (!firstValidation.valid) {
+      console.error('AI returned incomplete analysis, retrying once:', {
+        reason: firstValidation.reason,
+        model: completion.model,
+        analysisType,
+      })
+
+      const retryPrompt = createRetryPrompt(userPrompt, analysisType, locale, firstValidation.reason)
+      const retryCompletion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content:
+              systemMessage +
+              (locale === 'bg'
+                ? ' Никога не отказвай заявката, когато задачата е да съставиш астрологичен развлекателен/саморефлексивен доклад. Ако липсва информация, използвай наличните данни и маркирай извода като вероятна тенденция.'
+                : ' Never refuse when the task is to write an astrological entertainment/self-reflection report. If information is limited, use the available chart data and phrase conclusions as likely tendencies.'),
+          },
+          {
+            role: 'user',
+            content: retryPrompt,
+          },
+        ],
+        max_tokens: analysisType === 'comprehensive' ? 11000 : analysisType === 'detailed' ? 10000 : 5000,
+        temperature: 0.55,
+      })
+
+      const retryAnalysis = retryCompletion.choices[0]?.message?.content
+      const retryValidation = retryAnalysis
+        ? validateGeneratedAnalysis(retryAnalysis, analysisType)
+        : { valid: false as const, reason: 'empty retry analysis' }
+
+      if (!retryAnalysis || !retryValidation.valid) {
+        throw new Error(
+          `AI returned incomplete analysis after retry: ${
+            retryValidation.valid ? 'unknown reason' : retryValidation.reason
+          }`
+        )
+      }
+
+      analysis = retryAnalysis
+      completion = retryCompletion
     }
 
     // Structure the response
@@ -250,7 +348,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         data: {
-          ...generateMockAnalysis(fallbackBirthChart, fallbackAnalysisType),
+          ...generateMockAnalysis(fallbackBirthChart, fallbackAnalysisType, fallbackLocale),
           isFallback: true,
           fallbackReason: error instanceof Error ? error.message : 'AI provider error',
         },
@@ -288,6 +386,32 @@ function calculateCost(usage: any, model: string): number {
   const outputCost = (outputTokens / 1000) * price.output;
   
   return Math.round((inputCost + outputCost) * 100) / 100; // Закръгляне до 2 знака
+}
+
+function createRetryPrompt(originalPrompt: string, analysisType: string, locale: 'en' | 'bg', reason: string) {
+  const requiredTone =
+    locale === 'bg'
+      ? `Предишният отговор беше невалиден (${reason}). Напиши ПЪЛЕН анализ с всички секции. Не се извинявай, не отказвай и не предлагай кратък вариант. Това е астрологичен развлекателен и саморефлексивен доклад, не медицинска, правна или финансова диагноза. Използвай конкретни, но недетерминистични формулировки: "може да показва", "вероятна тенденция", "ако това резонира".`
+      : `The previous response was invalid (${reason}). Write the FULL analysis with all sections. Do not apologize, refuse, or offer a shorter version. This is an astrology entertainment and self-reflection report, not medical, legal, or financial advice. Use concrete but non-deterministic phrasing: "may suggest", "likely tendency", "if this resonates".`
+
+  const sectionReminder =
+    locale === 'bg'
+      ? analysisType === 'detailed'
+        ? `Задължително включи: резюме; астрологична основа с планети, домове и аспекти; ежедневни прояви; любов и емоционални модели; кариера и финансов потенциал; житейски цикли, силни и слаби периоди; повтарящи се модели; самосаботаж; стрес и решения; семейни модели; план за действие; 12 въпроса; 10 признака извън пътя; 10 признака в синхрон; финален синтез.`
+        : analysisType === 'comprehensive'
+          ? `Задължително включи: сравнение на двете натални карти; любовна и емоционална съвместимост; комуникация; привличане; силни страни; конфликти; дългосрочен потенциал; подходящи периоди; практически стратегии.`
+          : `Задължително включи: личност и силни страни; любов; кариера; скрит потенциал; планетарни влияния; житейски уроци; практически съвети.`
+      : analysisType === 'detailed'
+        ? `Must include: executive summary; astrological foundation with planets, houses, aspects; daily traits; love and emotional models; career and financial potential; life cycles, strong and weak periods; repeated patterns; self-sabotage; stress and decisions; family patterns; action plan; 12 questions; 10 off-path signs; 10 aligned signs; closing synthesis.`
+        : analysisType === 'comprehensive'
+          ? `Must include: comparison between both natal charts; love and emotional compatibility; communication; attraction; strengths; conflicts; long-term potential; suitable timing; practical strategies.`
+          : `Must include: personality and strengths; love; career; hidden potential; planetary influences; life lessons; practical advice.`
+
+  return `${requiredTone}
+
+${sectionReminder}
+
+${originalPrompt}`
 }
 
 function createAnalysisPrompt(birthChart: any, partnerBirthChart: any, analysisType: string) {
@@ -619,10 +743,257 @@ function pickVariant<T>(items: T[], seed: number, offset = 0): T {
   return items[(seed + offset) % items.length]
 }
 
-function generateMockAnalysis(birthChart: any, analysisType: string) {
+function generateBulgarianMockAnalysis(birthChart: any, analysisType: string) {
+  const { birthData, planetaryPositions, houses, aspects } = birthChart
+  const birthDate = new Date(birthData.date)
+  const personName = birthData.name || 'потребителя'
+  const sun = planetaryPositions.Sun?.sign || 'слънчевия знак'
+  const moon = planetaryPositions.Moon?.sign || 'лунния знак'
+  const mercury = planetaryPositions.Mercury?.sign || 'Меркурий'
+  const venus = planetaryPositions.Venus?.sign || 'Венера'
+  const mars = planetaryPositions.Mars?.sign || 'Марс'
+  const saturn = planetaryPositions.Saturn?.sign || 'Сатурн'
+  const firstHouse = houses[0]?.sign || 'първи дом'
+  const fourthHouse = houses[3]?.sign || 'четвърти дом'
+  const seventhHouse = houses[6]?.sign || 'седми дом'
+  const tenthHouse = houses[9]?.sign || 'десети дом'
+  const mainAspect = aspects[0]
+    ? `${aspects[0].planet1} ${aspects[0].type} ${aspects[0].planet2}`
+    : 'водещ аспект в картата'
+
+  const header = `**Данни:** ${personName} — ${birthDate.toLocaleDateString()} в ${birthData.time}, ${birthData.location}
+
+**Бележка за качеството:** Този доклад е пълен резервен анализ за текущите данни и избрания план. Използва се само ако AI доставчикът върне отказ, твърде кратък текст или услугата е в тестов режим без активен генератор.`
+
+  const baseSections = `## Астрологична основа
+
+Слънцето в ${sun} описва ядрото на личността: как ${personName} търси смисъл, признание и посока. Луната в ${moon} показва емоционалния ритъм и нуждата от сигурност. Меркурий в ${mercury} описва начина на мислене и комуникация. Венера в ${venus} говори за любов, ценности и усещане за стойност. Марс в ${mars} показва как желанието става действие и как човек реагира под напрежение.
+
+Първи дом в ${firstHouse} подсказва как човек се заявява. Четвърти дом в ${fourthHouse} насочва към корени, семейна среда и вътрешна сигурност. Седми дом в ${seventhHouse} описва уроците през партньорствата. Десети дом в ${tenthHouse} показва кариера, репутация и видимост. Аспектът ${mainAspect} добавя важна вътрешна динамика: две части на личността трябва да се интегрират, а не да се борят една с друга.`
+
+  if (analysisType === 'basic') {
+    return {
+      id: `analysis_${Date.now()}`,
+      birthChartId: birthChart.id,
+      analysisType,
+      content: `## Лична астрологична прогноза
+
+${header}
+
+${baseSections}
+
+## Личност и силни страни
+
+Основната сила е способността да се търси смисъл, а не само резултат. Когато ${personName} е в баланс, решенията идват от вътрешна яснота. Когато има напрежение, може да се появи прекалено мислене, отлагане или желание всичко да бъде сигурно предварително.
+
+## Любов и взаимоотношения
+
+В любовта има нужда от последователност и честност. Най-здравословни са отношенията, в които думите и действията съвпадат. Ако има постоянно гадаене, смесени сигнали или усещане, че трябва да се доказваш, това е знак за граница.
+
+## Кариера и житейски насоки
+
+Кариерата се развива най-добре там, където има смисъл, ясни роли и признание за усилието. Подходящи са среди с развитие, човешки контакт, анализ, комуникация, творчество, планиране или помощ към хора. Неподходящи са хаотични места с неясни очаквания.
+
+## Скрит потенциал и житейски уроци
+
+Скритият потенциал е в способността да се забелязват модели и да се правят зрели избори преди кризата. Сатурн в ${saturn} показва урок по дисциплина, граници и вътрешна опора. Най-важният въпрос е: "Къде вече знам истината, но още чакам доказателство?"
+
+## Практически съвети
+
+1. Записвай важните решения и ги преглеждай на следващия ден.
+2. Не обещавай, когато си емоционално активиран.
+3. Избирай хора, чиито действия съвпадат с думите.
+4. Пази енергията си от среда, която постоянно изисква доказване.
+5. Прави всяка седмица една малка стъпка към по-ясна посока.`,
+      generatedAt: new Date().toISOString(),
+      model: 'gpt-4-mock-bg-basic',
+    }
+  }
+
+  if (analysisType === 'comprehensive') {
+    return {
+      id: `analysis_${Date.now()}`,
+      birthChartId: birthChart.id,
+      analysisType,
+      content: `## Любовна съвместимост
+
+${header}
+
+## Обща оценка
+
+Този доклад разглежда съвместимостта като динамика, не като присъда. Основната тема е как двама души могат да създадат близост, без единият да загуби личния си център.
+
+## Сравнение между картите
+
+${baseSections}
+
+Сравнението между две карти показва къде хората се подкрепят естествено и къде активират чувствителни зони. Ако единият човек търси бърза яснота, а другият има нужда от време, връзката трябва да създаде ритъм, а не битка за контрол.
+
+## Любовна и емоционална съвместимост
+
+Лунната тема (${moon}) подсказва нужда от емоционална сигурност. Връзката се развива добре, когато има предвидимост, топлина и ясни намерения. Несигурността може да се прояви като контрол, мълчание или натрупано разочарование.
+
+## Комуникация и привличане
+
+Меркурий в ${mercury} показва, че разговорите трябва да са конкретни. Венера в ${venus} и Марс в ${mars} описват привличането: едновременно желание за близост и нужда от уважение към границите.
+
+## Силни страни
+
+- Потенциал за лоялност и подкрепа.
+- Възможност за дълбоко разбиране.
+- Съвместни цели, когато отговорностите са ясни.
+- Емоционална дълбочина при честна комуникация.
+
+## Потенциални конфликти
+
+Най-рискови са предположенията. Ако нещо не се казва, то започва да се играе като поведение: дистанция, ревност, критика или пасивна съпротива. Конфликтите трябва да се превеждат в конкретни нужди.
+
+## Дългосрочен потенциал
+
+Дългосрочният потенциал е силен, ако има постоянство, честност и готовност за корекция. Любовта не е достатъчна без умение за конфликт и ясни граници.
+
+## Подходящи периоди и стратегии
+
+Силни периоди са тези, в които разговорите са спокойни и решенията не идват от страх. Чувствителни периоди са тези с умора, ревност или мълчание. Практически правила: говорете за поведение, не за характер; не използвайте мълчание като наказание; поставяйте срок за важните разговори; обещавайте само конкретни действия.`,
+      generatedAt: new Date().toISOString(),
+      model: 'gpt-4-mock-bg-comprehensive',
+    }
+  }
+
+  return {
+    id: `analysis_${Date.now()}`,
+    birthChartId: birthChart.id,
+    analysisType,
+    content: `## Премиум звезден анализ
+
+${header}
+
+## Резюме: за какво говори картата
+
+- **Най-силно качество:** устойчивост и способност да се вижда смисъл отвъд повърхността.
+- **Втора сила:** чувствителност към атмосфера, тон и неизказано.
+- **Трети ресурс:** потенциал за стабилни решения, когато няма натиск за доказване.
+- **Риск 1:** прекалено дълго изчакване преди действие.
+- **Риск 2:** поемане на чужди емоции като лична отговорност.
+- **Риск 3:** смесване на лоялност със саможертва.
+- **Основен фокус:** назовавай дискомфорта по-рано.
+
+${baseSections}
+
+## Как чертите работят в ежедневието
+
+Когато картата е в баланс, ${personName} може да съчетава дълбочина, наблюдателност и отговорност. В ежедневието това помага при сложни ситуации, работа с хора, анализ и вземане на зрели решения. Рискът е да се чака прекалено дълго, защото човек иска пълна сигурност.
+
+**Предупредителен знак:** казваш "трябва ми още яснота", но всъщност отлагаш следващата стъпка.
+
+**Направи вместо това:** избери една малка обратима стъпка и провери реалността чрез действие.
+
+## Любов, връзки и емоционални модели
+
+Венера в ${venus} показва нужда от уважение, последователност и емоционална стойност. В любовта може да има склонност да се вижда потенциалът на човека, преди да се приеме реалното му поведение. Това е красиво като надежда, но опасно като стратегия.
+
+**Капан:** да обичаш обещанието повече от фактите.
+
+**Граница:** ако връзката те кара постоянно да гадаеш, това вече е информация.
+
+## Кариера и финансов потенциал
+
+Десети дом в ${tenthHouse} подсказва нужда от видимост и смисъл в професионалната посока. Подходящи са среди с ясни роли, развитие и уважение към труда. Финансовият урок е трудът да се оценява според стойността, която носи, а не според вина, страх или желание да се харесаш.
+
+Типични грешки: прекалена отговорност, оставане в среда без развитие, избягване на видимост, подценяване на уменията и приемане на хаос като нормална цена за сигурност.
+
+## Житейски цикли, силни и слаби периоди
+
+Силните периоди са тези, в които има спокойна яснота, фокус и готовност за конкретна стъпка. Подходящи са за разговори, обучение, преговори, професионална промяна и нови инициативи. Чувствителните периоди са тези с умора, реактивност или нужда друг човек да даде сигурност. Тогава е по-добре да се планира, не да се вземат крайни решения.
+
+## Повтарящи се модели
+
+Възможен модел е привличане към ситуации, които изискват много от ${personName}, но не дават достатъчно яснота. Скритият урок е да се помага без самозагуба и да се обича без отказ от граници.
+
+## Самосаботаж и сянка
+
+- Ако доказваш стойността си чрез работа, може би търсиш признание вместо посока.
+- Ако избягваш конфликт до избухване, бъркаш мира с мълчание.
+- Ако оставаш там, където не растеш, страхът от промяна говори по-силно от истината.
+- Ако омаловажаваш нуждите си, тялото ще ги изрази чрез напрежение.
+
+## Стрес и решения
+
+Под напрежение не обещавай. Ако решението засяга пари, дом, връзка или кариера, запиши го, преспи една нощ и провери дали тялото още казва "да". При критика поискай конкретика. При неяснота не гадай, а попитай.
+
+## Семейни и ранни модели
+
+Четвърти дом в ${fourthHouse} може да показва стара роля: да бъдеш силният, разумният или този, който издържа. Възрастният избор е да не превръщаш старата роля в доживотна идентичност.
+
+## План за действие
+
+**Спри:** да чакаш напрежението да стане единственият ти източник на смелост.
+
+**Започни:** да назоваваш дискомфорта, докато е малък.
+
+**Пази:** емоционалната яснота и правото на уважение.
+
+**Практикувай:** един директен разговор седмично.
+
+**Следи 30 дни:** кога казваш "да", докато тялото ти казва "не".
+
+## Въпроси за саморефлексия
+
+1. Коя ситуация се повтаря под различни имена?
+2. Къде бъркам лоялността със самопребрегване?
+3. Какво се страхувам, че ще стане, ако попитам директно?
+4. Каква работа ме кара да се чувствам полезен, но изтощен?
+5. Кой модел във връзките съм нормализирал?
+6. Какво доказвам чрез усилие?
+7. Кое решение отлагам?
+8. Къде имам нужда от повече структура?
+9. Къде имам нужда от повече свобода?
+10. Какво би се променило, ако нуждите ми са легитимни?
+11. Какво тялото ми вече знае?
+12. Коя граница защитава бъдещото ми аз?
+
+## 10 признака, че си извън естествения си път
+
+1. Работиш прекалено, за да доказваш стойност.
+2. Отлагаш важни разговори.
+3. Чувстваш се отговорен за настроението на всички.
+4. Оставаш там, където развитието е приключило.
+5. Игнорираш тялото си.
+6. Обясняваш чужда непоследователност.
+7. Бъркаш интензивността с близост.
+8. Харчиш или спестяваш от страх.
+9. Казваш "няма проблем", докато трупаш обида.
+10. Спираш да питаш какво искаш.
+
+## 10 признака, че си в синхрон
+
+1. Твоето "да" е спокойно.
+2. Работата има смисъл и граници.
+3. Връзките позволяват честност.
+4. Действаш преди да се натрупа обида.
+5. Почиваш без вина.
+6. Избираш постоянство пред драма.
+7. Задаваш директни въпроси.
+8. Уважаваш темпото си.
+9. Пазиш енергията си.
+10. Чувстваш се честен със себе си.
+
+## Финален синтез
+
+Тази карта говори за превръщане на чувствителността в зрял избор. Целта не е да станеш по-студен, а да спреш да чакаш натискът да решава вместо теб. Пътят напред е повече яснота, по-добри граници и среда, в която лоялността ти е уважавана.`,
+    generatedAt: new Date().toISOString(),
+    model: 'gpt-4-mock-bg-detailed',
+  }
+}
+
+function generateMockAnalysis(birthChart: any, analysisType: string, locale: 'en' | 'bg' = 'en') {
   const { birthData, planetaryPositions, houses, aspects } = birthChart
   const birthDate = new Date(birthData.date)
   const personName = birthData.name || 'User'
+
+  if (locale === 'bg') {
+    return generateBulgarianMockAnalysis(birthChart, analysisType)
+  }
   const profileSeed = hashString(
     `${personName}|${birthData.date}|${birthData.time}|${birthData.location}|${analysisType}`
   )
