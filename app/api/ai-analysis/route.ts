@@ -214,6 +214,28 @@ export async function POST(request: NextRequest) {
     const userPrompt = locale === 'bg' ? basePrompt + BG_COMPLETION_INSTRUCTION : basePrompt
     const systemMessage = locale === 'bg' ? SYSTEM_BG : SYSTEM_EN
 
+    if (analysisType === 'detailed' || analysisType === 'comprehensive') {
+      const chunkedAnalysis = await generateChunkedOpenAIAnalysis(
+        validatedData,
+        systemMessage
+      )
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          id: `analysis_${Date.now()}`,
+          birthChartId: birthChart.id,
+          analysisType,
+          content: chunkedAnalysis.content,
+          generatedAt: new Date().toISOString(),
+          model: chunkedAnalysis.model,
+          tokensUsed: chunkedAnalysis.tokensUsed,
+          cost: chunkedAnalysis.cost,
+          generationMode: 'openai-section-chunks',
+        },
+      })
+    }
+
     const compactPrompt = createCompactRecoveryPrompt(
       birthChart,
       validatedData.partnerBirthChart,
@@ -225,21 +247,21 @@ export async function POST(request: NextRequest) {
         label: 'full-openai-report',
         prompt: userPrompt,
         timeout: 22000,
-        maxTokens: analysisType === 'comprehensive' ? 8500 : analysisType === 'detailed' ? 8500 : 4200,
+        maxTokens: 4200,
         strict: true,
       },
       {
         label: 'strict-retry-openai-report',
         prompt: createRetryPrompt(userPrompt, analysisType, locale, 'first attempt did not produce a complete report'),
         timeout: 18000,
-        maxTokens: analysisType === 'comprehensive' ? 7000 : analysisType === 'detailed' ? 7000 : 3600,
+        maxTokens: 3600,
         strict: true,
       },
       {
         label: 'compact-openai-report',
         prompt: compactPrompt,
         timeout: 16000,
-        maxTokens: analysisType === 'comprehensive' ? 5200 : analysisType === 'detailed' ? 5200 : 3000,
+        maxTokens: 3000,
         strict: false,
       },
     ]
@@ -326,6 +348,8 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Analysis generation error:', error)
+    const debugId = `analysis_error_${Date.now()}`
+    const detail = error instanceof Error ? error.message : 'Unknown analysis generation error'
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -342,6 +366,8 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Real AI generation failed after retry. Please try again shortly.',
+        debugId,
+        detail,
       },
       { status: 500 }
     )
@@ -368,6 +394,200 @@ function calculateCost(usage: any, model: string): number {
   const outputCost = (outputTokens / 1000) * price.output;
   
   return Math.round((inputCost + outputCost) * 100) / 100; // Закръгляне до 2 знака
+}
+
+function compactChartContext(
+  birthChart: z.infer<typeof AIAnalysisSchema>['birthChart'],
+  partnerBirthChart?: z.infer<typeof AIAnalysisSchema>['partnerBirthChart']
+) {
+  const { birthData, planetaryPositions, houses, aspects } = birthChart
+  const person = `Клиент / Client:
+- Name: ${birthData.name}
+- Date: ${birthData.date}
+- Time: ${birthData.time}
+- Location: ${birthData.location}
+
+Planets:
+${Object.entries(planetaryPositions)
+  .map(([planet, data]) => `- ${planet}: ${data.sign} ${data.degree}° (House ${data.house})`)
+  .join('\n')}
+
+Houses:
+${houses.map((house) => `- House ${house.house}: ${house.sign} ${house.degree}°`).join('\n')}
+
+Aspects:
+${aspects.map((aspect) => `- ${aspect.planet1} ${aspect.type} ${aspect.planet2} (${aspect.orb}°)`).join('\n')}`
+
+  if (!partnerBirthChart) return person
+
+  return `${person}
+
+Партньор / Partner:
+- Name: ${partnerBirthChart.birthData.name}
+- Date: ${partnerBirthChart.birthData.date}
+- Time: ${partnerBirthChart.birthData.time}
+- Location: ${partnerBirthChart.birthData.location}
+
+Partner planets:
+${Object.entries(partnerBirthChart.planetaryPositions)
+  .map(([planet, data]) => `- ${planet}: ${data.sign} ${data.degree}° (House ${data.house})`)
+  .join('\n')}
+
+Partner houses:
+${partnerBirthChart.houses.map((house) => `- House ${house.house}: ${house.sign} ${house.degree}°`).join('\n')}
+
+Partner aspects:
+${partnerBirthChart.aspects
+  .map((aspect) => `- ${aspect.planet1} ${aspect.type} ${aspect.planet2} (${aspect.orb}°)`)
+  .join('\n')}`
+}
+
+function chunkPlan(
+  analysisType: z.infer<typeof AIAnalysisSchema>['analysisType'],
+  locale: z.infer<typeof AIAnalysisSchema>['locale']
+) {
+  if (locale === 'bg') {
+    if (analysisType === 'comprehensive') {
+      return [
+        {
+          title: '## 1. Обща съвместимост и основна динамика',
+          instructions:
+            'Покрий общата съвместимост, основната емоционална тема, най-силните свързващи фактори и главния риск във връзката. 5-7 богати абзаца плюс кратки bullet изводи.',
+        },
+        {
+          title: '## 2. Любов, емоции, привличане и интимност',
+          instructions:
+            'Покрий любовната динамика, емоционалните нужди, Венера/Марс теми, привличане, близост, ревност, дистанция, уязвимост и здравословни граници. Дай конкретни примери.',
+        },
+        {
+          title: '## 3. Комуникация, конфликти и модели на напрежение',
+          instructions:
+            'Покрий комуникацията, мисленето, конфликтите, какво ги отключва, как двамата да спорят по-зряло, какво да избягват и как да възстановяват доверие.',
+        },
+        {
+          title: '## 4. Дългосрочен потенциал, периоди и практически насоки',
+          instructions:
+            'Покрий дългосрочен потенциал, подходящи периоди за решения, рискови периоди, общи цели, практически правила, 10 конкретни препоръки и финален синтез.',
+        },
+      ]
+    }
+
+    return [
+      {
+        title: '## 1. Резюме, личност и астрологична основа',
+        instructions:
+          'Покрий резюме на картата, Слънце, Луна, Меркурий, Венера, Марс, важни домове и аспекти. Обяснявай причинно-следствено: позиция -> поведение -> сила -> риск -> практическо действие.',
+      },
+      {
+        title: '## 2. Любов, емоционални модели и връзки',
+        instructions:
+          'Покрий любовта, емоционалните потребности, привличаните хора, капани, граници, повторяеми модели, 5 въпроса за саморефлексия и конкретни примери.',
+      },
+      {
+        title: '## 3. Кариера, финанси, призвание и житейски цикли',
+        instructions:
+          'Покрий кариера, подходящи и неподходящи среди, финансов потенциал, грешки, силни и чувствителни периоди, възможности и промени без детерминистични обещания.',
+      },
+      {
+        title: '## 4. Самосаботаж, план за действие и финален синтез',
+        instructions:
+          'Покрий сенчести модели, стрес, решения, семеен/ранен модел ако е подкрепен, план за действие, 12 въпроса, 10 признака извън пътя, 10 признака в синхрон и финален синтез.',
+      },
+    ]
+  }
+
+  if (analysisType === 'comprehensive') {
+    return [
+      { title: '## 1. Overall Compatibility', instructions: 'Cover relationship potential, strengths, risks, and the core dynamic in depth.' },
+      { title: '## 2. Love, Emotion, Attraction, and Intimacy', instructions: 'Cover emotional needs, Venus/Mars themes, attraction, intimacy, boundaries, and examples.' },
+      { title: '## 3. Communication, Conflict, and Growth', instructions: 'Cover Mercury themes, conflict triggers, repair strategies, trust, and growth opportunities.' },
+      { title: '## 4. Long-Term Potential, Timing, and Guidance', instructions: 'Cover long-term potential, timing, practical rules, recommendations, and closing synthesis.' },
+    ]
+  }
+
+  return [
+    { title: '## 1. Summary, Personality, and Astrological Foundation', instructions: 'Cover core personality, planets, houses, aspects, strengths, risks, and practical use.' },
+    { title: '## 2. Love, Emotional Patterns, and Relationships', instructions: 'Cover relationships, emotional needs, traps, boundaries, and reflection questions.' },
+    { title: '## 3. Career, Money, Calling, and Life Cycles', instructions: 'Cover career, money, timing, strong and sensitive periods, and life direction.' },
+    { title: '## 4. Self-Sabotage, Action Plan, and Closing Synthesis', instructions: 'Cover shadow patterns, stress, decisions, action plan, checklists, questions, and synthesis.' },
+  ]
+}
+
+async function generateChunkedOpenAIAnalysis(
+  data: z.infer<typeof AIAnalysisSchema>,
+  systemMessage: string
+) {
+  const plan = chunkPlan(data.analysisType, data.locale)
+  const chartContext = compactChartContext(data.birthChart, data.partnerBirthChart)
+  const languageInstruction =
+    data.locale === 'bg'
+      ? 'Пиши само на български език. Без английски labels. Правилен правопис, естествен стил, без технически бележки, без извинения и без въвеждащи разговорни фрази.'
+      : 'Write only in English. No technical notes, no apologies, and no conversational preamble.'
+
+  const tasks = plan.map(async (chunk, index) => {
+    const prompt = `${chartContext}
+
+Generate only this report part:
+${chunk.title}
+
+Instructions:
+${chunk.instructions}
+
+${languageInstruction}
+Use markdown. Start exactly with this heading: ${chunk.title}
+Length target: ${data.locale === 'bg' ? '900-1400 Bulgarian words' : '800-1200 words'}.
+The text must be specific to the provided chart data and selected plan (${data.analysisType}).`
+
+    let lastError: unknown = null
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      try {
+        const completion = await openai.chat.completions.create(
+          {
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: systemMessage },
+              { role: 'user', content: prompt },
+            ],
+            max_tokens: 2400,
+            temperature: attempt === 1 ? 0.55 : 0.35,
+          },
+          { timeout: attempt === 1 ? 22000 : 18000 }
+        )
+        const content = completion.choices[0]?.message?.content?.trim()
+        if (!content) throw new Error(`Empty OpenAI chunk response ${index + 1}`)
+        if (REFUSAL_PATTERNS.some((pattern) => pattern.test(content))) {
+          throw new Error(`Refusal in OpenAI chunk ${index + 1}`)
+        }
+        if (data.locale === 'bg' && /executive summary|warning sign|action plan|checklist/i.test(content)) {
+          throw new Error(`English label in Bulgarian chunk ${index + 1}`)
+        }
+        return {
+          content,
+          model: completion.model || 'gpt-4o-mini',
+          tokensUsed: completion.usage?.total_tokens || 0,
+          cost: calculateCost(completion.usage, completion.model),
+        }
+      } catch (error) {
+        lastError = error
+        console.error(`OpenAI chunk ${index + 1} attempt ${attempt} failed:`, error)
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(`OpenAI chunk ${index + 1} failed`)
+  })
+
+  const chunks = await Promise.all(tasks)
+  const content = chunks.map((chunk) => chunk.content).join('\n\n')
+  const validation = validateGeneratedAnalysis(content, data.analysisType, data.locale)
+  if (!validation.valid) {
+    console.error('Chunked report validation warning:', validation.reason)
+  }
+
+  return {
+    content,
+    model: 'gpt-4o-mini-sectioned',
+    tokensUsed: chunks.reduce((sum, chunk) => sum + chunk.tokensUsed, 0),
+    cost: Math.round(chunks.reduce((sum, chunk) => sum + chunk.cost, 0) * 100) / 100,
+  }
 }
 
 function createRetryPrompt(originalPrompt: string, analysisType: string, locale: 'en' | 'bg', reason: string) {

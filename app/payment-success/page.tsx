@@ -219,7 +219,16 @@ function PaymentSuccessContent() {
 
       if (!analysisResult.success) {
         console.error('Analysis API returned an error:', analysisResult)
-        throw new Error(analysisResult.error || 'Failed to generate analysis')
+        const diagnostic = {
+          error: analysisResult.error || 'Failed to generate analysis',
+          detail: analysisResult.detail || null,
+          debugId: analysisResult.debugId || null,
+          analysisType,
+          sessionId,
+          at: new Date().toISOString(),
+        }
+        sessionStorage.setItem('analysisGenerationError', JSON.stringify(diagnostic))
+        throw new Error(diagnostic.detail || diagnostic.error)
       }
 
       console.log('Analysis result:', analysisResult)
@@ -228,6 +237,7 @@ function PaymentSuccessContent() {
 
       // Store analysis data
       sessionStorage.setItem('analysisData', JSON.stringify(analysisResult.data))
+      sessionStorage.removeItem('analysisGenerationError')
 
     } catch (error) {
       console.error('Error generating analysis:', error)
@@ -436,6 +446,11 @@ function PaymentSuccessContent() {
                 <p className="mb-6 text-cosmic-700 dark:text-cosmic-300">
                   Данните са запазени. Опитай отново, без да попълваш формата повторно.
                 </p>
+                {generationError && (
+                  <p className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-left text-xs text-red-700">
+                    Причина за диагностика: {generationError}
+                  </p>
+                )}
                 <Button
                   variant="gradient"
                   onClick={() => generateAnalysis(birthChartData, selectedAnalysisType, sessionId)}
