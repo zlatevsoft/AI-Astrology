@@ -158,8 +158,6 @@ const AIAnalysisSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
-  let recoveryData: z.infer<typeof AIAnalysisSchema> | null = null
-
   try {
     const body = await request.json()
     
@@ -167,7 +165,6 @@ export async function POST(request: NextRequest) {
     
     // Enhanced security: Validate and sanitize input
     const validatedData = AIAnalysisSchema.parse(body)
-    recoveryData = validatedData
     
     // Additional security checks
     if (!validatedData.birthChart?.birthData) {
@@ -217,116 +214,97 @@ export async function POST(request: NextRequest) {
     const userPrompt = locale === 'bg' ? basePrompt + BG_COMPLETION_INSTRUCTION : basePrompt
     const systemMessage = locale === 'bg' ? SYSTEM_BG : SYSTEM_EN
 
-    // Generate AI analysis with fallback to GPT-3.5 Turbo if needed
-    let completion;
-    try {
-      console.log('Attempting to use GPT-4 Turbo...')
-      completion = await openai.chat.completions.create({
-        model: "gpt-4o", // Използваме GPT-4o вместо gpt-4-1106-preview (по-стара версия)
-        messages: [
-          {
-            role: "system",
-            content: systemMessage
-          },
-          {
-            role: "user",
-            content: userPrompt
-          }
-        ],
-        max_tokens: analysisType === 'comprehensive' ? 10000 : analysisType === 'detailed' ? 9000 : 4500,
-        temperature: 0.7,
-      }, { timeout: 25000 })
-      console.log('GPT-4o used successfully')
-    } catch (error) {
-      console.log('GPT-4o failed, trying GPT-4...')
+    const compactPrompt = createCompactRecoveryPrompt(
+      birthChart,
+      validatedData.partnerBirthChart,
+      analysisType,
+      locale
+    )
+    const generationAttempts = [
+      {
+        label: 'full-openai-report',
+        prompt: userPrompt,
+        timeout: 22000,
+        maxTokens: analysisType === 'comprehensive' ? 8500 : analysisType === 'detailed' ? 8500 : 4200,
+        strict: true,
+      },
+      {
+        label: 'strict-retry-openai-report',
+        prompt: createRetryPrompt(userPrompt, analysisType, locale, 'first attempt did not produce a complete report'),
+        timeout: 18000,
+        maxTokens: analysisType === 'comprehensive' ? 7000 : analysisType === 'detailed' ? 7000 : 3600,
+        strict: true,
+      },
+      {
+        label: 'compact-openai-report',
+        prompt: compactPrompt,
+        timeout: 16000,
+        maxTokens: analysisType === 'comprehensive' ? 5200 : analysisType === 'detailed' ? 5200 : 3000,
+        strict: false,
+      },
+    ]
+
+    let completion: Awaited<ReturnType<typeof openai.chat.completions.create>> | null = null
+    let analysis = ''
+    let lastGenerationError = ''
+
+    for (const attempt of generationAttempts) {
       try {
-        completion = await openai.chat.completions.create({
-          model: "gpt-4", // Fallback to GPT-4
-          messages: [
-            {
-              role: "system",
-              content: systemMessage
-            },
-            {
-              role: "user",
-              content: userPrompt
-            }
-          ],
-          max_tokens: analysisType === 'comprehensive' ? 8000 : analysisType === 'detailed' ? 6500 : 3500,
-          temperature: 0.7,
-        }, { timeout: 20000 })
-        console.log('GPT-4 used successfully')
-      } catch (error2) {
-        console.log('GPT-4 failed, falling back to GPT-3.5 Turbo')
-        completion = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo", // GPT-3.5 Turbo - най-надеждният вариант
-          messages: [
-            {
-              role: "system",
-              content: systemMessage
-            },
-            {
-              role: "user",
-              content: userPrompt
-            }
-          ],
-          max_tokens: analysisType === 'comprehensive' ? 5000 : analysisType === 'detailed' ? 4500 : 2500,
-          temperature: 0.7,
-        }, { timeout: 18000 })
-        console.log('GPT-3.5 Turbo used successfully')
-      }
-    }
-
-    let analysis = completion.choices[0]?.message?.content
-
-    if (!analysis) {
-      throw new Error('Failed to generate analysis')
-    }
-
-    const firstValidation = validateGeneratedAnalysis(analysis, analysisType, locale)
-    if (!firstValidation.valid) {
-      console.error('AI returned incomplete analysis, retrying once:', {
-        reason: firstValidation.reason,
-        model: completion.model,
-        analysisType,
-      })
-
-      const retryPrompt = createRetryPrompt(userPrompt, analysisType, locale, firstValidation.reason)
-      const retryCompletion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
+        console.log(`Attempting ${attempt.label} with gpt-4o-mini...`)
+        const attemptCompletion = await openai.chat.completions.create(
           {
-            role: 'system',
-            content:
-              systemMessage +
-              (locale === 'bg'
-                ? ' Никога не отказвай заявката, когато задачата е да съставиш астрологичен развлекателен/саморефлексивен доклад. Ако липсва информация, използвай наличните данни и маркирай извода като вероятна тенденция.'
-                : ' Never refuse when the task is to write an astrological entertainment/self-reflection report. If information is limited, use the available chart data and phrase conclusions as likely tendencies.'),
+            model: 'gpt-4o-mini',
+            messages: [
+              {
+                role: 'system',
+                content:
+                  systemMessage +
+                  (locale === 'bg'
+                    ? ' Генерирай завършен клиентски доклад сега. Не връщай грешка, не искай уточнения и не споменавай технически ограничения.'
+                    : ' Generate a complete client-facing report now. Do not return an error, ask for clarification, or mention technical limitations.'),
+              },
+              {
+                role: 'user',
+                content: attempt.prompt,
+              },
+            ],
+            max_tokens: attempt.maxTokens,
+            temperature: attempt.strict ? 0.55 : 0.4,
           },
-          {
-            role: 'user',
-            content: retryPrompt,
-          },
-        ],
-        max_tokens: analysisType === 'comprehensive' ? 11000 : analysisType === 'detailed' ? 10000 : 5000,
-        temperature: 0.55,
-      }, { timeout: 25000 })
-
-      const retryAnalysis = retryCompletion.choices[0]?.message?.content
-      const retryValidation = retryAnalysis
-        ? validateGeneratedAnalysis(retryAnalysis, analysisType, locale)
-        : { valid: false as const, reason: 'empty retry analysis' }
-
-      if (!retryAnalysis || !retryValidation.valid) {
-        throw new Error(
-          `AI returned incomplete analysis after retry: ${
-            retryValidation.valid ? 'unknown reason' : retryValidation.reason
-          }`
+          { timeout: attempt.timeout }
         )
-      }
 
-      analysis = retryAnalysis
-      completion = retryCompletion
+        const attemptAnalysis = attemptCompletion.choices[0]?.message?.content?.trim()
+        if (!attemptAnalysis) {
+          lastGenerationError = `${attempt.label}: empty OpenAI response`
+          continue
+        }
+
+        const validation = validateGeneratedAnalysis(attemptAnalysis, analysisType, locale)
+        const validationReason = validation.valid ? '' : validation.reason
+        const relaxedCompactAccept =
+          !attempt.strict &&
+          attemptAnalysis.length >= 1200 &&
+          !validationReason.includes('refusal/apology') &&
+          !validationReason.includes('English label')
+
+        if (validation.valid || relaxedCompactAccept) {
+          analysis = attemptAnalysis
+          completion = attemptCompletion
+          break
+        }
+
+        lastGenerationError = `${attempt.label}: ${validation.reason}`
+        console.error('OpenAI attempt did not pass validation:', lastGenerationError)
+      } catch (attemptError) {
+        lastGenerationError =
+          attemptError instanceof Error ? `${attempt.label}: ${attemptError.message}` : `${attempt.label}: unknown error`
+        console.error('OpenAI attempt failed:', attemptError)
+      }
+    }
+
+    if (!analysis || !completion) {
+      throw new Error(lastGenerationError || 'OpenAI did not return a usable analysis')
     }
 
     // Structure the response
@@ -358,47 +336,6 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       )
-    }
-
-    if (recoveryData && process.env.OPENAI_API_KEY) {
-      try {
-        console.error('Trying compact real OpenAI recovery generation after failure:', error)
-        const { birthChart, partnerBirthChart, analysisType, locale } = recoveryData
-        const compactPrompt = createCompactRecoveryPrompt(birthChart, partnerBirthChart, analysisType, locale)
-        const recoveryCompletion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: locale === 'bg' ? SYSTEM_BG : SYSTEM_EN,
-            },
-            {
-              role: 'user',
-              content: compactPrompt,
-            },
-          ],
-          max_tokens: analysisType === 'comprehensive' ? 6500 : analysisType === 'detailed' ? 6500 : 3500,
-          temperature: 0.45,
-        }, { timeout: 30000 })
-        const recoveryAnalysis = recoveryCompletion.choices[0]?.message?.content?.trim()
-        if (recoveryAnalysis && !REFUSAL_PATTERNS.some((pattern) => pattern.test(recoveryAnalysis))) {
-          return NextResponse.json({
-            success: true,
-            data: {
-              id: `analysis_${Date.now()}`,
-              birthChartId: birthChart.id,
-              analysisType,
-              content: recoveryAnalysis,
-              generatedAt: new Date().toISOString(),
-              model: recoveryCompletion.model || 'gpt-4o-mini',
-              tokensUsed: recoveryCompletion.usage?.total_tokens || 0,
-              cost: calculateCost(recoveryCompletion.usage, recoveryCompletion.model),
-            },
-          })
-        }
-      } catch (recoveryError) {
-        console.error('Compact real OpenAI recovery generation failed:', recoveryError)
-      }
     }
 
     return NextResponse.json(
